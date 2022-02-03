@@ -4,8 +4,9 @@ package frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PWMSpeedController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,8 +23,8 @@ public class ControlModule{
 
 	public WheelPosition position;
 
-	private PWMSpeedController m_rotation; 
-	private PWMSpeedController m_wheel; 
+	private PWMMotorController m_rotation; 
+	private PWMMotorController m_wheel; 
 	
 	private PIDController rotationPID;
 	
@@ -43,7 +44,7 @@ public class ControlModule{
 		position = pos;
 	}
 
-	public ControlModule(PWMSpeedController rotation, PWMSpeedController wheel, int potentiometerPort, WheelPosition pos){
+	public ControlModule(PWMMotorController rotation, PWMMotorController wheel, int potentiometerPort, WheelPosition pos){
 		position = pos;
 
 		m_rotation = rotation;
@@ -53,10 +54,10 @@ public class ControlModule{
 		rotationPID = new PIDController(rotateP, rotateI, rotateD, rotationEncoder, m_rotation);
 
 		rotationPID.setContinuous();
-		rotationPID.setAbsoluteTolerance(rotatePIDTolerance);
+		rotationPID.setTolerance(rotatePIDTolerance);
 	}
 
-	public ControlModule(PWMSpeedController rotation, PWMSpeedController wheel, int encoderPort, int wheelEncoderA, int wheelEncoderB, WheelPosition location){
+	public ControlModule(PWMMotorController rotation, PWMMotorController wheel, int encoderPort, int wheelEncoderA, int wheelEncoderB, WheelPosition location){
 		this(rotation, wheel, encoderPort, location);
 		speedEncoder = new Encoder(wheelEncoderA, wheelEncoderB);
 	}
@@ -74,7 +75,7 @@ public class ControlModule{
 
 	public void setRotationPIDTolerance(double tolerance) {
 		rotatePIDTolerance = tolerance;
-		rotationPID.setAbsoluteTolerance(tolerance);
+		rotationPID.setTolerance(tolerance);
 	}
 	
 	public void setRotationPID(double kp, double ki, double kd){

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.SwerveDrive;
 
-import edu.wpi.first.wpilibj.GyroBase;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -33,7 +33,7 @@ public class SwerveHelper {
 	protected static double[] wheelSpeed = new double[4];
 	protected static double[] wheelAngle = new double[4];
 
-	protected static GyroBase m_gyro = null;
+	protected static Gyro m_gyro = null;
 
 	public static boolean fieldCentric = true;
 
@@ -179,12 +179,12 @@ public class SwerveHelper {
 		useAngleToReverse = false;
 	}
 
-	public static void setGyro(GyroBase gyro){
+	public static void setGyro(Gyro gyro){
 		m_gyro = gyro;
 		fieldCentric = true;
 	}
 
-	public static GyroBase getGyro(){
+	public static Gyro getGyro(){
 		return m_gyro;
 	}
 
