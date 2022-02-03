@@ -25,7 +25,9 @@ public class ControlModule{
 
 	private PWMMotorController m_rotation; 
 	private PWMMotorController m_wheel; 
-	
+	//NEW INSTANCE VARIABLES: continuousRotationStart, continuousRotationEnd
+	private double continuousRotationStart; //values not yet declared; to be determined later
+	private double continuousRotationEnd; //values not yet declared; to be determined later
 	private PIDController rotationPID;
 	
 	public double rotateP = 1.0;
@@ -53,7 +55,7 @@ public class ControlModule{
 
 		rotationPID = new PIDController(rotateP, rotateI, rotateD, rotationEncoder, m_rotation);
 
-		rotationPID.setContinuous();
+		rotationPID.enableContinuousInput(continuousRotationStart,continuousRotationEnd); //changed setContinuous to enableContinuousInput and added new instance variables
 		rotationPID.setTolerance(rotatePIDTolerance);
 	}
 
@@ -83,7 +85,7 @@ public class ControlModule{
 	}
 
 	public void setRotationPIDF(double kp, double ki, double kd, double kf){
-		rotationPID.setPID(kp, ki, kd, kf);
+		rotationPID.setPID(kp, ki, kd, kf); //No method with kf
 	}
 
 	public double getRotationP(){
