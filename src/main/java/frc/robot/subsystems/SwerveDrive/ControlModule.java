@@ -3,10 +3,6 @@ package frc.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,11 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ControlModule{
 
 	public WheelPosition position;
-
-	public double rotateP = 1.0;
-	public double rotateI = 0.0;
-	public double rotateD = 0.0;
-	protected double rotatePIDTolerance = 0.01;
 
 	private AnalogPotentiometer rotationEncoder = null;
 	private Encoder speedEncoder = null;

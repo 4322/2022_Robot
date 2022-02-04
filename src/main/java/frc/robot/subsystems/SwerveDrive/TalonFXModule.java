@@ -3,28 +3,22 @@ package frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.Joystick;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class TalonFXModule extends ControlModule {
 	
-	private TalonFX m_rotation; 
-	private TalonFX m_wheel;
+	private WPI_TalonFX m_rotation; 
+	private WPI_TalonFX m_wheel;
 	
 	private double wheelDiameter = 4.0;
 	private double rotationDiameter = 4.0;
 	private int ticksPerRev = 4096;
 	
-	public TalonFXModule(TalonFX rotation, TalonFX wheel, WheelPosition pos) {
+	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos) {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
-	}
-	
-	public TalonFXModule(TalonFX rotation, TalonFX wheel, WheelPosition pos, double wheelDiam, double rotationDiam, int ticksPerRev) {
-		this(rotation, wheel, pos);
-		setWheelDiameter(wheelDiam);
-		setRotationDiameter(rotationDiam);
-		setTicksPerRev(ticksPerRev);
 	}
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
