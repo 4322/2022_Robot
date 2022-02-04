@@ -53,9 +53,9 @@ public class ControlModule{
 		m_wheel = wheel;
 		rotationEncoder = new AnalogPotentiometer(potentiometerPort, 360.0, 0);
 
-		rotationPID = new PIDController(rotateP, rotateI, rotateD, rotationEncoder, m_rotation);
+		rotationPID = new PIDController(rotateP, rotateI, rotateD);
 
-		rotationPID.enableContinuousInput(continuousRotationStart,continuousRotationEnd); //changed setContinuous to enableContinuousInput and added new instance variables
+		rotationPID.enableContinuousInput(continuousRotationStart,continuousRotationEnd); //changed setContinuous() to enableContinuousInput(s,e) and added new instance variables
 		rotationPID.setTolerance(rotatePIDTolerance);
 	}
 
@@ -84,10 +84,6 @@ public class ControlModule{
 		rotationPID.setPID(kp, ki, kd);
 	}
 
-	public void setRotationPIDF(double kp, double ki, double kd, double kf){
-		rotationPID.setPID(kp, ki, kd, kf); //No method with kf
-	}
-
 	public double getRotationP(){
 		return rotationPID.getP();
 	}
@@ -98,10 +94,6 @@ public class ControlModule{
 
 	public double getRotationD(){
 		return rotationPID.getD();
-	}
-
-	public double getRotationF(){
-		return rotationPID.getF();
 	}
 
 	public void resetSpeedEncoder(){
@@ -167,7 +159,6 @@ public class ControlModule{
 		SmartDashboard.putNumber(name + "Spin P", this.getRotationP());
 		SmartDashboard.putNumber(name + "Spin I", this.getRotationI());
 		SmartDashboard.putNumber(name + "Spin D", this.getRotationD());
-		SmartDashboard.putNumber(name + "Spin F", this.getRotationF());
 	}
 
 	public enum WheelPosition{
