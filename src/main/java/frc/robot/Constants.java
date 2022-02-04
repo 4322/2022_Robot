@@ -14,7 +14,16 @@ package frc.robot;
  */
 public final class Constants {
 
-    public final class DrivebaseConstants {
+    public final class DriveConstants {
+        public static final int frontRightDriveID = 2;
+        public static final int frontRightRotationID = 3;
+        public static final int rearRightDriveID = 4;
+        public static final int rearRightRotationID = 5;      
+        public static final int frontLeftDriveID = 6;
+        public static final int frontLeftRotationID = 7;
+        public static final int rearLeftDriveID = 8;
+        public static final int rearLeftRotationID = 9;
+
         public static final double kWheelRadius = 0.0508;
         public static final int kEncoderResolution = 4096;
 
@@ -27,6 +36,7 @@ public final class Constants {
             // nothing for now
 
         }
+        
     }
-
+    
 }
