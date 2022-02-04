@@ -19,6 +19,24 @@ public class TalonFXModule extends ControlModule {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
+
+/* Need to configure both the drive and rotation motor controllers using the following example:
+    private void configDriveMaster(WPI_TalonFX talon) {
+        talon.configFactoryDefault();
+
+        talon.configClosedloopRamp(Config.driveClosedLoopRampRate, Config.motorControllerConfigTimeoutMs);
+        talon.configOpenloopRamp(Config.driveOpenLoopRampRate, Config.motorControllerConfigTimeoutMs);
+        talon.config_kP(0, Config.driveVelocityP, Config.motorControllerConfigTimeoutMs);
+        talon.config_kI(0, Config.driveVelocityI, Config.motorControllerConfigTimeoutMs);
+        talon.config_IntegralZone(0, Config.driveVelocityIntegralZone, Config.motorControllerConfigTimeoutMs);
+        talon.config_kD(0, Config.driveVelocityD, Config.motorControllerConfigTimeoutMs);
+        talon.config_kF(0, Config.driveVelocityF, Config.motorControllerConfigTimeoutMs);
+
+        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setInverted(true);
+        talon.setSensorPhase(false);
+    }
+*/
 	}
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
