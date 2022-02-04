@@ -41,13 +41,6 @@ public class TalonSRXModule extends ControlModule {
 	}
 
 	@Override
-	public void setRotationPIDF(double kp, double ki, double kd, double kf){
-		m_rotation.config_kP(0, kp, 0);
-		m_rotation.config_kI(1, ki, 0);
-		m_rotation.config_kD(2, kd, 0);
-		m_rotation.config_kF(3, kf, 0);	}
-	
-	@Override
 	public double getRotationP(){
 		return m_rotation.configGetParameter(0, 0, 0);
 	}
@@ -60,11 +53,6 @@ public class TalonSRXModule extends ControlModule {
 	@Override
 	public double getRotationD(){
 		return m_rotation.configGetParameter(2, 0, 0);
-	}
-
-	@Override
-	public double getRotationF(){
-		return m_rotation.configGetParameter(3, 0, 0);
 	}
 	
 	@Override
