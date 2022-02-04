@@ -23,13 +23,6 @@ public class ControlModule{
 
 	public WheelPosition position;
 
-	private PWMMotorController m_rotation; 
-	private PWMMotorController m_wheel; 
-	//NEW INSTANCE VARIABLES: continuousRotationStart, continuousRotationEnd
-	private double continuousRotationStart; //values not yet declared; to be determined later
-	private double continuousRotationEnd; //values not yet declared; to be determined later
-	private PIDController rotationPID;
-	
 	public double rotateP = 1.0;
 	public double rotateI = 0.0;
 	public double rotateD = 0.0;
@@ -46,55 +39,8 @@ public class ControlModule{
 		position = pos;
 	}
 
-	public ControlModule(PWMMotorController rotation, PWMMotorController wheel, int potentiometerPort, WheelPosition pos){
-		position = pos;
-
-		m_rotation = rotation;
-		m_wheel = wheel;
-		rotationEncoder = new AnalogPotentiometer(potentiometerPort, 360.0, 0);
-
-		rotationPID = new PIDController(rotateP, rotateI, rotateD);
-
-		rotationPID.enableContinuousInput(continuousRotationStart,continuousRotationEnd); //changed setContinuous() to enableContinuousInput(s,e) and added new instance variables
-		rotationPID.setTolerance(rotatePIDTolerance);
-	}
-
-	public ControlModule(PWMMotorController rotation, PWMMotorController wheel, int encoderPort, int wheelEncoderA, int wheelEncoderB, WheelPosition location){
-		this(rotation, wheel, encoderPort, location);
-		speedEncoder = new Encoder(wheelEncoderA, wheelEncoderB);
-	}
-
-	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
-		m_wheel.set(SwerveHelper.getSpeedValue(drive, rotate, position.wheelNumber));
-		rotationPID.setSetpoint(SwerveHelper.getAngleValue(drive, rotate, position.wheelNumber));
-	}
-
-	public void setEncoder(int encoderPortA, int encoderPortB){
-		this.speedEncoder = new Encoder(encoderPortA, encoderPortB);
-	}
-
 	//*********************PID Helper Methods******************//
 
-	public void setRotationPIDTolerance(double tolerance) {
-		rotatePIDTolerance = tolerance;
-		rotationPID.setTolerance(tolerance);
-	}
-	
-	public void setRotationPID(double kp, double ki, double kd){
-		rotationPID.setPID(kp, ki, kd);
-	}
-
-	public double getRotationP(){
-		return rotationPID.getP();
-	}
-
-	public double getRotationI(){
-		return rotationPID.getI();
-	}
-
-	public double getRotationD(){
-		return rotationPID.getD();
-	}
 
 	public void resetSpeedEncoder(){
 		if(speedEncoder != null)
@@ -156,9 +102,6 @@ public class ControlModule{
 		SmartDashboard.putNumber(name + "Velocity", this.getVelocity());
 		SmartDashboard.putNumber(name + "Acceleration", this.getAcceleration());
 		
-		SmartDashboard.putNumber(name + "Spin P", this.getRotationP());
-		SmartDashboard.putNumber(name + "Spin I", this.getRotationI());
-		SmartDashboard.putNumber(name + "Spin D", this.getRotationD());
 	}
 
 	public enum WheelPosition{
