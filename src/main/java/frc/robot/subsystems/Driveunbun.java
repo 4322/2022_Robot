@@ -3,12 +3,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
-public class Driveunbun {
+public class Driveunbun extends SubsystemBase {
     private WPI_TalonFX frontRightDrive;
     private WPI_TalonFX frontLeftDrive;
     private WPI_TalonFX rearRightDrive;
@@ -38,8 +41,14 @@ public class Driveunbun {
         frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, WheelPosition.FRONT_RIGHT);
         frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, WheelPosition.FRONT_LEFT);
         rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, WheelPosition.BACK_LEFT);
-        rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, WheelPosition.BACK_RIGHT);
-     
+        rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, WheelPosition.BACK_RIGHT);  
+    }
 
+    public void setSpeedAndAngle(Joystick drive, Joystick rotate){
+        
+        frontRight.setSpeedAndAngle(drive, rotate);
+        frontLeft.setSpeedAndAngle(drive, rotate);
+        rearLeft.setSpeedAndAngle(drive, rotate);
+        rearRight.setSpeedAndAngle(drive, rotate);
     }
 }
