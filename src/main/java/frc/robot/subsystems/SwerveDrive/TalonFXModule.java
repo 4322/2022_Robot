@@ -43,7 +43,8 @@ public class TalonFXModule extends ControlModule {
 
 	drive motor PID parameters:
 	private final double kP = (0.06);
-	private final double kD = (0.0);
+	private final double kI = (0.0);
+	private final double kIZone = (0.0); // config_IntegralZone()
     private final double kD = (0.0);
     private final double kF = (0.083);
 
