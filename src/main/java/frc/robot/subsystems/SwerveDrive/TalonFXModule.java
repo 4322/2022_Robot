@@ -36,8 +36,40 @@ public class TalonFXModule extends ControlModule {
         talon.setInverted(true);
         talon.setSensorPhase(false);	
     }
-*/
-	}
+
+	rotation motor PID paraemters:
+	private final double kP = (0.007);
+    private final double kD = (0.00024);
+
+	drive motor PID parameters:
+	private final double kP = (0.06);
+	private final double kD = (0.0);
+    private final double kD = (0.0);
+    private final double kF = (0.083);
+
+	Both motors:
+	configOpenloopRamp(0.08);
+	configClosedloopRamp(0.08);
+    configVoltageCompSaturation(12);
+    enableVoltageCompensation(true);
+
+  * Configure the current limits that will be used
+  * Stator Current is the current that passes through the motor stators.
+  *  Use stator current limits to limit rotor acceleration/heat production
+  * Supply Current is the current that passes into the controller from the supply
+  *  Use supply current limits to prevent breakers from tripping
+  *
+  * Drive motor:
+  *                                                               enabled | Limit(amp) | Trigger Threshold(amp) | Trigger Threshold Time(s)
+  configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      40,                45,                1.0));
+  configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      40,                45,                0.5));
+
+  * Rotation motor:
+  *                                                               enabled | Limit(amp) | Trigger Threshold(amp) | Trigger Threshold Time(s)
+  configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      40,                45,                1.0));
+  configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      30,                35,                0.5));
+  */
+}
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, position.wheelNumber));
