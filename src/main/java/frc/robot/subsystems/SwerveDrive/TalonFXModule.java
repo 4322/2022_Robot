@@ -5,6 +5,8 @@ import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class TalonFXModule extends ControlModule {
@@ -39,6 +41,9 @@ public class TalonFXModule extends ControlModule {
 		
 		talon.configVoltageCompSaturation(Constants.DriveConstants.Drive.configVoltageCompSaturation);
 		talon.enableVoltageCompensation(Constants.DriveConstants.Drive.enableVoltageCompensation);
+
+		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(Constants.DriveConstants.Drive.statorEnabled, Constants.DriveConstants.Drive.statorLimit, Constants.DriveConstants.Drive.statorThreshold, Constants.DriveConstants.Drive.statorTime));
+		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Drive.supplyEnabled, Constants.DriveConstants.Drive.supplyLimit, Constants.DriveConstants.Drive.supplyThreshold, Constants.DriveConstants.Drive.supplyTime));
     }
 
 	private void configRotationMaster(WPI_TalonFX talon) {
@@ -55,7 +60,9 @@ public class TalonFXModule extends ControlModule {
 		
 		talon.configVoltageCompSaturation(Constants.DriveConstants.Rotation.configVoltageCompSaturation);
 		talon.enableVoltageCompensation(Constants.DriveConstants.Rotation.enableVoltageCompensation);
-		talon.configStatorCurrentLimit(Constants.DriveConstants.Drive.statorEnabled, Constants.DriveConstants.Drive.statorLimit, Constants.DriveConstants.Drive.statorThreshold, Constants.DriveConstants.Drive.statorTime);
+		
+		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(Constants.DriveConstants.Rotation.statorEnabled, Constants.DriveConstants.Rotation.statorLimit, Constants.DriveConstants.Rotation.statorThreshold, Constants.DriveConstants.Rotation.statorTime));
+		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Rotation.supplyEnabled, Constants.DriveConstants.Rotation.supplyLimit, Constants.DriveConstants.Rotation.supplyThreshold, Constants.DriveConstants.Rotation.supplyTime));
     }
 
 //	For rotation motor only to use external encoder:
