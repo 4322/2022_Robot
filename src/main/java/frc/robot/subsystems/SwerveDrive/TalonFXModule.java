@@ -1,9 +1,10 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class TalonFXModule extends ControlModule {
@@ -19,44 +20,47 @@ public class TalonFXModule extends ControlModule {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
-
-/*Need to configure both the drive and rotation motor controllers using the following example:
+	}
+//Need to configure both the drive and rotation motor controllers using the following example:
     private void configDriveMaster(WPI_TalonFX talon) {
         talon.configFactoryDefault();
 
-        talon.configClosedloopRamp(Config.driveClosedLoopRampRate, Config.motorControllerConfigTimeoutMs);
-        talon.configOpenloopRamp(Config.driveOpenLoopRampRate, Config.motorControllerConfigTimeoutMs);
-        talon.config_kP(0, Config.driveVelocityP, Config.motorControllerConfigTimeoutMs);
-        talon.config_kI(0, Config.driveVelocityI, Config.motorControllerConfigTimeoutMs);
-        talon.config_IntegralZone(0, Config.driveVelocityIntegralZone, Config.motorControllerConfigTimeoutMs);
-        talon.config_kD(0, Config.driveVelocityD, Config.motorControllerConfigTimeoutMs);
-        talon.config_kF(0, Config.driveVelocityF, Config.motorControllerConfigTimeoutMs);
+        talon.configClosedloopRamp(Constants.DriveConstants.Drive.configCLosedLoopRamp);
+        talon.configOpenloopRamp(Constants.DriveConstants.Drive.configOpenLoopRamp);
+        talon.config_kP(0, Constants.DriveConstants.Drive.kP);
+        talon.config_kI(0, Constants.DriveConstants.Drive.kI);
+        talon.config_IntegralZone(0, Constants.DriveConstants.Drive.kIZone);
+        talon.config_kD(0, Constants.DriveConstants.Drive.kD);
+        talon.config_kF(0, Constants.DriveConstants.Drive.kF);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
-        talon.setSensorPhase(false);	
+        talon.setSensorPhase(false);
+		
+		talon.configVoltageCompSaturation(Constants.DriveConstants.Drive.configVoltageCompSaturation);
+		talon.enableVoltageCompensation(Constants.DriveConstants.Drive.enableVoltageCompensation);
     }
 
-	rotation motor PID paraemters:
-	private final double kP = (0.007);
-    private final double kD = (0.00024);
+	private void configRotationMaster(WPI_TalonFX talon) {
+        talon.configFactoryDefault();
 
-	drive motor PID parameters:
-	private final double kP = (0.06);
-	private final double kI = (0.0);
-	private final double kIZone = (0.0); // config_IntegralZone()
-    private final double kD = (0.0);
-    private final double kF = (0.083);
+        talon.configClosedloopRamp(Constants.DriveConstants.Rotation.configCLosedLoopRamp);
+        talon.configOpenloopRamp(Constants.DriveConstants.Rotation.configOpenLoopRamp);
+        talon.config_kP(0, Constants.DriveConstants.Rotation.kP);
+        talon.config_kD(0, Constants.DriveConstants.Rotation.kD);
 
-	Both motors:
-	configOpenloopRamp(0.08);
-	configClosedloopRamp(0.08);
-    configVoltageCompSaturation(12);
-    enableVoltageCompensation(true);
+        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setInverted(true);
+        talon.setSensorPhase(false);
+		
+		talon.configVoltageCompSaturation(Constants.DriveConstants.Rotation.configVoltageCompSaturation);
+		talon.enableVoltageCompensation(Constants.DriveConstants.Rotation.enableVoltageCompensation);
+		talon.configStatorCurrentLimit(Constants.DriveConstants.Drive.statorEnabled, Constants.DriveConstants.Drive.statorLimit, Constants.DriveConstants.Drive.statorThreshold, Constants.DriveConstants.Drive.statorTime);
+    }
 
-	For rotation motor only to use external encoder:
-	configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-
+//	For rotation motor only to use external encoder:
+//configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+/*
   * Configure the current limits that will be used
   * Stator Current is the current that passes through the motor stators.
   *  Use stator current limits to limit rotor acceleration/heat production
@@ -73,7 +77,6 @@ public class TalonFXModule extends ControlModule {
   configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      40,                45,                1.0));
   configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      30,                35,                0.5));
   */
-}
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, position.wheelNumber));
