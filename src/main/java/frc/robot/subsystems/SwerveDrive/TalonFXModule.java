@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+
 public class TalonFXModule extends ControlModule {
 	
 	private WPI_TalonFX m_rotation; 
@@ -153,6 +154,6 @@ public class TalonFXModule extends ControlModule {
 
 	public void setTicksPerRev(int ticksPerRev) {
 		this.ticksPerRev = ticksPerRev;
-	}	
+	}
 
 }
