@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -51,4 +53,26 @@ public class Driveunbun extends SubsystemBase {
             rearRight.setSpeedAndAngle(drive, rotate);
         }  
     }
+
+    public void setCoastMode () {
+        frontRightDrive.setNeutralMode(NeutralMode.Coast);
+        frontLeftDrive.setNeutralMode(NeutralMode.Coast);
+        rearRightDrive.setNeutralMode(NeutralMode.Coast);
+        rearLeftDrive.setNeutralMode(NeutralMode.Coast);
+        frontRightRotation.setNeutralMode(NeutralMode.Coast);
+        frontLeftRotation.setNeutralMode(NeutralMode.Coast);
+        rearRightRotation.setNeutralMode(NeutralMode.Coast);
+        rearLeftRotation.setNeutralMode(NeutralMode.Coast);
+    }
+
+    public void setBrakeMode () {
+        frontRightDrive.setNeutralMode(NeutralMode.Brake);
+        frontLeftDrive.setNeutralMode(NeutralMode.Brake);
+        rearRightDrive.setNeutralMode(NeutralMode.Brake);
+        rearLeftDrive.setNeutralMode(NeutralMode.Brake);
+        frontRightRotation.setNeutralMode(NeutralMode.Brake);
+        frontLeftRotation.setNeutralMode(NeutralMode.Brake);
+        rearRightRotation.setNeutralMode(NeutralMode.Brake);
+        rearLeftRotation.setNeutralMode(NeutralMode.Brake);
+    } 
 }
