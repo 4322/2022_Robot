@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -63,6 +64,8 @@ public class TalonFXModule extends ControlModule {
 		
 		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(Constants.DriveConstants.Rotation.statorEnabled, Constants.DriveConstants.Rotation.statorLimit, Constants.DriveConstants.Rotation.statorThreshold, Constants.DriveConstants.Rotation.statorTime));
 		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Rotation.supplyEnabled, Constants.DriveConstants.Rotation.supplyLimit, Constants.DriveConstants.Rotation.supplyThreshold, Constants.DriveConstants.Rotation.supplyTime));
+		
+		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     }
 
 //	For rotation motor only to use external encoder:
