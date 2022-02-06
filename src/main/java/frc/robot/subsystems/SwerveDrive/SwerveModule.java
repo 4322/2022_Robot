@@ -20,18 +20,19 @@ public class SwerveModule {
     private final TalonFX m_driveMotor;
     private final TalonFX m_turningMotor;
 
-    private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
+    private final PIDController m_drivePIDController = 
+    new PIDController(Constants.DriveConstants.Drive.kP, Constants.DriveConstants.Drive.kI, Constants.DriveConstants.Drive.kD);
 
     private final ProfiledPIDController m_turningPIDController =
       new ProfiledPIDController(
-          1,
+          Constants.DriveConstants.Rotation.kP,
           0,
-          0,
+          Constants.DriveConstants.Rotation.kD,
           new TrapezoidProfile.Constraints(
               Constants.DriveConstants.kMaxAngularSpeed, Constants.DriveConstants.kModuleMaxAngularAcceleration));
 
-    private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
-    private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
+    private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.DriveConstants.Drive.ks, Constants.DriveConstants.Drive.kv);
+    private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.DriveConstants.Rotation.ks, Constants.DriveConstants.Rotation.kv);
     
     public SwerveModule(
       int driveMotorChannel,
