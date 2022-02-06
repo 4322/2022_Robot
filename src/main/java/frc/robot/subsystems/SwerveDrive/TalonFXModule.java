@@ -53,6 +53,9 @@ public class TalonFXModule extends ControlModule {
     configVoltageCompSaturation(12);
     enableVoltageCompensation(true);
 
+	For rotation motor only to use external encoder:
+	configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
   * Configure the current limits that will be used
   * Stator Current is the current that passes through the motor stators.
   *  Use stator current limits to limit rotor acceleration/heat production
