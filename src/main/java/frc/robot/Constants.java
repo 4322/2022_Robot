@@ -13,7 +13,6 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
     public static final boolean driveEnabled = true;
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
@@ -37,11 +36,16 @@ public final class Constants {
         public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
 
         public final class SwerveModuleConstants {
-
-            // nothing for now
+            
+            //Nothing for now
 
         }
-        
+
+        public final class PID_Values {
+            public static final double kP = 1;
+            public static final double kI = 1;
+            public static final double kD = 1;
+            public static final double kF = 1;
+        }
     }
-    
 }

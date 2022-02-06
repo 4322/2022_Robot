@@ -20,7 +20,7 @@ public class TalonFXModule extends ControlModule {
 		m_rotation = rotation;
 		m_wheel = wheel;
 
-/* Need to configure both the drive and rotation motor controllers using the following example:
+/*Need to configure both the drive and rotation motor controllers using the following example:
     private void configDriveMaster(WPI_TalonFX talon) {
         talon.configFactoryDefault();
 
@@ -34,7 +34,7 @@ public class TalonFXModule extends ControlModule {
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
-        talon.setSensorPhase(false);
+        talon.setSensorPhase(false);	
     }
 */
 	}
