@@ -66,7 +66,7 @@ public class Driveunbun extends SubsystemBase {
     }
 
     public void setBrakeMode () {
-        frontRightDrive.setNeutralMode(NeutralMode.Brake);
+        frontRightDrive.setNeutralMode(NeutralMode.Brake); 
         frontLeftDrive.setNeutralMode(NeutralMode.Brake);
         rearRightDrive.setNeutralMode(NeutralMode.Brake);
         rearLeftDrive.setNeutralMode(NeutralMode.Brake);

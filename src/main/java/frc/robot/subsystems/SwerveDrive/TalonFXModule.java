@@ -24,9 +24,11 @@ public class TalonFXModule extends ControlModule {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
+		configDrive(wheel);
+		configRotation(rotation);
 	}
 //Need to configure both the drive and rotation motor controllers using the following example:
-    private void configDriveMaster(WPI_TalonFX talon) {
+    private void configDrive(WPI_TalonFX talon) {
         talon.configFactoryDefault();
 
         talon.configClosedloopRamp(Constants.DriveConstants.Drive.configCLosedLoopRamp);
@@ -48,7 +50,7 @@ public class TalonFXModule extends ControlModule {
 		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Drive.supplyEnabled, Constants.DriveConstants.Drive.supplyLimit, Constants.DriveConstants.Drive.supplyThreshold, Constants.DriveConstants.Drive.supplyTime));
     }
 
-	private void configRotationMaster(WPI_TalonFX talon) {
+	private void configRotation(WPI_TalonFX talon) {
         talon.configFactoryDefault();
 
         talon.configClosedloopRamp(Constants.DriveConstants.Rotation.configCLosedLoopRamp);
