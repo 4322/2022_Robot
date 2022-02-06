@@ -31,6 +31,9 @@ public final class Constants {
         public static final double kMaxAngularSpeed = Math.PI;
         public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
 
+        public static final double distWheelX = 0.339275;
+        public static final double distWheelY = 0.244475;
+
         public final class SwerveModuleConstants {
 
             // nothing for now

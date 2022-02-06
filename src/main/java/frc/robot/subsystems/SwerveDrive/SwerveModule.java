@@ -37,8 +37,8 @@ public class SwerveModule {
       int driveMotorChannel,
       int turningMotorChannel) {
 
-        m_driveMotor = new TalonFX(driveMotorChannel);
-        m_turningMotor = new TalonFX(turningMotorChannel);
+        m_driveMotor = new TalonFX(driveMotorChannel); // distPerPulse: 2 * Math.PI * kWheelRadius / kEncoderResolution
+        m_turningMotor = new TalonFX(turningMotorChannel); // distPerPulse: 2 * Math.PI / kEncoderResolution
 
         m_turningMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
