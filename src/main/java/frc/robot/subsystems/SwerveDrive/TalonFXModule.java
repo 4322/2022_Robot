@@ -33,7 +33,7 @@ public class TalonFXModule extends ControlModule {
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
 
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
         talon.setInverted(true);
         talon.setSensorPhase(false);
 		
@@ -67,7 +67,7 @@ public class TalonFXModule extends ControlModule {
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
         talon.setInverted(true);
         talon.setSensorPhase(false);
 		

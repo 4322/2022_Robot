@@ -56,26 +56,30 @@ public class Driveunbun extends SubsystemBase {
             rearRight.setSpeedAndAngle(drive, rotate);
         }  
     }
-
+        
     public void setCoastMode () {
-        frontRightDrive.setNeutralMode(NeutralMode.Coast);
-        frontLeftDrive.setNeutralMode(NeutralMode.Coast);
-        rearRightDrive.setNeutralMode(NeutralMode.Coast);
-        rearLeftDrive.setNeutralMode(NeutralMode.Coast);
-        frontRightRotation.setNeutralMode(NeutralMode.Coast);
-        frontLeftRotation.setNeutralMode(NeutralMode.Coast);
-        rearRightRotation.setNeutralMode(NeutralMode.Coast);
-        rearLeftRotation.setNeutralMode(NeutralMode.Coast);
+        if (Constants.driveEnabled) {
+            frontRightDrive.setNeutralMode(NeutralMode.Coast);
+            frontLeftDrive.setNeutralMode(NeutralMode.Coast);
+            rearRightDrive.setNeutralMode(NeutralMode.Coast);
+            rearLeftDrive.setNeutralMode(NeutralMode.Coast);
+            frontRightRotation.setNeutralMode(NeutralMode.Coast);
+            frontLeftRotation.setNeutralMode(NeutralMode.Coast);
+            rearRightRotation.setNeutralMode(NeutralMode.Coast);
+            rearLeftRotation.setNeutralMode(NeutralMode.Coast);
+        }
     }
 
     public void setBrakeMode () {
-        frontRightDrive.setNeutralMode(NeutralMode.Brake); 
-        frontLeftDrive.setNeutralMode(NeutralMode.Brake);
-        rearRightDrive.setNeutralMode(NeutralMode.Brake);
-        rearLeftDrive.setNeutralMode(NeutralMode.Brake);
-        frontRightRotation.setNeutralMode(NeutralMode.Brake);
-        frontLeftRotation.setNeutralMode(NeutralMode.Brake);
-        rearRightRotation.setNeutralMode(NeutralMode.Brake);
-        rearLeftRotation.setNeutralMode(NeutralMode.Brake);
+        if (Constants.driveEnabled) {
+            frontRightDrive.setNeutralMode(NeutralMode.Brake); 
+            frontLeftDrive.setNeutralMode(NeutralMode.Brake);
+            rearRightDrive.setNeutralMode(NeutralMode.Brake);
+            rearLeftDrive.setNeutralMode(NeutralMode.Brake);
+            frontRightRotation.setNeutralMode(NeutralMode.Brake);
+            frontLeftRotation.setNeutralMode(NeutralMode.Brake);
+            rearRightRotation.setNeutralMode(NeutralMode.Brake);
+            rearLeftRotation.setNeutralMode(NeutralMode.Brake);
+        }
     } 
 }
