@@ -1,6 +1,7 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -11,9 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author created by Unnas Hussain on 8/2/2017
  */
 public class SwerveHelper {
-
-	public static double WHEELBASE_LENGTH = 36.0/12.0;  //based on 2791's robot Stoker from FRC SteamWorks
-	public static double WHEELBASE_WIDTH = 28.0/12.0;   //based on 2791's robot Stoker from FRC SteamWorks
 
 	/*
 	 * Math Conventions:
@@ -38,20 +36,6 @@ public class SwerveHelper {
 	public static boolean fieldCentric = true;
 
 	public static boolean useAngleToReverse = true;
-
-
-	public static void setRobotDimensions(double length, double width) {
-		WHEELBASE_LENGTH = length;
-		WHEELBASE_WIDTH = width; 
-	}
-	
-	/**
-	 * 
-	 * @return {wheelbase length, wheelbase width}
-	 */
-	public static double[] getRobotDimensions() {		
-		return new double[] {WHEELBASE_LENGTH, WHEELBASE_WIDTH};
-	}
 	
 	public static double getSpeedValue(Joystick drive, Joystick rotate, int wheelID){
 		calculate(drive.getY(), drive.getX(), rotate.getX());
@@ -79,7 +63,7 @@ public class SwerveHelper {
 		 * Inverse Kinematics Based on work from Ether on Cheif Delphi
 		 */
 		double frontRightX,frontRightY,backLeftX,backLeftY;
-		double L = WHEELBASE_LENGTH, W = WHEELBASE_WIDTH;
+		double L = Constants.DriveConstants.wheelBaseLengthFeet, W = Constants.DriveConstants.wheelBaseWidthFeet;
 		double R = Math.sqrt(Math.pow(L, 2) + Math.pow(W, 2) );
 
 		frontRightX = strafe - rotate*(L/R);

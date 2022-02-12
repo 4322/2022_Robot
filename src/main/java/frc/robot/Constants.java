@@ -47,6 +47,9 @@ public final class Constants {
         public static final double distWheelX = 0.339725;
         public static final double distWheelY = 0.244475;
 
+        public static final double wheelBaseLengthFeet = 26.75/12.0;
+        public static final double wheelBaseWidthFeet = 19.25/12.0;
+
         public final class Rotation {
             public static final double kP = 0.007;
             public static final double kD = 0.00024;
@@ -86,6 +89,9 @@ public final class Constants {
             public static final double supplyLimit = 30;
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
+
+            public static final double wheelDiameter = 4.0;
+            public static final int ticksPerRev = 4096;
         }
     }
 }

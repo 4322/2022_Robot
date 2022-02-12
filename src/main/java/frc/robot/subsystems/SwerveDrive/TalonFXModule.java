@@ -17,10 +17,6 @@ public class TalonFXModule extends ControlModule {
 	private WPI_TalonFX m_rotation; 
 	private WPI_TalonFX m_wheel;
 	
-	private double wheelDiameter = 4.0;
-	private double rotationDiameter = 4.0;
-	private int ticksPerRev = 4096;
-	
 	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
 		super(pos);
 		m_rotation = rotation;
@@ -115,46 +111,21 @@ public class TalonFXModule extends ControlModule {
 	
 	@Override
 	public double getAngle(){
-		return (m_rotation.getSelectedSensorPosition(0) *  Math.PI * wheelDiameter);
+		return (m_rotation.getSelectedSensorPosition(0) *  Math.PI * Constants.DriveConstants.Drive.wheelDiameter);
 	}
 	
 	@Override
 	public double getDistance(){
-		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * wheelDiameter) / ticksPerRev;
+		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * Constants.DriveConstants.Drive.wheelDiameter) / Constants.DriveConstants.Drive.ticksPerRev;
 	}
 
 	@Override
 	public double getVelocity() {
-		return m_wheel.getSelectedSensorVelocity(0) * 600/ticksPerRev;
+		return m_wheel.getSelectedSensorVelocity(0) * 600/Constants.DriveConstants.Drive.ticksPerRev;
 	}
 
 	@Override
 	public double getAcceleration() {
 		return super.getAcceleration();
 	}
-
-	public double getWheelDiameter() {
-		return wheelDiameter;
-	}
-
-	public void setWheelDiameter(double wheelDiameter) {
-		this.wheelDiameter = wheelDiameter;
-	}
-
-	public double getRotationDiameter() {
-		return rotationDiameter;
-	}
-
-	public void setRotationDiameter(double rotationDiameter) {
-		this.rotationDiameter = rotationDiameter;
-	}
-
-	public int getTicksPerRev() {
-		return ticksPerRev;
-	}
-
-	public void setTicksPerRev(int ticksPerRev) {
-		this.ticksPerRev = ticksPerRev;
-	}
-
 }
