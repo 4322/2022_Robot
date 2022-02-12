@@ -20,6 +20,11 @@ public class Driveunbun extends SubsystemBase {
     private WPI_TalonFX rearRightRotation;
     private WPI_TalonFX rearLeftRotation;
 
+    private WPI_TalonFX frontRightEncoder;
+    private WPI_TalonFX rearRightEncoder;
+    private WPI_TalonFX frontLeftEncoder;
+    private WPI_TalonFX rearLeftEncoder;
+
     private TalonFXModule frontRight;
     private TalonFXModule frontLeft;
     private TalonFXModule rearLeft;

@@ -1,11 +1,14 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -19,6 +22,8 @@ public class TalonFXModule extends ControlModule {
 	private double wheelDiameter = 4.0;
 	private double rotationDiameter = 4.0;
 	private int ticksPerRev = 4096;
+
+	private RemoteFeedbackDevice encoder;
 	
 	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos) {
 		super(pos);
@@ -46,11 +51,19 @@ public class TalonFXModule extends ControlModule {
 		talon.configVoltageCompSaturation(Constants.DriveConstants.Drive.configVoltageCompSaturation);
 		talon.enableVoltageCompensation(Constants.DriveConstants.Drive.enableVoltageCompensation);
 
-		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(Constants.DriveConstants.Drive.statorEnabled, Constants.DriveConstants.Drive.statorLimit, Constants.DriveConstants.Drive.statorThreshold, Constants.DriveConstants.Drive.statorTime));
-		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Drive.supplyEnabled, Constants.DriveConstants.Drive.supplyLimit, Constants.DriveConstants.Drive.supplyThreshold, Constants.DriveConstants.Drive.supplyTime));
+		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+			Constants.DriveConstants.Drive.statorEnabled, 
+			Constants.DriveConstants.Drive.statorLimit, 
+			Constants.DriveConstants.Drive.statorThreshold, 
+			Constants.DriveConstants.Drive.statorTime));
+		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+			Constants.DriveConstants.Drive.supplyEnabled, 
+			Constants.DriveConstants.Drive.supplyLimit, 
+			Constants.DriveConstants.Drive.supplyThreshold, 
+			Constants.DriveConstants.Drive.supplyTime));
     }
 
-	private void configRotation(WPI_TalonFX talon) {
+	private void configRotation(WPI_TalonFX talon, int encoderID) {
         talon.configFactoryDefault();
 
         talon.configClosedloopRamp(Constants.DriveConstants.Rotation.configCLosedLoopRamp);
@@ -65,9 +78,17 @@ public class TalonFXModule extends ControlModule {
 		talon.configVoltageCompSaturation(Constants.DriveConstants.Rotation.configVoltageCompSaturation);
 		talon.enableVoltageCompensation(Constants.DriveConstants.Rotation.enableVoltageCompensation);
 		
-		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(Constants.DriveConstants.Rotation.statorEnabled, Constants.DriveConstants.Rotation.statorLimit, Constants.DriveConstants.Rotation.statorThreshold, Constants.DriveConstants.Rotation.statorTime));
-		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(Constants.DriveConstants.Rotation.supplyEnabled, Constants.DriveConstants.Rotation.supplyLimit, Constants.DriveConstants.Rotation.supplyThreshold, Constants.DriveConstants.Rotation.supplyTime));
-		
+		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+			Constants.DriveConstants.Rotation.statorEnabled, 
+			Constants.DriveConstants.Rotation.statorLimit, 
+			Constants.DriveConstants.Rotation.statorThreshold, 
+			Constants.DriveConstants.Rotation.statorTime));
+		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+			Constants.DriveConstants.Rotation.supplyEnabled, 
+			Constants.DriveConstants.Rotation.supplyLimit, 
+			Constants.DriveConstants.Rotation.supplyThreshold, 
+			Constants.DriveConstants.Rotation.supplyTime));
+
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     }
 

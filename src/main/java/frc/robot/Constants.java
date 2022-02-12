@@ -32,6 +32,11 @@ public final class Constants {
         public static final int rearLeftDriveID = 8;
         public static final int rearLeftRotationID = 9;
 
+        public static final int frontRightEncoderID = 10;
+        public static final int rearRightEncoderID = 11;
+        public static final int frontLeftEncoderID = 12;
+        public static final int rearLeftEncoderID = 13;
+
         public static final double kWheelRadius = 0.0508;
         public static final int kEncoderResolution = 4096;
 
