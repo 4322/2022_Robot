@@ -20,11 +20,6 @@ public class Driveunbun extends SubsystemBase {
     private WPI_TalonFX rearRightRotation;
     private WPI_TalonFX rearLeftRotation;
 
-    private WPI_TalonFX frontRightEncoder;
-    private WPI_TalonFX rearRightEncoder;
-    private WPI_TalonFX frontLeftEncoder;
-    private WPI_TalonFX rearLeftEncoder;
-
     private TalonFXModule frontRight;
     private TalonFXModule frontLeft;
     private TalonFXModule rearLeft;
@@ -42,10 +37,10 @@ public class Driveunbun extends SubsystemBase {
             rearRightRotation = new WPI_TalonFX(Constants.DriveConstants.rearRightRotationID);
             rearLeftRotation = new WPI_TalonFX(Constants.DriveConstants.rearLeftRotationID);
             
-            frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, WheelPosition.FRONT_RIGHT);
-            frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, WheelPosition.FRONT_LEFT);
-            rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, WheelPosition.BACK_LEFT);
-            rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, WheelPosition.BACK_RIGHT); 
+            frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, WheelPosition.FRONT_RIGHT, Constants.DriveConstants.frontRightEncoderID);
+            frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, WheelPosition.FRONT_LEFT, Constants.DriveConstants.frontLeftEncoderID);
+            rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, WheelPosition.BACK_RIGHT, Constants.DriveConstants.rearRightEncoderID); 
+            rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, WheelPosition.BACK_LEFT, Constants.DriveConstants.rearLeftEncoderID);
         }   
     }
 

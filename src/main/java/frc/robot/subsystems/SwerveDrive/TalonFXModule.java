@@ -21,12 +21,12 @@ public class TalonFXModule extends ControlModule {
 	private double rotationDiameter = 4.0;
 	private int ticksPerRev = 4096;
 	
-	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos) {
+	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
 		configDrive(wheel);
-		configRotation(rotation);
+		configRotation(rotation, encoderID);
 	}
 //Need to configure both the drive and rotation motor controllers using the following example:
     private void configDrive(WPI_TalonFX talon) {
