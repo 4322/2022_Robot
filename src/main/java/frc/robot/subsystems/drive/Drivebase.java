@@ -1,5 +1,5 @@
 // https://github.com/wpilibsuite/allwpilib/blob/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/swervebot/Drivetrain.java
-package frc.robot.subsystems.SwerveDrive;
+package frc.robot.subsystems.drive;
 
 import com.kauailabs.navx.frc.AHRS;
 
