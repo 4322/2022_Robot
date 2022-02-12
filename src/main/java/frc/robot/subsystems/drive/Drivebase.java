@@ -18,10 +18,22 @@ public class Drivebase extends SubsystemBase {
     private final Translation2d m_backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelX, Constants.DriveConstants.distWheelY);
     private final Translation2d m_backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelX, -Constants.DriveConstants.distWheelY);
   
-    private final SwerveModule m_frontLeft = new SwerveModule(Constants.DriveConstants.frontRightDriveID, Constants.DriveConstants.frontRightRotationID);
-    private final SwerveModule m_frontRight = new SwerveModule(Constants.DriveConstants.frontLeftDriveID, Constants.DriveConstants.frontLeftRotationID);
-    private final SwerveModule m_backLeft = new SwerveModule(Constants.DriveConstants.backRightDriveID, Constants.DriveConstants.backRightRotationID);
-    private final SwerveModule m_backRight = new SwerveModule(Constants.DriveConstants.backLeftDriveID, Constants.DriveConstants.backLeftRotationID);
+    private final SwerveModule m_frontLeft = new SwerveModule(
+        Constants.DriveConstants.frontRightDriveID,
+        Constants.DriveConstants.frontRightRotationID,
+        Constants.DriveConstants.frontRightEncoderID);
+    private final SwerveModule m_frontRight = new SwerveModule(
+        Constants.DriveConstants.frontLeftDriveID,
+        Constants.DriveConstants.frontLeftRotationID,
+        Constants.DriveConstants.frontLeftEncoderID);
+    private final SwerveModule m_backLeft = new SwerveModule(
+        Constants.DriveConstants.backRightDriveID,
+        Constants.DriveConstants.backRightRotationID,
+        Constants.DriveConstants.backRightEncoderID);
+    private final SwerveModule m_backRight = new SwerveModule(
+        Constants.DriveConstants.backLeftDriveID,
+        Constants.DriveConstants.backLeftRotationID,
+        Constants.DriveConstants.backLeftEncoderID);
 
     // need to initialize swerve module later
 

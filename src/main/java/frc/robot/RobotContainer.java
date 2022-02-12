@@ -47,6 +47,14 @@ public class RobotContainer {
   
    }
 
+   /*public void disableSubsystems() {
+    swerveDrive.setCoastMode();
+  }
+
+  public void enableSubsystems() {
+    swerveDrive.setBrakeMode();
+  } */ //Need to add this into Swerve Module first
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

@@ -21,6 +21,7 @@ public final class Constants {
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
     public static final boolean climberEnabled = false;
+    public static final boolean gyroEnabled = true;
 
     public final class DriveConstants {
         public static final int frontRightDriveID = 2;
@@ -31,6 +32,11 @@ public final class Constants {
         public static final int frontLeftRotationID = 7;
         public static final int backLeftDriveID = 8;
         public static final int backLeftRotationID = 9;
+
+        public static final int frontRightEncoderID = 10;
+        public static final int backRightEncoderID = 11;
+        public static final int frontLeftEncoderID = 12;
+        public static final int backLeftEncoderID = 13;
 
         public static final double kWheelRadius = 0.0508;
         public static final int kEncoderResolution = 4096;
@@ -71,6 +77,10 @@ public final class Constants {
             public static final double supplyLimit = 40;
             public static final double supplyThreshold = 45;
             public static final double supplyTime = 0.5;
+
+            public static final double allowableClosedloopError = 0;  // need non-zero value
+            public static final double motionAcceleration = 1000;   // need better value to use Magic Motion
+            public static final double motionCruiseVelocity = 100;   // need better value to use Magic Motion
         }
 
         public final class Drive {
