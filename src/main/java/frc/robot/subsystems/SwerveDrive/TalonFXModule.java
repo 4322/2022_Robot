@@ -1,18 +1,16 @@
 package frc.robot.subsystems.SwerveDrive;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
 public class TalonFXModule extends ControlModule {
 	
@@ -22,8 +20,6 @@ public class TalonFXModule extends ControlModule {
 	private double wheelDiameter = 4.0;
 	private double rotationDiameter = 4.0;
 	private int ticksPerRev = 4096;
-
-	private RemoteFeedbackDevice encoder;
 	
 	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos) {
 		super(pos);
@@ -64,13 +60,20 @@ public class TalonFXModule extends ControlModule {
     }
 
 	private void configRotation(WPI_TalonFX talon, int encoderID) {
-        talon.configFactoryDefault();
 
-        talon.configClosedloopRamp(Constants.DriveConstants.Rotation.configCLosedLoopRamp);
-        talon.configOpenloopRamp(Constants.DriveConstants.Rotation.configOpenLoopRamp);
-        talon.config_kP(0, Constants.DriveConstants.Rotation.kP);
-        talon.config_kD(0, Constants.DriveConstants.Rotation.kD);
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.remoteFilter0.remoteSensorDeviceID = encoderID;
+        config.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        config.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        config.slot0.kP = Constants.DriveConstants.Rotation.kP;
+        config.slot0.kD = Constants.DriveConstants.Rotation.kD;
+		config.closedloopRamp = Constants.DriveConstants.Rotation.configCLosedLoopRamp;
+        config.slot0.allowableClosedloopError = 0;  // need non-zero value
+        config.motionAcceleration = 1000;   // need better value to use Magic Motion
+        config.motionCruiseVelocity = 100;  // need better value to use Magic Motion
 
+		talon.configFactoryDefault();
+		talon.configAllSettings(config);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
         talon.setSensorPhase(false);
@@ -88,8 +91,6 @@ public class TalonFXModule extends ControlModule {
 			Constants.DriveConstants.Rotation.supplyLimit, 
 			Constants.DriveConstants.Rotation.supplyThreshold, 
 			Constants.DriveConstants.Rotation.supplyTime));
-
-		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     }
 
 //	For rotation motor only to use external encoder:
