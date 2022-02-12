@@ -24,7 +24,7 @@ public class TalonFXModule extends ControlModule {
 		configDrive(wheel);
 		configRotation(rotation, encoderID);
 	}
-//Need to configure both the drive and rotation motor controllers using the following example:
+
     private void configDrive(WPI_TalonFX talon) {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
