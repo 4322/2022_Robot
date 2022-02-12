@@ -30,15 +30,12 @@ public class TalonFXModule extends ControlModule {
 	}
 //Need to configure both the drive and rotation motor controllers using the following example:
     private void configDrive(WPI_TalonFX talon) {
-        talon.configFactoryDefault();
+       
+        TalonFXConfiguration config = new TalonFXConfiguration();
+		config.openloopRamp = Constants.DriveConstants.Drive.configOpenLoopRamp;
 
-        talon.configClosedloopRamp(Constants.DriveConstants.Drive.configCLosedLoopRamp);
-        talon.configOpenloopRamp(Constants.DriveConstants.Drive.configOpenLoopRamp);
-        talon.config_kP(0, Constants.DriveConstants.Drive.kP);
-        talon.config_kI(0, Constants.DriveConstants.Drive.kI);
-        talon.config_IntegralZone(0, Constants.DriveConstants.Drive.kIZone);
-        talon.config_kD(0, Constants.DriveConstants.Drive.kD);
-        talon.config_kF(0, Constants.DriveConstants.Drive.kF);
+		talon.configFactoryDefault();
+		talon.configAllSettings(config);
 
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setInverted(true);
@@ -68,9 +65,9 @@ public class TalonFXModule extends ControlModule {
         config.slot0.kP = Constants.DriveConstants.Rotation.kP;
         config.slot0.kD = Constants.DriveConstants.Rotation.kD;
 		config.closedloopRamp = Constants.DriveConstants.Rotation.configCLosedLoopRamp;
-        config.slot0.allowableClosedloopError = 0;  // need non-zero value
-        config.motionAcceleration = 1000;   // need better value to use Magic Motion
-        config.motionCruiseVelocity = 100;  // need better value to use Magic Motion
+        config.slot0.allowableClosedloopError = Constants.DriveConstants.Rotation.allowableClosedloopError;  
+        config.motionAcceleration = Constants.DriveConstants.Rotation.motionAcceleration;
+        config.motionCruiseVelocity = Constants.DriveConstants.Rotation.motionCruiseVelocity;
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
@@ -92,26 +89,6 @@ public class TalonFXModule extends ControlModule {
 			Constants.DriveConstants.Rotation.supplyThreshold, 
 			Constants.DriveConstants.Rotation.supplyTime));
     }
-
-//	For rotation motor only to use external encoder:
-//configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-/*
-  * Configure the current limits that will be used
-  * Stator Current is the current that passes through the motor stators.
-  *  Use stator current limits to limit rotor acceleration/heat production
-  * Supply Current is the current that passes into the controller from the supply
-  *  Use supply current limits to prevent breakers from tripping
-  *
-  * Drive motor:
-  *                                                               enabled | Limit(amp) | Trigger Threshold(amp) | Trigger Threshold Time(s)
-  configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      40,                45,                1.0));
-  configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      40,                45,                0.5));
-
-  * Rotation motor:
-  *                                                               enabled | Limit(amp) | Trigger Threshold(amp) | Trigger Threshold Time(s)
-  configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      40,                45,                1.0));
-  configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      30,                35,                0.5));
-  */
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, position.wheelNumber));

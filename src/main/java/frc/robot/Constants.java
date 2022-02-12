@@ -47,18 +47,10 @@ public final class Constants {
         public static final double distWheelX = 0.339725;
         public static final double distWheelY = 0.244475;
 
-        public final class SwerveModuleConstants {
-
-            // Nothing for now
-
-        }
-
-
         public final class Rotation {
             public static final double kP = 0.007;
             public static final double kD = 0.00024;
 
-            public static final double configOpenLoopRamp = 0.08;
             public static final double configCLosedLoopRamp = 0.08;
 
             public static final double configVoltageCompSaturation = 12;
@@ -73,17 +65,14 @@ public final class Constants {
             public static final double supplyLimit = 40;
             public static final double supplyThreshold = 45;
             public static final double supplyTime = 0.5;
+
+            public static final double allowableClosedloopError = 0;  // need non-zero value
+            public static final double motionAcceleration = 1000;   // need better value to use Magic Motion
+            public static final double motionCruiseVelocity = 100;   // need better value to use Magic Motion
         }
 
         public final class Drive {
-            public static final double kP = 0.06;
-            public static final double kI = 0.0;
-            public static final double kIZone = 0.0;
-            public static final double kD = 0.0;
-            public static final double kF = 0.083;
-
             public static final double configOpenLoopRamp = 0.08;
-            public static final double configCLosedLoopRamp = 0.08;
 
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;
