@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
@@ -45,6 +48,10 @@ public class Driveunbun extends SubsystemBase {
                 WheelPosition.BACK_RIGHT, Constants.DriveConstants.rearRightEncoderID); 
             rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, 
                 WheelPosition.BACK_LEFT, Constants.DriveConstants.rearLeftEncoderID);
+
+            if (Constants.gyroEnabled) {
+                SwerveHelper.setGyro(new AHRS(SerialPort.Port.kUSB1));
+            }
         }   
     }
 
@@ -56,7 +63,7 @@ public class Driveunbun extends SubsystemBase {
             rearRight.setSpeedAndAngle(drive, rotate);
         }  
     }
-        
+
     public void setCoastMode () {
         if (Constants.driveEnabled) {
             frontRightDrive.setNeutralMode(NeutralMode.Coast);
