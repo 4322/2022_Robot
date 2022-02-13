@@ -88,7 +88,8 @@ public final class Constants {
             public static final double ks = 1;
             public static final double kv = 3;
 
-            public static final double configOpenLoopRamp = 0.08;
+            public static final double rampRate = 0.08;
+            public static final double allowableClosedloopError = 0;
 
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;

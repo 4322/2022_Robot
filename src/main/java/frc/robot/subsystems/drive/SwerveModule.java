@@ -41,7 +41,11 @@ public class SwerveModule {
     private void configDrive(TalonFX talon) {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
-		config.openloopRamp = Constants.DriveConstants.Drive.configOpenLoopRamp;
+		config.closedloopRamp = Constants.DriveConstants.Drive.rampRate;
+        config.slot0.kP = Constants.DriveConstants.Drive.kP;
+        config.slot0.kI = Constants.DriveConstants.Drive.kI;
+        config.slot0.kD = Constants.DriveConstants.Drive.kD;
+        config.slot0.allowableClosedloopError = Constants.DriveConstants.Drive.allowableClosedloopError;  
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
@@ -75,8 +79,6 @@ public class SwerveModule {
         config.slot0.kD = Constants.DriveConstants.Rotation.kD;
 		config.closedloopRamp = Constants.DriveConstants.Rotation.configCLosedLoopRamp;
         config.slot0.allowableClosedloopError = Constants.DriveConstants.Rotation.allowableClosedloopError;  
-        config.motionAcceleration = Constants.DriveConstants.Rotation.motionAcceleration;
-        config.motionCruiseVelocity = Constants.DriveConstants.Rotation.motionCruiseVelocity;
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
@@ -108,9 +110,7 @@ public class SwerveModule {
         SwerveModuleState state =
             SwerveModuleState.optimize(desiredState, new Rotation2d(turningMotor.getSelectedSensorPosition()));
 
-        
-
-        driveMotor.set(ControlMode.Velocity, );
-        turningMotor.set(ControlMode.Position, );
+        driveMotor.set(ControlMode.Velocity, state.speedMetersPerSecond);)
+        turningMotor.set(ControlMode.Position, state.angle);
     }
 }
