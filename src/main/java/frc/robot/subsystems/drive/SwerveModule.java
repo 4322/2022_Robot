@@ -45,10 +45,8 @@ public class SwerveModule {
         int turningMotorChannel,
         int encoderID) {
 
-        m_driveMotor = new TalonFX(driveMotorChannel); // distPerPulse: 2 * Math.PI * kWheelRadius / kEncoderResolution
-        m_turningMotor = new TalonFX(turningMotorChannel); // distPerPulse: 2 * Math.PI / kEncoderResolution
-
-        m_turningMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        m_driveMotor = new TalonFX(driveMotorChannel);
+        m_turningMotor = new TalonFX(turningMotorChannel);
 
         // Limit the PID Controller's input range between -pi and pi and set the input
         // to be continuous.
@@ -132,7 +130,7 @@ public class SwerveModule {
         final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
         final double turnOutput =
-            m_turningPIDController.calculate(m_driveMotor.getSelectedSensorPosition(), state.angle.getRadians());
+            m_turningPIDController.calculate(m_turningMotor.getSelectedSensorPosition(), state.angle.getRadians());
 
         final double turnFeedforward =
             m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
