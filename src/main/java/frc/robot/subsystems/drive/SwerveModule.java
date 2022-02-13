@@ -110,7 +110,7 @@ public class SwerveModule {
         SwerveModuleState state =
             SwerveModuleState.optimize(desiredState, new Rotation2d(turningMotor.getSelectedSensorPosition()));
 
-        driveMotor.set(ControlMode.Velocity, state.speedMetersPerSecond);)
-        turningMotor.set(ControlMode.Position, state.angle);
+        driveMotor.set(ControlMode.Velocity, state.speedMetersPerSecond);
+        turningMotor.set(ControlMode.Position, state.angle.getDegrees());
     }
 }

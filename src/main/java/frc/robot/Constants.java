@@ -38,15 +38,15 @@ public final class Constants {
         public static final int frontLeftEncoderID = 12;
         public static final int backLeftEncoderID = 13;
 
-        public static final double kWheelRadius = 0.0508;
+        public static final double kWheelRadius = 0.0508; // m
         public static final int kEncoderResolution = 4096;
 
-        public static final double kMaxSpeed = 3.0;
+        public static final double kMaxSpeed = 3.0; // m/s
         public static final double kMaxAngularSpeed = Math.PI;
         public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
 
-        public static final double distWheelX = 0.339725;
-        public static final double distWheelY = 0.244475;
+        public static final double distWheelX = 0.339725; // m
+        public static final double distWheelY = 0.244475; // m
 
         public static final double wheelBaseLengthFeet = 26.75/12.0;
         public static final double wheelBaseWidthFeet = 19.25/12.0;
