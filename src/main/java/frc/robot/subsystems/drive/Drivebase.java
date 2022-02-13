@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Drivebase extends SubsystemBase {
-    private final Translation2d m_frontLeftLocation = new Translation2d(Constants.DriveConstants.distWheelX, Constants.DriveConstants.distWheelY);
-    private final Translation2d m_frontRightLocation = new Translation2d(Constants.DriveConstants.distWheelX, -Constants.DriveConstants.distWheelY);
-    private final Translation2d m_backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelX, Constants.DriveConstants.distWheelY);
-    private final Translation2d m_backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelX, -Constants.DriveConstants.distWheelY);
+    private final Translation2d m_frontLeftLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+    private final Translation2d m_frontRightLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
+    private final Translation2d m_backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+    private final Translation2d m_backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
           
     private WPI_TalonFX frontRightDrive;
     private WPI_TalonFX frontLeftDrive;
@@ -72,7 +72,7 @@ public class Drivebase extends SubsystemBase {
                 fieldRelative
                     ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
                     : new ChassisSpeeds(xSpeed, ySpeed, rot));
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.kMaxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
         frontLeft.setDesiredState(swerveModuleStates[0]);
         frontRight.setDesiredState(swerveModuleStates[1]);
         rearLeft.setDesiredState(swerveModuleStates[2]);

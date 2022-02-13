@@ -9,17 +9,11 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Constants;
 
-// TO DO: switch from using PIDController to TalonFX PID
+import frc.robot.Constants;
 
 public class SwerveModule {
     
@@ -110,7 +104,11 @@ public class SwerveModule {
         SwerveModuleState state =
             SwerveModuleState.optimize(desiredState, new Rotation2d(turningMotor.getSelectedSensorPosition()));
 
-        driveMotor.set(ControlMode.Velocity, state.speedMetersPerSecond);
+        driveMotor.set(ControlMode.Velocity, 
+            state.speedMetersPerSecond / 
+            (Constants.DriveConstants.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
+            * Constants.DriveConstants.driveGearRatio * Constants.DriveConstants.kEncoderResolution
+            / 10); // every 100 ms
         turningMotor.set(ControlMode.Position, state.angle.getDegrees());
     }
 }

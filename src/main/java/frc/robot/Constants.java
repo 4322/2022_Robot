@@ -17,11 +17,14 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
     public static final boolean driveEnabled = true;
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = true;
+
+    public static final double inchesToMeters = 0.0254;
 
     public final class DriveConstants {
         public static final int frontRightDriveID = 2;
@@ -38,15 +41,15 @@ public final class Constants {
         public static final int frontLeftEncoderID = 12;
         public static final int backLeftEncoderID = 13;
 
-        public static final double kWheelRadius = 0.0508; // m
+        public static final double wheelDiameterInches = 4;
         public static final int kEncoderResolution = 4096;
+        public static final double driveGearRatio = 6.55;
 
-        public static final double kMaxSpeed = 3.0; // m/s
-        public static final double kMaxAngularSpeed = Math.PI;
-        public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
+        public static final double maxSpeedMetersPerSecond = 4.5;
+        public static final double maxRotationDegreesPerSecond = 120;
 
-        public static final double distWheelX = 0.339725; // m
-        public static final double distWheelY = 0.244475; // m
+        public static final double distWheelMetersX = 0.339725; // increasing X is front of the robot
+        public static final double distWheelMetersY = 0.244475; // increasing y is left of the robot
 
         public static final double wheelBaseLengthFeet = 26.75/12.0;
         public static final double wheelBaseWidthFeet = 19.25/12.0;

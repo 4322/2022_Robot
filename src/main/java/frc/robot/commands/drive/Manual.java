@@ -4,6 +4,7 @@
 
 package frc.robot.commands.drive;
 
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drivebase;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -28,9 +29,9 @@ public class Manual extends CommandBase {
   public void execute() {
 
     m_drivebase.drive(
-      RobotContainer.pilotl.getX(), 
-      RobotContainer.pilotl.getY(), 
-      RobotContainer.pilotr.getDirectionDegrees(), 
+      RobotContainer.pilotl.getX() * Constants.DriveConstants.maxSpeedMetersPerSecond,
+      RobotContainer.pilotl.getY() * Constants.DriveConstants.maxSpeedMetersPerSecond,
+      RobotContainer.pilotr.getX() * Constants.DriveConstants.maxRotationDegreesPerSecond, 
       true
     );
 
