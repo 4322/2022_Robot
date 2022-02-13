@@ -48,12 +48,8 @@ public final class Constants {
         public static final double distWheelX = 0.339725;
         public static final double distWheelY = 0.244475;
 
-        public final class SwerveModuleConstants {
-
-            // Nothing for now
-
-        }
-
+        public static final double wheelBaseLengthFeet = 26.75/12.0;
+        public static final double wheelBaseWidthFeet = 19.25/12.0;
 
         public final class Rotation {
             public static final double kP = 0.007;
@@ -62,7 +58,6 @@ public final class Constants {
             public static final double ks = 1;
             public static final double kv = 0.5;
 
-            public static final double configOpenLoopRamp = 0.08;
             public static final double configCLosedLoopRamp = 0.08;
 
             public static final double configVoltageCompSaturation = 12;
@@ -94,7 +89,6 @@ public final class Constants {
             public static final double kv = 3;
 
             public static final double configOpenLoopRamp = 0.08;
-            public static final double configCLosedLoopRamp = 0.08;
 
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;
@@ -108,6 +102,9 @@ public final class Constants {
             public static final double supplyLimit = 30;
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
+
+            public static final double wheelDiameter = 4.0;
+            public static final int ticksPerRev = 4096;
         }
     }
 }
