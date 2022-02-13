@@ -23,37 +23,22 @@ import frc.robot.Constants;
 
 public class SwerveModule {
     
-    private final TalonFX m_driveMotor;
-    private final TalonFX m_turningMotor;
+    private final TalonFX driveMotor;
+    private final TalonFX turningMotor;
 
-    private final PIDController m_drivePIDController = 
-    new PIDController(Constants.DriveConstants.Drive.kP, Constants.DriveConstants.Drive.kI, Constants.DriveConstants.Drive.kD);
-
-    private final ProfiledPIDController m_turningPIDController =
-      new ProfiledPIDController(
-          Constants.DriveConstants.Rotation.kP,
-          0,
-          Constants.DriveConstants.Rotation.kD,
-          new TrapezoidProfile.Constraints(
-              Constants.DriveConstants.kMaxAngularSpeed, Constants.DriveConstants.kModuleMaxAngularAcceleration));
-
-    private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(Constants.DriveConstants.Drive.ks, Constants.DriveConstants.Drive.kv);
-    private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(Constants.DriveConstants.Rotation.ks, Constants.DriveConstants.Rotation.kv);
-    
     public SwerveModule(
         int driveMotorChannel,
         int turningMotorChannel,
         int encoderID) {
 
-        m_driveMotor = new TalonFX(driveMotorChannel);
-        m_turningMotor = new TalonFX(turningMotorChannel);
-
-        // Limit the PID Controller's input range between -pi and pi and set the input
-        // to be continuous.
-        m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        driveMotor = new TalonFX(driveMotorChannel);
+        turningMotor = new TalonFX(turningMotorChannel);
+        
+        configDrive(driveMotor);
+        configRotation(turningMotor, encoderID);
     }
     
-    private void configDrive(WPI_TalonFX talon) {
+    private void configDrive(TalonFX talon) {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
 		config.openloopRamp = Constants.DriveConstants.Drive.configOpenLoopRamp;
@@ -80,7 +65,7 @@ public class SwerveModule {
 			Constants.DriveConstants.Drive.supplyTime));
     }
 
-	private void configRotation(WPI_TalonFX talon, int encoderID) {
+	private void configRotation(TalonFX talon, int encoderID) {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.remoteFilter0.remoteSensorDeviceID = encoderID;
@@ -115,27 +100,17 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(m_driveMotor.getSelectedSensorPosition(), new Rotation2d(m_turningMotor.getSelectedSensorPosition()));
+        return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), new Rotation2d(turningMotor.getSelectedSensorPosition()));
     }
 
     public void setDesiredState(SwerveModuleState desiredState) {
         // Optimize the reference state to avoid spinning further than 90 degrees
         SwerveModuleState state =
-            SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningMotor.getSelectedSensorPosition()));
+            SwerveModuleState.optimize(desiredState, new Rotation2d(turningMotor.getSelectedSensorPosition()));
 
-        // Calculate outputs
-        final double driveOutput =
-            m_drivePIDController.calculate(m_driveMotor.getSelectedSensorPosition(), state.speedMetersPerSecond);
+        
 
-        final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
-
-        final double turnOutput =
-            m_turningPIDController.calculate(m_turningMotor.getSelectedSensorPosition(), state.angle.getRadians());
-
-        final double turnFeedforward =
-            m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
-
-        m_driveMotor.set(ControlMode.Current, driveOutput + driveFeedforward);
-        m_turningMotor.set(ControlMode.Current, turnOutput + turnFeedforward);
+        driveMotor.set(ControlMode.Velocity, );
+        turningMotor.set(ControlMode.Position, );
     }
 }
