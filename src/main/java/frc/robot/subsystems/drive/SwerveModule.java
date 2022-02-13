@@ -140,4 +140,10 @@ public class SwerveModule {
         m_driveMotor.set(ControlMode.Current, driveOutput + driveFeedforward);
         m_turningMotor.set(ControlMode.Current, turnOutput + turnFeedforward);
     }
+
+    public void setCoastMode () {
+        if(Constants.driveEnabled) {
+                // Need to Add here
+        }
+    }
 }

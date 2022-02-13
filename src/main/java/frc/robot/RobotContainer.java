@@ -29,21 +29,9 @@ public class RobotContainer {
     // Define Commands
     public final Manual driveManual = new Manual(swerveDrive); 
 
-    
-
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    swerveDrive.setDefaultCommand(driveManual);
-  }
-
-  public void disableSubsystems() {
-    swerveDrive.setCoastMode();
-  }
-
-  public void enableSubsystems() {
-    swerveDrive.setBrakeMode();
   }
 
   /**
