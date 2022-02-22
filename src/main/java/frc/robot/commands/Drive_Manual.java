@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
+import frc.robot.Constants;
 import frc.robot.subsystems.Driveunbun;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -33,8 +34,9 @@ public class Drive_Manual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    driveunbun.setSpeedAndAngle(RobotContainer.pilotl, RobotContainer.pilotr);
+    if (Constants.joysticksEnabled) {
+      driveunbun.setSpeedAndAngle(RobotContainer.pilotl, RobotContainer.pilotr);
+    }
   }
 
   // Called once the command ends or is interrupted.
