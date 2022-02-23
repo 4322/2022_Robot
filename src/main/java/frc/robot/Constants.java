@@ -22,7 +22,7 @@ public final class Constants {
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
     public static final boolean climberEnabled = false;
-    public static final boolean gyroEnabled = true;
+    public static final boolean gyroEnabled = false;
 
     public final class DriveConstants {
         public static final int frontRightDriveID = 2;
