@@ -58,6 +58,8 @@ public final class Constants {
             public static final double kD = 0.00024;
 
             public static final double configCLosedLoopRamp = 0.08;
+            public static final double minPower = 0.05;  // resistance on carpet
+            public static final double maxPower = 0.3;   // reduce gear wear and overshoot
 
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;
@@ -72,9 +74,7 @@ public final class Constants {
             public static final double supplyThreshold = 45;
             public static final double supplyTime = 0.5;
 
-            public static final double allowableClosedloopError = 0;  // need non-zero value
-            public static final double motionAcceleration = 1000;   // need better value to use Magic Motion
-            public static final double motionCruiseVelocity = 100;   // need better value to use Magic Motion
+            public static final double allowableClosedloopError = 6;
         }
 
         public final class Drive {

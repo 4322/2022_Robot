@@ -59,15 +59,14 @@ public class TalonFXModule extends ControlModule {
 	private void configRotation(WPI_TalonFX talon, int encoderID) {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.remoteFilter0.remoteSensorDeviceID = encoderID;
-        config.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-        config.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
         config.slot0.kP = Constants.DriveConstants.Rotation.kP;
         config.slot0.kD = Constants.DriveConstants.Rotation.kD;
 		config.closedloopRamp = Constants.DriveConstants.Rotation.configCLosedLoopRamp;
         config.slot0.allowableClosedloopError = Constants.DriveConstants.Rotation.allowableClosedloopError;  
-        config.motionAcceleration = Constants.DriveConstants.Rotation.motionAcceleration;
-        config.motionCruiseVelocity = Constants.DriveConstants.Rotation.motionCruiseVelocity;
+		config.nominalOutputForward = Constants.DriveConstants.Rotation.minPower;
+		config.nominalOutputReverse = -Constants.DriveConstants.Rotation.minPower;
+		config.peakOutputForward = Constants.DriveConstants.Rotation.maxPower;
+		config.peakOutputReverse = -Constants.DriveConstants.Rotation.maxPower;
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
