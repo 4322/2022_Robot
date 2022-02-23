@@ -42,7 +42,7 @@ public class SwerveHelper {
 		return wheelSpeed[wheelID];
 	}
 
-	public static double getAngleValue(Joystick drive, Joystick rotate,  double currentAngle, int wheelID){
+	public static double getAngleChange(Joystick drive, Joystick rotate,  double currentAngle, int wheelID){
 		calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
 		return wheelAngle[wheelID];
 	}	
