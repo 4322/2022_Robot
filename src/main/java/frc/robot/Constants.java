@@ -39,8 +39,9 @@ public final class Constants {
         public static final int frontLeftEncoderID = 12;
         public static final int rearLeftEncoderID = 13;
 
-        public static final double kWheelRadius = 0.0508;
-        public static final int kEncoderResolution = 4096;
+        public static final double wheelRadius = 0.0508;
+        public static final int encoderResolution = 4096;
+        public static final double countToDegrees = 360.0 / encoderResolution;
 
         public static final double kMaxSpeed = 3.0;
         public static final double kMaxAngularSpeed = Math.PI;

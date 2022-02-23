@@ -2,7 +2,7 @@ package frc.robot.subsystems.SwerveDrive;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 /**
  * Calculates the angle and speed of each 4 wheels based
@@ -30,6 +30,7 @@ public class SwerveHelper {
 	
 	protected static double[] wheelSpeed = new double[4];
 	protected static double[] wheelAngle = new double[4];
+	protected static double[] wheelAngleChange = new double[4];
 
 	protected static Gyro m_gyro = null;
 
@@ -37,19 +38,21 @@ public class SwerveHelper {
 
 	public static boolean useAngleToReverse = true;
 	
-	public static double getSpeedValue(Joystick drive, Joystick rotate, double currentAngle, int wheelID){
-		calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
-		return wheelSpeed[wheelID];
+	public static double getSpeed(WheelPosition position) {
+		return wheelSpeed[position.wheelNumber];
 	}
 
-	public static double getAngleChange(Joystick drive, Joystick rotate,  double currentAngle, int wheelID){
-		calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
-		return wheelAngle[wheelID];
+	public static double getAngle(WheelPosition position) {
+		return wheelAngle[position.wheelNumber];
 	}	
 
-	public static void calculate(double forward, double strafe, double rotate, double currentAngle){
+	public static double getAngleChange(WheelPosition position) {
+		return wheelAngle[position.wheelNumber];
+	}	
 
-		if(fieldCentric && getGyro() != null){
+	public static void calculate(double forward, double strafe, double rotate, double[] currentAngle){
+
+		if(fieldCentric && getGyro() != null) {
 			double gyroAngle =Math.toRadians(getGyro().getAngle());
 
 			double temp = forward * Math.cos(gyroAngle) + strafe*Math.sin(gyroAngle);
@@ -82,9 +85,13 @@ public class SwerveHelper {
 		wheelAngle[2] = Math.atan2(frontRightX, backLeftY) * 180/Math.PI;
 		wheelAngle[3] = Math.atan2(frontRightX, backLeftX) * 180/Math.PI;
 
-		if(!useAngleToReverse)
-			reverseWithSpeed();
+		for (int i = 0; i < wheelAngleChange.length; i++) {
+			wheelAngleChange[i] = boundDegrees(wheelAngle[i] - currentAngle[i]);
+		}
 
+		if (!useAngleToReverse) {
+			reverseWithSpeed(currentAngle);
+		}
 	}
 
 	/**
@@ -95,30 +102,15 @@ public class SwerveHelper {
 	 * use this method after the kinematics are done.
 	 * (Then going backwards will be Speed ==-1.0, Angle == 0)
 	 */
-	private static void reverseWithSpeed(){
-		double temp_wheelAngle[] = wheelAngle;
-
-		if(temp_wheelAngle[0] > 90.0 || temp_wheelAngle[0] < -90.0){
-			wheelAngle[0] = temp_wheelAngle[0] - Math.copySign(180.0, temp_wheelAngle[0]);
-			wheelSpeed[0] *= -1.0;
-		}
-
-		if(temp_wheelAngle[1] > 90.0 || temp_wheelAngle[1] < -90.0){
-			wheelAngle[1] = temp_wheelAngle[1] - Math.copySign(180.0, temp_wheelAngle[1]);
-			wheelSpeed[1] *= -1.0;
-		}
-
-		if(temp_wheelAngle[2] > 90.0 || temp_wheelAngle[2] < -90.0){
-			wheelAngle[2] = temp_wheelAngle[2] - Math.copySign(180.0, temp_wheelAngle[2]);
-			wheelSpeed[2] *= -1.0;
-		}
-
-		if(temp_wheelAngle[3] > 90.0 || temp_wheelAngle[3] < -90.0){
-			wheelAngle[3] = temp_wheelAngle[3] - Math.copySign(180.0, temp_wheelAngle[0]);
-			wheelSpeed[3] *= -1.0;
+	private static void reverseWithSpeed(double[] currentAngle){
+		for (int i = 0; i < wheelAngle.length; i++) {
+			if (wheelAngleChange[i] > 90.0 || wheelAngleChange[i] < -90.0){
+				wheelAngle[i] = wheelAngle[i] - Math.copySign(180.0, wheelAngle[i]);
+				wheelAngleChange[i] = wheelAngleChange[i] - Math.copySign(180.0, wheelAngleChange[i]);
+				wheelSpeed[i] *= -1.0;
+			}
 		}
 	}
-
 
 	/**Normalize speeds to be in a range from 0 to +1.0*/
 	private static void normalizeSpeeds(){
@@ -127,10 +119,10 @@ public class SwerveHelper {
 		max = Math.max(max, wheelSpeed[3]);
 
 		if(max>1){
-			wheelSpeed[0] /=max;
-			wheelSpeed[1] /=max;
-			wheelSpeed[2] /=max;
-			wheelSpeed[3] /=max;
+			wheelSpeed[0] /= max;
+			wheelSpeed[1] /= max;
+			wheelSpeed[2] /= max;
+			wheelSpeed[3] /= max;
 		}
 	}
 
@@ -172,5 +164,9 @@ public class SwerveHelper {
 		return m_gyro;
 	}
 
+	// convert angle to range of +/- 180 degrees
+	public static double boundDegrees(double angleDegrees) {
+		return ((angleDegrees + 180) % 360) - 180;
+	}
 }
 

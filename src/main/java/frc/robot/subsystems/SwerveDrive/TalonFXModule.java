@@ -1,6 +1,5 @@
 package frc.robot.subsystems.SwerveDrive;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -98,12 +97,15 @@ public class TalonFXModule extends ControlModule {
 		CANCoder m_encoder = new CANCoder(encoderID);
 		m_encoder.configFactoryDefault();
 		m_encoder.configAllSettings(encoderConfig);
+
+		// initialize internal Falcon encoder to absolute wheel position from CANCoder
+		talon.setSelectedSensorPosition(m_encoder.getAbsolutePosition() / Constants.DriveConstants.countToDegrees);
     }
 	
-	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
-		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, getAngle(), position.wheelNumber));
-		m_rotation.set(ControlMode.Position, getContinuousAngle() +
-			SwerveHelper.getAngleChange(drive, rotate, getAngle(), position.wheelNumber));
+	public void setSpeedAndAngle(){
+		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
+		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
+			SwerveHelper.getAngleChange(position) / Constants.DriveConstants.countToDegrees);
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
@@ -124,15 +126,19 @@ public class TalonFXModule extends ControlModule {
 		return m_rotation.configGetParameter(2, 0, 0);
 	}
 	
-	@Override
-	public double getAngle(){
-		return (m_encoder.getAbsolutePosition());
+	public double getMagneticRotationAngle(){
+		return m_encoder.getAbsolutePosition();
 	}
 
-	public double getContinuousAngle(){
-		return (m_encoder.getPosition());
+	public double getInternalRotationCount(){
+		return m_rotation.getSelectedSensorPosition();
 	}
-	
+
+	// returns +/- 180 degrees
+	public double getInternalRotationDegrees(){
+		return SwerveHelper.boundDegrees(getInternalRotationCount() * Constants.DriveConstants.countToDegrees);
+	}
+
 	@Override
 	public double getDistance(){
 		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * Constants.DriveConstants.Drive.wheelDiameter) / Constants.DriveConstants.Drive.ticksPerRev;

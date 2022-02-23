@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -27,7 +28,6 @@ public class Driveunbun extends SubsystemBase {
     private TalonFXModule frontLeft;
     private TalonFXModule rearLeft;
     private TalonFXModule rearRight;
-
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -57,10 +57,17 @@ public class Driveunbun extends SubsystemBase {
 
     public void setSpeedAndAngle(Joystick drive, Joystick rotate){
         if (Constants.driveEnabled) {
-            frontRight.setSpeedAndAngle(drive, rotate);
-            frontLeft.setSpeedAndAngle(drive, rotate);
-            rearLeft.setSpeedAndAngle(drive, rotate);
-            rearRight.setSpeedAndAngle(drive, rotate);
+            double[] currentAngle = new double[4];
+            currentAngle[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getInternalRotationDegrees();
+            currentAngle[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getInternalRotationDegrees();
+            currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
+            currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
+
+            SwerveHelper.calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
+            frontRight.setSpeedAndAngle();
+            frontLeft.setSpeedAndAngle();
+            rearLeft.setSpeedAndAngle();
+            rearRight.setSpeedAndAngle();
         }  
     }
 
