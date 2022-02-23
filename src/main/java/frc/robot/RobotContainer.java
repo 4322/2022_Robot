@@ -34,8 +34,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-    swerveDrive.setDefaultCommand(driveManual);
+    if (Constants.joysticksEnabled) {
+      swerveDrive.setDefaultCommand(driveManual);
+    }
   }
 
   public void disableSubsystems() {
@@ -58,14 +59,6 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(driveManual);
   
    }
-
-   /*public void disableSubsystems() {
-    swerveDrive.setCoastMode();
-  }
-
-  public void enableSubsystems() {
-    swerveDrive.setBrakeMode();
-  } */ //Need to add this into Swerve Module first
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

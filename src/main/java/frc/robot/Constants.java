@@ -19,6 +19,7 @@ package frc.robot;
 public final class Constants {
 
     public static final boolean driveEnabled = true;
+    public static final boolean joysticksEnabled = true;
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
     public static final boolean climberEnabled = false;

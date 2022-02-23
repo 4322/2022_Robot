@@ -34,6 +34,9 @@ public class Drivebase extends SubsystemBase {
     private SwerveModule frontLeft;
     private SwerveModule rearLeft;
     private SwerveModule rearRight;
+
+    private AHRS m_gyro;
+    private SwerveDriveOdometry m_odometry;
     
     public Drivebase() {
         if (Constants.driveEnabled) {
@@ -53,23 +56,22 @@ public class Drivebase extends SubsystemBase {
                 Constants.DriveConstants.backLeftDriveID,
                 Constants.DriveConstants.backLeftRotationID,
                 Constants.DriveConstants.backLeftEncoderID); 
+            if (Constants.gyroEnabled) {
+                m_gyro = new AHRS(SerialPort.Port.kUSB1);
+                m_odometry = 
+                new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d());
+            }
         }
     }
     
-    // need to initialize swerve module later
-    private final AHRS m_gyro = new AHRS(SerialPort.Port.kUSB1); 
-
     private final SwerveDriveKinematics m_kinematics =
         new SwerveDriveKinematics(
             m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
-    private final SwerveDriveOdometry m_odometry =
-        new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d());
-
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) { // drive w/ joystick
         var swerveModuleStates =
             m_kinematics.toSwerveModuleStates(
-                fieldRelative
+                (fieldRelative && Constants.gyroEnabled)
                     ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
                     : new ChassisSpeeds(xSpeed, ySpeed, rot));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
@@ -80,12 +82,15 @@ public class Drivebase extends SubsystemBase {
     }
 
     public void updateOdometry() {
-        m_odometry.update(
-            m_gyro.getRotation2d(),
-            frontLeft.getState(),
-            frontRight.getState(),
-            rearLeft.getState(),
-            rearRight.getState());
+        if (Constants.gyroEnabled) {
+            m_odometry.update(
+                m_gyro.getRotation2d(),
+                frontLeft.getState(),
+                frontRight.getState(),
+                rearLeft.getState(),
+                rearRight.getState()
+                );
+            }
         }    
 
     public void setCoastMode() {
