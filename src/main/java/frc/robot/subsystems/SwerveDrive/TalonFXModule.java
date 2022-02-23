@@ -9,6 +9,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
@@ -16,6 +20,7 @@ public class TalonFXModule extends ControlModule {
 	
 	private WPI_TalonFX m_rotation; 
 	private WPI_TalonFX m_wheel;
+	private CANCoder m_encoder;
 	
 	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
 		super(pos);
@@ -84,6 +89,15 @@ public class TalonFXModule extends ControlModule {
 			Constants.DriveConstants.Rotation.supplyLimit, 
 			Constants.DriveConstants.Rotation.supplyThreshold, 
 			Constants.DriveConstants.Rotation.supplyTime));
+
+		CANCoderConfiguration encoderConfig = new CANCoderConfiguration();
+		encoderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+		encoderConfig.sensorDirection = true;  // positive rotation is clockwise
+		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+		
+		CANCoder m_encoder = new CANCoder(encoderID);
+		m_encoder.configFactoryDefault();
+		m_encoder.configAllSettings(encoderConfig);
     }
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
@@ -111,7 +125,7 @@ public class TalonFXModule extends ControlModule {
 	
 	@Override
 	public double getAngle(){
-		return (m_rotation.getSelectedSensorPosition(0) *  Math.PI * Constants.DriveConstants.Drive.wheelDiameter);
+		return (m_encoder.getAbsolutePosition());
 	}
 	
 	@Override
