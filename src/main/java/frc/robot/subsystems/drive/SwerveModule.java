@@ -96,13 +96,13 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), new Rotation2d(turningMotor.getSelectedSensorPosition()));
+        return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), Rotation2d.fromDegrees(turningMotor.getSelectedSensorPosition()));
     }
 
     public void setDesiredState(SwerveModuleState desiredState) {
         // Optimize the reference state to avoid spinning further than 90 degrees
         SwerveModuleState state =
-            SwerveModuleState.optimize(desiredState, new Rotation2d(turningMotor.getSelectedSensorPosition()));
+            SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(turningMotor.getSelectedSensorPosition()));
 
         driveMotor.set(ControlMode.Velocity, 
             state.speedMetersPerSecond / 
