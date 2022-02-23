@@ -37,17 +37,17 @@ public class SwerveHelper {
 
 	public static boolean useAngleToReverse = true;
 	
-	public static double getSpeedValue(Joystick drive, Joystick rotate, int wheelID){
-		calculate(drive.getY(), drive.getX(), rotate.getX());
+	public static double getSpeedValue(Joystick drive, Joystick rotate, double currentAngle, int wheelID){
+		calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
 		return wheelSpeed[wheelID];
 	}
 
-	public static double getAngleValue(Joystick drive, Joystick rotate,  int wheelID){
-		calculate(drive.getY(), drive.getX(), rotate.getX());
+	public static double getAngleValue(Joystick drive, Joystick rotate,  double currentAngle, int wheelID){
+		calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
 		return wheelAngle[wheelID];
 	}	
 
-	public static void calculate(double forward, double strafe, double rotate){
+	public static void calculate(double forward, double strafe, double rotate, double currentAngle){
 
 		if(fieldCentric && getGyro() != null){
 			double gyroAngle =Math.toRadians(getGyro().getAngle());

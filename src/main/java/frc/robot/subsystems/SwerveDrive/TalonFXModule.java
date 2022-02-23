@@ -101,11 +101,12 @@ public class TalonFXModule extends ControlModule {
     }
 	
 	public void setSpeedAndAngle(Joystick drive, Joystick rotate){
-		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, position.wheelNumber));
-		m_rotation.set(ControlMode.Position, SwerveHelper.getAngleValue(drive, rotate, position.wheelNumber));
-	}
+		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeedValue(drive, rotate, getAngle(), position.wheelNumber));
+		m_rotation.set(ControlMode.Position, getContinuousAngle() +
+			(SwerveHelper.getAngleValue(drive, rotate, getAngle(), position.wheelNumber) - getAngle() % 360));
+	}	
 	
-	public void setRotationPID(double kp, double ki, double kd){
+	public void setRotationPID(double kp, double ki, double kd) {
 		m_rotation.config_kP(0, kp, 0);
 		m_rotation.config_kI(1, ki, 0);
 		m_rotation.config_kD(2, kd, 0);
@@ -126,6 +127,10 @@ public class TalonFXModule extends ControlModule {
 	@Override
 	public double getAngle(){
 		return (m_encoder.getAbsolutePosition());
+	}
+
+	public double getContinuousAngle(){
+		return (m_encoder.getPosition());
 	}
 	
 	@Override
