@@ -1,6 +1,6 @@
 package frc.robot.subsystems.SwerveDrive;
 
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -30,7 +30,7 @@ public class TalonFXModule extends ControlModule {
     private void configDrive(WPI_TalonFX talon) {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
-		config.openloopRamp = Constants.DriveConstants.Drive.configOpenLoopRamp;
+		config.openloopRamp = DriveConstants.Drive.configOpenLoopRamp;
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
@@ -39,32 +39,32 @@ public class TalonFXModule extends ControlModule {
         talon.setInverted(true);
         talon.setSensorPhase(false);
 		
-		talon.configVoltageCompSaturation(Constants.DriveConstants.Drive.configVoltageCompSaturation);
-		talon.enableVoltageCompensation(Constants.DriveConstants.Drive.enableVoltageCompensation);
+		talon.configVoltageCompSaturation(DriveConstants.Drive.configVoltageCompSaturation);
+		talon.enableVoltageCompensation(DriveConstants.Drive.enableVoltageCompensation);
 
 		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			Constants.DriveConstants.Drive.statorEnabled, 
-			Constants.DriveConstants.Drive.statorLimit, 
-			Constants.DriveConstants.Drive.statorThreshold, 
-			Constants.DriveConstants.Drive.statorTime));
+			DriveConstants.Drive.statorEnabled, 
+			DriveConstants.Drive.statorLimit, 
+			DriveConstants.Drive.statorThreshold, 
+			DriveConstants.Drive.statorTime));
 		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-			Constants.DriveConstants.Drive.supplyEnabled, 
-			Constants.DriveConstants.Drive.supplyLimit, 
-			Constants.DriveConstants.Drive.supplyThreshold, 
-			Constants.DriveConstants.Drive.supplyTime));
+			DriveConstants.Drive.supplyEnabled, 
+			DriveConstants.Drive.supplyLimit, 
+			DriveConstants.Drive.supplyThreshold, 
+			DriveConstants.Drive.supplyTime));
     }
 
 	private void configRotation(WPI_TalonFX talon, int encoderID) {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = Constants.DriveConstants.Rotation.kP;
-        config.slot0.kD = Constants.DriveConstants.Rotation.kD;
-		config.closedloopRamp = Constants.DriveConstants.Rotation.configCLosedLoopRamp;
-        config.slot0.allowableClosedloopError = Constants.DriveConstants.Rotation.allowableClosedloopError;  
-		config.nominalOutputForward = Constants.DriveConstants.Rotation.minPower;
-		config.nominalOutputReverse = -Constants.DriveConstants.Rotation.minPower;
-		config.peakOutputForward = Constants.DriveConstants.Rotation.maxPower;
-		config.peakOutputReverse = -Constants.DriveConstants.Rotation.maxPower;
+        config.slot0.kP = DriveConstants.Rotation.kP;
+        config.slot0.kD = DriveConstants.Rotation.kD;
+		config.closedloopRamp = DriveConstants.Rotation.configCLosedLoopRamp;
+        config.slot0.allowableClosedloopError = DriveConstants.Rotation.allowableClosedloopError;  
+		config.nominalOutputForward = DriveConstants.Rotation.minPower;
+		config.nominalOutputReverse = -DriveConstants.Rotation.minPower;
+		config.peakOutputForward = DriveConstants.Rotation.maxPower;
+		config.peakOutputReverse = -DriveConstants.Rotation.maxPower;
 
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
@@ -72,19 +72,19 @@ public class TalonFXModule extends ControlModule {
         talon.setInverted(false);
         talon.setSensorPhase(false);
 		
-		talon.configVoltageCompSaturation(Constants.DriveConstants.Rotation.configVoltageCompSaturation);
-		talon.enableVoltageCompensation(Constants.DriveConstants.Rotation.enableVoltageCompensation);
+		talon.configVoltageCompSaturation(DriveConstants.Rotation.configVoltageCompSaturation);
+		talon.enableVoltageCompensation(DriveConstants.Rotation.enableVoltageCompensation);
 		
 		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			Constants.DriveConstants.Rotation.statorEnabled, 
-			Constants.DriveConstants.Rotation.statorLimit, 
-			Constants.DriveConstants.Rotation.statorThreshold, 
-			Constants.DriveConstants.Rotation.statorTime));
+			DriveConstants.Rotation.statorEnabled, 
+			DriveConstants.Rotation.statorLimit, 
+			DriveConstants.Rotation.statorThreshold, 
+			DriveConstants.Rotation.statorTime));
 		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-			Constants.DriveConstants.Rotation.supplyEnabled, 
-			Constants.DriveConstants.Rotation.supplyLimit, 
-			Constants.DriveConstants.Rotation.supplyThreshold, 
-			Constants.DriveConstants.Rotation.supplyTime));
+			DriveConstants.Rotation.supplyEnabled, 
+			DriveConstants.Rotation.supplyLimit, 
+			DriveConstants.Rotation.supplyThreshold, 
+			DriveConstants.Rotation.supplyTime));
 
 		CANCoderConfiguration encoderConfig = new CANCoderConfiguration();
 		encoderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
@@ -96,14 +96,17 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.configAllSettings(encoderConfig);
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		talon.setSelectedSensorPosition(m_encoder.getAbsolutePosition() / 
-			Constants.DriveConstants.Rotation.countToDegrees);
+		talon.setSelectedSensorPosition(
+			(m_encoder.getAbsolutePosition() - 
+			 DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
+			DriveConstants.Rotation.countToDegrees);
     }
 	
 	public void setSpeedAndAngle(){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
 		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
-			SwerveHelper.getAngleChange(position) / Constants.DriveConstants.Rotation.countToDegrees);
+			SwerveHelper.getAngleChange(position) / 
+			DriveConstants.Rotation.countToDegrees);
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
@@ -135,17 +138,18 @@ public class TalonFXModule extends ControlModule {
 	// returns +/- 180 degrees
 	public double getInternalRotationDegrees(){
 		return SwerveHelper.boundDegrees(getInternalRotationCount() * 
-			   Constants.DriveConstants.Rotation.countToDegrees);
+			   DriveConstants.Rotation.countToDegrees);
 	}
 
 	@Override
 	public double getDistance(){
-		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * Constants.DriveConstants.Drive.wheelDiameter) / Constants.DriveConstants.Drive.ticksPerRev;
+		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * DriveConstants.Drive.wheelDiameter) / 
+			DriveConstants.Drive.ticksPerRev;
 	}
 
 	@Override
 	public double getVelocity() {
-		return m_wheel.getSelectedSensorVelocity(0) * 600/Constants.DriveConstants.Drive.ticksPerRev;
+		return m_wheel.getSelectedSensorVelocity(0) * 600/DriveConstants.Drive.ticksPerRev;
 	}
 
 	@Override

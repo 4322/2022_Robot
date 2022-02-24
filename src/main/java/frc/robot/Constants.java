@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -24,7 +26,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
 
-    public final class DriveConstants {
+    public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
         public static final int frontRightRotationID = 3;
         public static final int rearRightDriveID = 4;
@@ -52,7 +54,7 @@ public final class Constants {
         public static final double wheelBaseLengthFeet = 26.75/12.0;
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
-        public final class Rotation {
+        public final static class Rotation {
             public static final double kP = 0.1;
             public static final double kD = 0.0;
 
@@ -75,9 +77,19 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double allowableClosedloopError = 2.0 / countToDegrees;
+
+            // values obtained from swerve module zeroing procedure
+            public static final double[] CANCoderOffsetDegrees;
+            static {
+                CANCoderOffsetDegrees = new double[4];
+                CANCoderOffsetDegrees[WheelPosition.FRONT_RIGHT.wheelNumber] = 0;
+                CANCoderOffsetDegrees[WheelPosition.FRONT_LEFT.wheelNumber] = 0;
+                CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = 0;
+                CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = 0;
+            }
         }
 
-        public final class Drive {
+        public static final class Drive {
             public static final double configOpenLoopRamp = 0.08;
 
             public static final double configVoltageCompSaturation = 12;
