@@ -69,7 +69,7 @@ public class TalonFXModule extends ControlModule {
 		talon.configFactoryDefault();
 		talon.configAllSettings(config);
         talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
-        talon.setInverted(true);
+        talon.setInverted(false);
         talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(Constants.DriveConstants.Rotation.configVoltageCompSaturation);
@@ -91,7 +91,7 @@ public class TalonFXModule extends ControlModule {
 		encoderConfig.sensorDirection = true;  // positive rotation is clockwise
 		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 		
-		CANCoder m_encoder = new CANCoder(encoderID);
+		m_encoder = new CANCoder(encoderID);
 		m_encoder.configFactoryDefault();
 		m_encoder.configAllSettings(encoderConfig);
 

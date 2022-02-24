@@ -18,7 +18,7 @@ package frc.robot;
  */
 public final class Constants {
     public static final boolean driveEnabled = true;
-    public static final boolean joysticksEnabled = false;
+    public static final boolean joysticksEnabled = true;
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = false;
     public static final boolean climberEnabled = false;
@@ -53,11 +53,11 @@ public final class Constants {
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
         public final class Rotation {
-            public static final double kP = 0.08;
+            public static final double kP = 0.1;
             public static final double kD = 0.0;
 
             public static final double configCLosedLoopRamp = 0.08;
-            public static final double minPower = 0.05;  // resistance on carpet
+            public static final double minPower = 0.16;  // resistance on carpet
             public static final double maxPower = 0.3;   // reduce gear wear and overshoot
             public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
@@ -74,7 +74,7 @@ public final class Constants {
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
 
-            public static final double allowableClosedloopError = 1.0 / countToDegrees;
+            public static final double allowableClosedloopError = 2.0 / countToDegrees;
         }
 
         public final class Drive {
