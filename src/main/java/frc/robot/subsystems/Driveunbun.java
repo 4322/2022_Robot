@@ -51,6 +51,8 @@ public class Driveunbun extends SubsystemBase {
             if (Constants.gyroEnabled) {
                 SwerveHelper.setGyro(new AHRS(SerialPort.Port.kUSB1));
             }
+
+            SwerveHelper.setReversingToSpeed();
         }   
     }
 

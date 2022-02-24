@@ -47,7 +47,7 @@ public class SwerveHelper {
 	}	
 
 	public static double getAngleChange(WheelPosition position) {
-		return wheelAngle[position.wheelNumber];
+		return wheelAngleChange[position.wheelNumber];
 	}	
 
 	public static void calculate(double forward, double strafe, double rotate, double[] currentAngle){
