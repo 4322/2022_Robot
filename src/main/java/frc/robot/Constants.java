@@ -40,7 +40,7 @@ public final class Constants {
         public static final int rearLeftEncoderID = 13;
 
         public static final double wheelRadius = 0.0508;
-        public static final int encoderResolution = 4096;
+        public static final int encoderResolution = 2048;
 
         public static final double kMaxSpeed = 3.0;
         public static final double kMaxAngularSpeed = Math.PI;
