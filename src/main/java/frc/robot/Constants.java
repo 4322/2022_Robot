@@ -41,7 +41,6 @@ public final class Constants {
 
         public static final double wheelRadius = 0.0508;
         public static final int encoderResolution = 4096;
-        public static final double countToDegrees = 360.0 / encoderResolution;
 
         public static final double kMaxSpeed = 3.0;
         public static final double kMaxAngularSpeed = Math.PI;
@@ -54,12 +53,13 @@ public final class Constants {
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
         public final class Rotation {
-            public static final double kP = 0.007;
-            public static final double kD = 0.00024;
+            public static final double kP = 0.08;
+            public static final double kD = 0.0;
 
             public static final double configCLosedLoopRamp = 0.08;
             public static final double minPower = 0.05;  // resistance on carpet
             public static final double maxPower = 0.3;   // reduce gear wear and overshoot
+            public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;
@@ -70,11 +70,11 @@ public final class Constants {
             public static final double statorTime = 1.0;
 
             public static final boolean supplyEnabled = true;
-            public static final double supplyLimit = 40;
-            public static final double supplyThreshold = 45;
+            public static final double supplyLimit = 30;
+            public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
 
-            public static final double allowableClosedloopError = 6;
+            public static final double allowableClosedloopError = 1.0 / countToDegrees;
         }
 
         public final class Drive {
@@ -89,8 +89,8 @@ public final class Constants {
             public static final double statorTime = 1.0;
 
             public static final boolean supplyEnabled = true;
-            public static final double supplyLimit = 30;
-            public static final double supplyThreshold = 35;
+            public static final double supplyLimit = 40;
+            public static final double supplyThreshold = 45;
             public static final double supplyTime = 0.5;
 
             public static final double wheelDiameter = 4.0;

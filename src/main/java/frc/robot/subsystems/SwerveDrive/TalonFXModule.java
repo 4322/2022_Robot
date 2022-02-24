@@ -3,7 +3,6 @@ package frc.robot.subsystems.SwerveDrive;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -13,7 +12,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 
 public class TalonFXModule extends ControlModule {
 	
@@ -98,13 +96,14 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.configAllSettings(encoderConfig);
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		talon.setSelectedSensorPosition(m_encoder.getAbsolutePosition() / Constants.DriveConstants.countToDegrees);
+		talon.setSelectedSensorPosition(m_encoder.getAbsolutePosition() / 
+			Constants.DriveConstants.Rotation.countToDegrees);
     }
 	
 	public void setSpeedAndAngle(){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
 		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
-			SwerveHelper.getAngleChange(position) / Constants.DriveConstants.countToDegrees);
+			SwerveHelper.getAngleChange(position) / Constants.DriveConstants.Rotation.countToDegrees);
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
@@ -135,7 +134,8 @@ public class TalonFXModule extends ControlModule {
 
 	// returns +/- 180 degrees
 	public double getInternalRotationDegrees(){
-		return SwerveHelper.boundDegrees(getInternalRotationCount() * Constants.DriveConstants.countToDegrees);
+		return SwerveHelper.boundDegrees(getInternalRotationCount() * 
+			   Constants.DriveConstants.Rotation.countToDegrees);
 	}
 
 	@Override
