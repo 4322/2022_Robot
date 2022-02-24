@@ -43,7 +43,7 @@ public final class Constants {
         public static final int backLeftEncoderID = 13;
 
         public static final double wheelDiameterInches = 4;
-        public static final int kEncoderResolution = 4096;
+        public static final int encoderResolution = 2048;
         public static final double driveGearRatio = 6.55;
 
         public static final double maxSpeedMetersPerSecond = 4.5;
@@ -80,6 +80,7 @@ public final class Constants {
             public static final double allowableClosedloopError = 0;  // need non-zero value
             public static final double motionAcceleration = 1000;   // need better value to use Magic Motion
             public static final double motionCruiseVelocity = 100;   // need better value to use Magic Motion
+            public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
         }
 
         public final class Drive {
