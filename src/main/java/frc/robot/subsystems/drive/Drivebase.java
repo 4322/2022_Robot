@@ -68,7 +68,11 @@ public class Drivebase extends SubsystemBase {
         new SwerveDriveKinematics(
             m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) { // drive w/ joystick
+    public void drive(double xSpeed, double ySpeed, double rot_, boolean fieldRelative) { // drive w/ joystick
+        // convert to rad from degrees b/c rotation2ds are typically created from rad
+        double rot = rot_ * (Math.PI/180);
+
+        // create SwerveModuleStates inversely from the kinematics
         var swerveModuleStates =
             m_kinematics.toSwerveModuleStates(
                 (fieldRelative && Constants.gyroEnabled)
