@@ -56,15 +56,16 @@ public class Driveunbun extends SubsystemBase {
         }   
     }
 
-    public void setSpeedAndAngle(Joystick drive, Joystick rotate){
+    public void setSpeedAndAngle(double driveX, double driveY, double rotate) {
         if (Constants.driveEnabled) {
             double[] currentAngle = new double[4];
             currentAngle[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
-
-            SwerveHelper.calculate(drive.getY(), -drive.getX(), -rotate.getX(), currentAngle);
+            
+            // cube joystick inputs to increase sensitivity
+            SwerveHelper.calculate(-driveX*driveX*driveX, driveY*driveY*driveY, -rotate*rotate*rotate, currentAngle);
             frontRight.setSpeedAndAngle();
             frontLeft.setSpeedAndAngle();
             rearLeft.setSpeedAndAngle();

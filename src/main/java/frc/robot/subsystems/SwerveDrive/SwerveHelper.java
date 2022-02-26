@@ -50,7 +50,7 @@ public class SwerveHelper {
 		return wheelAngleChange[position.wheelNumber];
 	}	
 
-	public static void calculate(double forward, double strafe, double rotate, double[] currentAngle){
+	public static void calculate(double strafe, double forward, double rotate, double[] currentAngle){
 
 		if (fieldCentric && getGyro() != null) {
 			double gyroAngle =Math.toRadians(getGyro().getAngle());
