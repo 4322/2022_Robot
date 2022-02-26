@@ -63,7 +63,11 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
             
-            // cube joystick inputs to increase sensitivity
+            /* cube joystick inputs to increase sensitivity
+             x = smaller value
+             y = greater value
+             x = (y^3 / y) * x 
+             */
             if (Math.abs(driveX) >= Math.abs(driveY)) {
                 SwerveHelper.calculate(
                     -driveX*driveX*driveX, driveX*driveX*driveY, -rotate*rotate*rotate, currentAngle
