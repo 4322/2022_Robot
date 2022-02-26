@@ -26,6 +26,8 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
 
+    public static final int controllerConfigTimeoutMs = 50;
+
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
         public static final int frontRightRotationID = 3;

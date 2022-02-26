@@ -52,14 +52,12 @@ public class SwerveHelper {
 
 	public static void calculate(double forward, double strafe, double rotate, double[] currentAngle){
 
-		if(fieldCentric && getGyro() != null) {
+		if (fieldCentric && getGyro() != null) {
 			double gyroAngle =Math.toRadians(getGyro().getAngle());
 
 			double temp = forward * Math.cos(gyroAngle) + strafe*Math.sin(gyroAngle);
 			strafe = -forward*Math.sin(gyroAngle) + strafe*Math.cos(gyroAngle);
 			forward = temp;
-		}else if (fieldCentric && getGyro() == null) {
-			System.out.println ("No Gyro found, Swerve calculations will be Robot Centric");
 		}
 
 		/*

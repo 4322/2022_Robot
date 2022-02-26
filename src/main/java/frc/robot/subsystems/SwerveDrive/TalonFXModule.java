@@ -1,7 +1,9 @@
 package frc.robot.subsystems.SwerveDrive;
 
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -11,6 +13,9 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+
+import edu.wpi.first.wpilibj.DriverStation;
+
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 public class TalonFXModule extends ControlModule {
@@ -95,11 +100,22 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.configFactoryDefault();
 		m_encoder.configAllSettings(encoderConfig);
 
+		// wait for CANCoder position to stabilize
+		try {
+			Thread.sleep(50); // can go as low as 10, 50 to be safe
+		}
+		catch (InterruptedException e) {}
+
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		talon.setSelectedSensorPosition(
-			(m_encoder.getAbsolutePosition() - 
-			 DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
-			DriveConstants.Rotation.countToDegrees);
+		double count = 	(m_encoder.getAbsolutePosition() - 
+		DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
+	   	DriveConstants.Rotation.countToDegrees;
+
+		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
+		if (error != ErrorCode.OK) {
+			DriverStation.reportError("Error " + error.value + " initializing Talon FX " + talon.getDeviceID() + 
+				" position ", false);
+		}
     }
 	
 	public void setSpeedAndAngle(){
