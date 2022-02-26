@@ -85,7 +85,7 @@ public final class Constants {
                 CANCoderOffsetDegrees[WheelPosition.FRONT_RIGHT.wheelNumber] = 78.311;
                 CANCoderOffsetDegrees[WheelPosition.FRONT_LEFT.wheelNumber] = 169.365;
                 CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = 106.787;
-                CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = 106.787;
+                CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = -104.678;
             }
         }
 
