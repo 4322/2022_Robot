@@ -64,7 +64,7 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
 
-            SwerveHelper.calculate(drive.getY(), drive.getX(), rotate.getX(), currentAngle);
+            SwerveHelper.calculate(drive.getY(), -drive.getX(), -rotate.getX(), currentAngle);
             frontRight.setSpeedAndAngle();
             frontLeft.setSpeedAndAngle();
             rearLeft.setSpeedAndAngle();

@@ -28,11 +28,11 @@ public class TalonFXModule extends ControlModule {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
-		configDrive(wheel);
+		configDrive(wheel, pos);
 		configRotation(rotation, encoderID);
 	}
 
-    private void configDrive(WPI_TalonFX talon) {
+    private void configDrive(WPI_TalonFX talon, WheelPosition pos) {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
 		config.openloopRamp = DriveConstants.Drive.configOpenLoopRamp;
@@ -41,7 +41,8 @@ public class TalonFXModule extends ControlModule {
 		talon.configAllSettings(config);
 
         talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
-        talon.setInverted(true);
+		boolean isRightSide = pos == WheelPosition.FRONT_RIGHT || pos == WheelPosition.BACK_RIGHT;
+        talon.setInverted(isRightSide);
         talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(DriveConstants.Drive.configVoltageCompSaturation);
