@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
@@ -48,7 +48,7 @@ public class Driveunbun extends SubsystemBase {
                 WheelPosition.BACK_LEFT, Constants.DriveConstants.rearLeftEncoderID);
 
             if (Constants.gyroEnabled) {
-                SwerveHelper.setGyro(new AHRS(SerialPort.Port.kUSB1));
+                SwerveHelper.setGyro(new AHRS(I2C.Port.kOnboard));
             }
 
             SwerveHelper.setReversingToSpeed();
