@@ -111,4 +111,7 @@ public final class Constants {
             public static final int ticksPerRev = 4096;
         }
     }
+    public static final class HoodConstants {
+
+    }
 }
