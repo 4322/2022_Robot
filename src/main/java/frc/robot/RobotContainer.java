@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Drive_Manual;
 import frc.robot.subsystems.Driveunbun;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +21,7 @@ public class RobotContainer {
   // Define controllers
   public static Joystick pilotl = new Joystick(0);
   public static Joystick pilotr = new Joystick(1);
+  public static XboxController coPilot = new XboxController(2);
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
