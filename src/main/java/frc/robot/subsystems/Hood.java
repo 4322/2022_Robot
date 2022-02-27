@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Hood extends SubsystemBase{
+public class Hood extends SubsystemBase {
     
     private WPI_TalonFX hood;
 
@@ -35,8 +35,8 @@ public class Hood extends SubsystemBase{
 
             hood.configFactoryDefault();
             hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                                                        Constants.HoodConstants.kPIDLoopIdx,
-                                                        Constants.HoodConstants.kTimeoutMs);
+                Constants.HoodConstants.kPIDLoopIdx,
+                Constants.HoodConstants.kTimeoutMs);
             hood.setSensorPhase(Constants.HoodConstants.kSensorPhase);
         
             /* Config the peak and nominal outputs */
@@ -47,28 +47,42 @@ public class Hood extends SubsystemBase{
             hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower, Constants.HoodConstants.kTimeoutMs);
             hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower, Constants.HoodConstants.kTimeoutMs);   
             
-            setCoastMode();  //Allow hood to be moved manually
+            setCoastMode();  // Allow hood to be moved manually
 
             // DEBUG
             if (Constants.debug) {
-                
+
                 hoodPositionTalon = tab.add("Hood Position (Talon)", 0)
                 .withPosition(0,1)   
                 .withSize(1,1)
                 .getEntry();
+                
                 hoodPower = tab.add("Hood Power", 0)
                 .withPosition(1,1)
                 .withSize(1,1)
                 .getEntry();
+
             }
         }   
     }
 
   @Override
   public void periodic() {
-    hoodPositionTalon.setDouble(getPosition());
-    isHomeIndicator.setBoolean(isAtHome());
-    hoodPower.setDouble(hood.getMotorOutputPercent());
+    if (Constants.hoodEnabled) {
+
+      // SHUFFLEBOARD
+      if (Constants.debug) {
+        hoodPositionTalon.setDouble(getPosition());
+        hoodPower.setDouble(hood.getMotorOutputPercent());
+      }
+      isHomeIndicator.setBoolean(getHomed());
+
+      // Reset encoder if hood is at home
+      if (this.getHomed()) {
+        hood.setSelectedSensorPosition(0);
+      }
+
+    }
   }
 
   public void setCoastMode() {
@@ -79,12 +93,8 @@ public class Hood extends SubsystemBase{
     hood.setNeutralMode(NeutralMode.Brake);
   }
 
-  public double getPosition() {
-    return hood.getSelectedSensorPosition(0);
-  }
+  public void setHoodPower(double power) {
 
-  public void setHoodPower(double power)
-  {
     double encValue = getPosition();
     double _power = power;
     
@@ -114,6 +124,10 @@ public class Hood extends SubsystemBase{
     }
   }
 
+  public double getPosition() {
+    return hood.getSelectedSensorPosition(0);
+  }
+
   public void moveHome() {
     hood.set(Constants.HoodConstants.homingPower);
   }
@@ -128,20 +142,7 @@ public class Hood extends SubsystemBase{
             Constants.HoodConstants.hoodTolerance);
   }
 
-  public void setAtHome() {
-    hood.setSelectedSensorPosition(0);
-    homed = true;
-  }
-
-  public void setNotAtHome() {
-    homed = false;
-  }
-
-  public boolean isAtHome() {
+  public boolean getHomed() {
     return hood.isRevLimitSwitchClosed() == 1 ? true : false;
-  }
-
-  public boolean isHomed() {
-    return homed;
-  }
+  } 
 }
