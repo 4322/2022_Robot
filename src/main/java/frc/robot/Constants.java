@@ -26,6 +26,7 @@ public final class Constants {
     public static final boolean joysticksEnabled = true;
     public static final boolean intakeEnabled = false;
     public static final boolean shooterEnabled = true;
+    public static final boolean kickerEnabled = true;
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
 
@@ -121,6 +122,7 @@ public final class Constants {
 
         public static final int flywheelLeftID = 0;
         public static final int flywheelRightID = 0;
+        public static final int kickerID = 0;
 
         public static final double kP = 0;
         public static final double kI = 0;
@@ -132,5 +134,6 @@ public final class Constants {
         public static final double rampRate = 0;
 
         public static final double minEjectVel = 0;
+        public static double kickerPower = 0.5;
     }
 }

@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.Drive_Manual;
-import frc.robot.commands.Shooter_SetPower;
+import frc.robot.commands.Shooter_ManualEject;
 import frc.robot.commands.Shooter_Stop;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Shooter;
@@ -25,7 +25,6 @@ public class RobotContainer {
   // Define controllers
   public static Joystick pilotl = new Joystick(0);
   public static Joystick pilotr = new Joystick(1);
-
   public static XboxController coPilot = new XboxController(2);
 
   // The robot's subsystems and commands are defined here...
@@ -62,7 +61,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    coPilot.b.whenPressed(new Shooter_SetPower(shooter, 3000));
+    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, 3000, coPilot));
     coPilot.a.whenPressed(stopShooter);
   }
 
