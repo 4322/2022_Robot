@@ -15,9 +15,6 @@ public class Hood extends SubsystemBase {
     
     private WPI_TalonFX hood;
 
-    //Hood Control
-    private boolean homed = false;
-
     //SHUFFLEBOARD
     private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
     private NetworkTableEntry hoodPositionTalon;
@@ -86,41 +83,46 @@ public class Hood extends SubsystemBase {
   }
 
   public void setCoastMode() {
-    hood.setNeutralMode(NeutralMode.Coast);
+    if (Constants.hoodEnabled) {
+      hood.setNeutralMode(NeutralMode.Coast);
+    }
   }
 
   public void setBrakeMode() {
-    hood.setNeutralMode(NeutralMode.Brake);
+    if (Constants.hoodEnabled) {
+      hood.setNeutralMode(NeutralMode.Brake);
+    }
   }
 
   public void setHoodPower(double power) {
-
-    double encValue = getPosition();
-    double _power = power;
-    
-    if (_power > 0) {
-      if (encValue >= Constants.HoodConstants.hoodMaxPosition) {
-        hood.stopMotor();
-      } else {
-        if (encValue >= Constants.HoodConstants.hoodMaxPosition - Constants.HoodConstants.hoodDecellerationDistance) {
-          _power *= (Constants.HoodConstants.hoodMaxPosition - encValue) /
-                    Constants.HoodConstants.hoodDecellerationDistance;
+    if (Constants.hoodEnabled) {
+      double encValue = getPosition();
+      double _power = power;
+      
+      if (_power > 0) {
+        if (encValue >= Constants.HoodConstants.hoodMaxPosition) {
+          hood.stopMotor();
+        } else {
+          if (encValue >= Constants.HoodConstants.hoodMaxPosition - Constants.HoodConstants.hoodDecellerationDistance) {
+            _power *= (Constants.HoodConstants.hoodMaxPosition - encValue) /
+                      Constants.HoodConstants.hoodDecellerationDistance;
+          }
+          // let motor controller apply minimum power bound for easier tuning
+          hood.set(Math.min(_power, Constants.HoodConstants.maxForwardPower));
         }
-        // let motor controller apply minimum power bound for easier tuning
-        hood.set(Math.min(_power, Constants.HoodConstants.maxForwardPower));
-      }
-    } else if (_power < 0) {
-      if (encValue <= Constants.HoodConstants.hoodMinPosition) {
-        hood.stopMotor();
-      } else {
-        if (encValue <= Constants.HoodConstants.hoodDecellerationDistance) {
-          _power *= -encValue / Constants.HoodConstants.hoodDecellerationDistance;
+      } else if (_power < 0) {
+        if (encValue <= Constants.HoodConstants.hoodMinPosition) {
+          hood.stopMotor();
+        } else {
+          if (encValue <= Constants.HoodConstants.hoodDecellerationDistance) {
+            _power *= -encValue / Constants.HoodConstants.hoodDecellerationDistance;
+          }
+          // let motor controller apply minimum power bound for easier tuning
+          hood.set(Math.max(_power, Constants.HoodConstants.maxReversePower));
         }
-        // let motor controller apply minimum power bound for easier tuning
-        hood.set(Math.max(_power, Constants.HoodConstants.maxReversePower));
+      } else {
+        hood.stopMotor();
       }
-    } else {
-      hood.stopMotor();
     }
   }
 
@@ -129,11 +131,15 @@ public class Hood extends SubsystemBase {
   }
 
   public void moveHome() {
-    hood.set(Constants.HoodConstants.homingPower);
+    if (Constants.hoodEnabled) {
+      hood.set(Constants.HoodConstants.homingPower);
+    }
   }
 
   public void setTargetPosition(double setpoint) {
-    hood.set(ControlMode.Position, setpoint);
+    if (Constants.hoodEnabled) {
+      hood.set(ControlMode.Position, setpoint);
+    }
   }
 
   // This is only valid following a set position command

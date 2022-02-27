@@ -26,7 +26,6 @@ public class Hood_Reset extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    hood.setNotAtHome();
     hood.moveHome();
   }
 
@@ -44,8 +43,7 @@ public class Hood_Reset extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (hood.isAtHome()) {
-      hood.setAtHome();
+    if (hood.getHomed()) {
       return true;
     }
     else if (timer.hasElapsed(Constants.HoodConstants.homingTimeout)) {
