@@ -19,6 +19,9 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public static final boolean debug = true;
+
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
     public static final boolean intakeEnabled = false;
@@ -26,7 +29,6 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
     public static final boolean hoodEnabled = true;
-    public static final boolean debugEnabled = false;
 
     public static final int controllerConfigTimeoutMs = 50;
 
