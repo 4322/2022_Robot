@@ -7,11 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.Drive_Manual;
+import frc.robot.commands.Hood_Manual;
+import frc.robot.commands.Hood_Reset;
 import frc.robot.commands.Intake_Intake;
 import frc.robot.commands.Intake_Stop;
 import frc.robot.commands.Shooter_ManualEject;
 import frc.robot.commands.Shooter_Stop;
 import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +37,7 @@ public class RobotContainer {
   private final Driveunbun driveunbun = new Driveunbun();
   private final Shooter shooter = new Shooter();
   private final Intake intake = new Intake();
+  private final Hood hood = new Hood();
 
   // Drive Commands
   private final Drive_Manual driveManual = new Drive_Manual(driveunbun);
@@ -44,6 +48,10 @@ public class RobotContainer {
   // Intake Commands
   private final Intake_Intake intakeIntake = new Intake_Intake(intake);
   private final Intake_Stop stopIntake = new Intake_Stop(intake);
+
+  // Hood Commands
+  private final Hood_Manual hoodManual = new Hood_Manual(hood);
+  private final Hood_Reset hoodReset = new Hood_Reset(hood);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,6 +80,8 @@ public class RobotContainer {
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
     coPilot.lt.whenHeld(stopIntake);
+    coPilot.rb.whenHeld(hoodManual);
+    coPilot.lb.whenHeld(hoodReset);
   }
 
   /**
