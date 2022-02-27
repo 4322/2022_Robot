@@ -170,6 +170,7 @@ public final class Constants {
         public static class Positions {
             //For preset positions
         }
+    }
 
     public static final class IntakeConstants {
         public static final int intakeTalon_ID = 0;
