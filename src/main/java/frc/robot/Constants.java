@@ -176,6 +176,7 @@ public final class Constants {
 
     public static final class ConveyorConstants {
 
+        public static int conveyorID = 0;
         public static double minBallDistIn = 2;
         public static double conveyorPower = 0.5;
 

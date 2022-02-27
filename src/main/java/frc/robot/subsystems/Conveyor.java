@@ -9,6 +9,7 @@ import frc.robot.Constants.ConveyorConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,7 @@ public class Conveyor extends SubsystemBase {
 
   public Conveyor() {
     if (Constants.conveyorEnabled) {
+      conveyor = new CANSparkMax(ConveyorConstants.conveyorID, MotorType.kBrushless);
       conveyor.restoreFactoryDefaults();
       conveyor.setInverted(true);
       conveyor.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
@@ -36,14 +38,20 @@ public class Conveyor extends SubsystemBase {
 
   }
 
-  public void enableKicker() {
-    if (Constants.kickerEnabled && (ultrasonic.getRangeInches() <= ConveyorConstants.minBallDistIn)) {
+  public void enableConveyor() {
+    if (Constants.conveyorEnabled && (ultrasonic.getRangeInches() <= ConveyorConstants.minBallDistIn)) {
       conveyor.set(ConveyorConstants.conveyorPower);
     }
   }
 
-  public void disableKicker() {
-    if (Constants.kickerEnabled) {
+  public void enableConveyorOverride() {
+    if (Constants.conveyorEnabled) {
+      conveyor.set(ConveyorConstants.conveyorPower);
+    }
+  }
+
+  public void disableConveyor() {
+    if (Constants.conveyorEnabled) {
       conveyor.stopMotor();
     }
   }
