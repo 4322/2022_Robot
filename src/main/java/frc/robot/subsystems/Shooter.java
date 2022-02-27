@@ -34,76 +34,90 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry targetRPM;
 
   public Shooter() {
-    flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
-    flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
+    if (Constants.shooterEnabled) {
+      flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
+      flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
 
-    flywheelLeft.restoreFactoryDefaults();
-    flywheelLeft.setInverted(true);
-    flywheelRight.restoreFactoryDefaults();
-    flywheelRight.follow(flywheelLeft, true);
-    flywheelLeft.setIdleMode(IdleMode.kCoast);
-    flywheelRight.setIdleMode(IdleMode.kCoast);
-    flywheelLeft.setClosedLoopRampRate(ShooterConstants.rampRate);  // don't eject the shooter
+      flywheelLeft.restoreFactoryDefaults();
+      flywheelLeft.setInverted(true);
+      flywheelRight.restoreFactoryDefaults();
+      flywheelRight.follow(flywheelLeft, true);
+      flywheelLeft.setIdleMode(IdleMode.kCoast);
+      flywheelRight.setIdleMode(IdleMode.kCoast);
+      flywheelLeft.setClosedLoopRampRate(ShooterConstants.rampRate);  // don't eject the shooter
 
-    flywheelEncoder = flywheelLeft.getEncoder();
-    flywheelPID = flywheelLeft.getPIDController();
+      flywheelEncoder = flywheelLeft.getEncoder();
+      flywheelPID = flywheelLeft.getPIDController();
 
-    flywheelPID.setP(ShooterConstants.kP);
-    flywheelPID.setI(ShooterConstants.kI);
-    flywheelPID.setD(ShooterConstants.kD);
-    flywheelPID.setIZone(ShooterConstants.kIz);
-    flywheelPID.setFF(ShooterConstants.kFF);
-    flywheelPID.setOutputRange(ShooterConstants.kMinRange, ShooterConstants.kMaxRange);
+      flywheelPID.setP(ShooterConstants.kP);
+      flywheelPID.setI(ShooterConstants.kI);
+      flywheelPID.setD(ShooterConstants.kD);
+      flywheelPID.setIZone(ShooterConstants.kIz);
+      flywheelPID.setFF(ShooterConstants.kFF);
+      flywheelPID.setOutputRange(ShooterConstants.kMinRange, ShooterConstants.kMaxRange);
 
-    // DEBUG
-    if (Constants.debug) {
-      tab = Shuffleboard.getTab("Shooter");
-    
-      power =
-        tab.add("Power", 0)
-        .withPosition(0,0)
-        .withSize(1,1)
-        .getEntry();
+      // DEBUG
+      if (Constants.debug) {
+        tab = Shuffleboard.getTab("Shooter");
+      
+        power =
+          tab.add("Power", 0)
+          .withPosition(0,0)
+          .withSize(1,1)
+          .getEntry();
 
-      currentRPM =
-        tab.add("Current RPM", 0)
-        .withPosition(1,0)
-        .withSize(1,1)
-        .getEntry();
+        currentRPM =
+          tab.add("Current RPM", 0)
+          .withPosition(1,0)
+          .withSize(1,1)
+          .getEntry();
 
-      targetRPM =
-        tab.add("Target RPM", 0)
-        .withPosition(2,0)
-        .withSize(1,1)
-        .getEntry();
+        targetRPM =
+          tab.add("Target RPM", 0)
+          .withPosition(2,0)
+          .withSize(1,1)
+          .getEntry();
+      }
     }
   }
 
   @Override
   public void periodic() {
-    if (Constants.debug) {
+    if (Constants.debug && Constants.shooterEnabled) {
       power.setDouble(flywheelLeft.getAppliedOutput());
       currentRPM.setDouble(getSpeed());
     }
   }
 
   public void setSpeed(double rpm) {
-    flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-    if (Constants.debug) {
-      targetRPM.setDouble(rpm);
+    if (Constants.shooterEnabled) {
+      flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      if (Constants.debug) {
+        targetRPM.setDouble(rpm);
+      }
     }
   }
 
   public double getSpeed() {
-    return flywheelEncoder.getVelocity();
+    if (Constants.shooterEnabled) {
+      return flywheelEncoder.getVelocity();
+    } else {
+      return -1;
+    }
   }
 
   // don't let balls get stuck in the shooter
   public boolean isAbleToEject() {
-    return getSpeed() >= ShooterConstants.minEjectVel;
+    if (Constants.shooterEnabled) {
+      return getSpeed() >= ShooterConstants.minEjectVel;
+    } else {
+      return false;
+    }
   }
   
   public void stopShooter() {
-    flywheelLeft.stopMotor();
+    if (Constants.shooterEnabled) {
+      flywheelLeft.stopMotor();
+    }
   }
 }
