@@ -72,8 +72,7 @@ public class TalonFXModule extends ControlModule {
 		config.peakOutputForward = DriveConstants.Rotation.maxPower;
 		config.peakOutputReverse = -DriveConstants.Rotation.maxPower;
 
-		talon.configFactoryDefault();
-		talon.configAllSettings(config);
+		talon.configAllSettings(config);	// factory default is the baseline
         talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
         talon.setInverted(false);
         talon.setSensorPhase(false);
@@ -98,8 +97,7 @@ public class TalonFXModule extends ControlModule {
 		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 		
 		m_encoder = new CANCoder(encoderID);
-		m_encoder.configFactoryDefault();
-		m_encoder.configAllSettings(encoderConfig);
+		m_encoder.configAllSettings(encoderConfig);  // factory default is the baseline
 
 		// wait for CANCoder position to stabilize
 		try {

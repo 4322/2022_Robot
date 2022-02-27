@@ -27,6 +27,8 @@ public class Driveunbun extends SubsystemBase {
     private TalonFXModule rearLeft;
     private TalonFXModule rearRight;
 
+    private AHRS gyro;
+
     public Driveunbun() {
         if (Constants.driveEnabled) {
             frontRightDrive = new WPI_TalonFX(Constants.DriveConstants.frontRightDriveID);
@@ -48,11 +50,28 @@ public class Driveunbun extends SubsystemBase {
                 WheelPosition.BACK_LEFT, Constants.DriveConstants.rearLeftEncoderID);
 
             if (Constants.gyroEnabled) {
-                SwerveHelper.setGyro(new AHRS(SPI.Port.kOnboardCS0));
+                gyro = new AHRS(SPI.Port.kMXP);
+
+                // wait for first gyro reading to be received
+                try {
+                    Thread.sleep(250);
+                }
+                catch (InterruptedException e) {}
+
+                resetFieldCentric();
+                SwerveHelper.setGyro(gyro);
             }
 
             SwerveHelper.setReversingToSpeed();
         }   
+    }
+
+    // make the current robot direction be forward
+    public void resetFieldCentric() {
+        if (gyro != null) {
+            gyro.setAngleAdjustment(0);
+            gyro.setAngleAdjustment(-gyro.getAngle());  
+        }
     }
 
     public void setSpeedAndAngle(double driveX, double driveY, double rotate) {

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.Drive_Manual;
 import frc.robot.commands.Hood_Manual;
 import frc.robot.commands.Hood_Reset;
+import frc.robot.commands.ResetFieldCentric;
 import frc.robot.commands.Intake_Intake;
 import frc.robot.commands.Intake_Stop;
 import frc.robot.commands.Shooter_ManualEject;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 /**
@@ -29,8 +31,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
   // Define controllers
-  public static Joystick pilotl = new Joystick(0);
-  public static Joystick pilotr = new Joystick(1);
+  public static Joystick rotateStick = new Joystick(0);
+  public static Joystick driveStick = new Joystick(1);
+  private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
   public static XboxController coPilot = new XboxController(2);
 
   // The robot's subsystems and commands are defined here...
@@ -76,6 +79,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driveTopLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
     coPilot.b.whenPressed(new Shooter_ManualEject(shooter, 3000, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
