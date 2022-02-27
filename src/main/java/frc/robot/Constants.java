@@ -136,4 +136,9 @@ public final class Constants {
         public static final double minEjectVel = 0;
         public static double kickerPower = 0.5;
     }
+
+    public static final class IntakeConstants {
+        public static final int intakeTalon_ID = 0;
+        public static final double intake_speed = 0.85;
+    }
 }
