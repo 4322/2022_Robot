@@ -1,6 +1,6 @@
 package frc.robot.subsystems.SwerveDrive;
 
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
@@ -32,7 +32,7 @@ public class SwerveHelper {
 	protected static double[] wheelAngle = new double[4];
 	protected static double[] wheelAngleChange = new double[4];
 
-	protected static Gyro m_gyro = null;
+	protected static AHRS m_gyro = null;
 
 	public static boolean fieldCentric = true;
 
@@ -52,7 +52,7 @@ public class SwerveHelper {
 
 	public static void calculate(double strafe, double forward, double rotate, double[] currentAngle){
 
-		if (fieldCentric && getGyro() != null) {
+		if (fieldCentric && getGyro() != null && getGyro().isConnected() && !getGyro().isCalibrating()) {
 			double gyroAngle =Math.toRadians(getGyro().getAngle());
 
 			double temp = forward * Math.cos(gyroAngle) + strafe*Math.sin(gyroAngle);
@@ -153,12 +153,12 @@ public class SwerveHelper {
 		useAngleToReverse = false;
 	}
 
-	public static void setGyro(Gyro gyro){
+	public static void setGyro(AHRS gyro){
 		m_gyro = gyro;
 		fieldCentric = true;
 	}
 
-	public static Gyro getGyro(){
+	public static AHRS getGyro(){
 		return m_gyro;
 	}
 
