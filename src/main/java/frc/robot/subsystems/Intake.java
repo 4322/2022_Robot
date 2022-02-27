@@ -10,12 +10,13 @@ public class Intake extends SubsystemBase{
     private WPI_TalonFX intakeMotor;
 
     public Intake() {
-
-        intakeMotor = new WPI_TalonFX(Constants.IntakeConstants.intakeTalon_ID);
-        intakeMotor.setInverted(true);
+        if (Constants.intakeEnabled) {
+            intakeMotor = new WPI_TalonFX(Constants.IntakeConstants.intakeTalon_ID);
+            intakeMotor.setInverted(true);
+        }
       }
     
-      public void collect()
+      public void intake()
       {
         intakeMotor.set(Constants.IntakeConstants.intake_speed);
       }
