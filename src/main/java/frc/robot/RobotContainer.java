@@ -7,9 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.Drive_Manual;
+import frc.robot.commands.Intake_Intake;
+import frc.robot.commands.Intake_Stop;
 import frc.robot.commands.Shooter_ManualEject;
 import frc.robot.commands.Shooter_Stop;
 import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -30,6 +33,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
   private final Shooter shooter = new Shooter();
+  private final Intake intake = new Intake();
 
   // Drive Commands
   private final Drive_Manual driveManual = new Drive_Manual(driveunbun);
@@ -37,6 +41,9 @@ public class RobotContainer {
   // Shooter Commands
   private final Shooter_Stop stopShooter = new Shooter_Stop(shooter);
 
+  // Intake Commands
+  private final Intake_Intake intakeIntake = new Intake_Intake(intake);
+  private final Intake_Stop stopIntake = new Intake_Stop(intake);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -63,6 +70,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     coPilot.b.whenPressed(new Shooter_ManualEject(shooter, 3000, coPilot));
     coPilot.a.whenPressed(stopShooter);
+    coPilot.rt.whenHeld(intakeIntake);
+    coPilot.lt.whenHeld(stopIntake);
   }
 
   /**
