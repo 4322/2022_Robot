@@ -19,10 +19,14 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public static final boolean debug = true;
+
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
     public static final boolean intakeEnabled = false;
-    public static final boolean shooterEnabled = false;
+    public static final boolean shooterEnabled = true;
+    public static final boolean kickerEnabled = true;
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = true;
 
@@ -110,5 +114,26 @@ public final class Constants {
             public static final double wheelDiameter = 4.0;
             public static final int ticksPerRev = 4096;
         }
+    }
+
+    public static final class ShooterConstants {
+
+        public static final boolean shooterEnabled = true;
+
+        public static final int flywheelLeftID = 0;
+        public static final int flywheelRightID = 0;
+        public static final int kickerID = 0;
+
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kIz = 0;
+        public static final double kFF = 0;
+        public static final double kMinRange = 0;
+        public static final double kMaxRange = 0;
+        public static final double rampRate = 0;
+
+        public static final double minEjectVel = 0;
+        public static double kickerPower = 0.5;
     }
 }
