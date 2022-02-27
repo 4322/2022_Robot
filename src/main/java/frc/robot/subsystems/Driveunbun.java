@@ -54,10 +54,10 @@ public class Driveunbun extends SubsystemBase {
 
                 // wait for first gyro reading to be received
                 try {
-                    Thread.sleep(50); // can go as low as 10, 50 to be safe
+                    Thread.sleep(250);
                 }
                 catch (InterruptedException e) {}
-                
+
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
             }
