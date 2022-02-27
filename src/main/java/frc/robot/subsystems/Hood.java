@@ -20,28 +20,12 @@ public class Hood extends SubsystemBase{
 
     //SHUFFLEBOARD
     private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
-
-    
-    private NetworkTableEntry hoodPositionTalon =
-        tab.add("Hood Position (Talon)", 0)
-        .withPosition(0,1)   
-        .withSize(1,1)
-        .getEntry();
-    private NetworkTableEntry hoodPower =
-        tab.add("Hood Power", 0)
-        .withPosition(1,1)
-        .withSize(1,1)
-        .getEntry();
+    private NetworkTableEntry hoodPositionTalon;
+    private NetworkTableEntry hoodPower;
     private NetworkTableEntry isHomeIndicator =
         tab.add("Is @ home", false)
         .withWidget(BuiltInWidgets.kBooleanBox)
         .withPosition(0,2)
-        .withSize(1,1)
-        .getEntry();
-    private NetworkTableEntry isHomedIndicator =
-        tab.add("Homed", false)
-        .withWidget(BuiltInWidgets.kBooleanBox)
-        .withPosition(1,2)
         .withSize(1,1)
         .getEntry();
     
@@ -51,17 +35,32 @@ public class Hood extends SubsystemBase{
 
             hood.configFactoryDefault();
             hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                                                      Constants.HoodConstants.kPIDLoopIdx,
-                                                      Constants.HoodConstants.kTimeoutMs);
+                                                        Constants.HoodConstants.kPIDLoopIdx,
+                                                        Constants.HoodConstants.kTimeoutMs);
             hood.setSensorPhase(Constants.HoodConstants.kSensorPhase);
         
             /* Config the peak and nominal outputs */
-                hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower, Constants.HoodConstants.kTimeoutMs);
-                hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower, Constants.HoodConstants.kTimeoutMs);
-                hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower, Constants.HoodConstants.kTimeoutMs);
-                hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower, Constants.HoodConstants.kTimeoutMs);   
+            hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower, 
+                Constants.HoodConstants.kTimeoutMs);
+            hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower, 
+                Constants.HoodConstants.kTimeoutMs);
+            hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower, Constants.HoodConstants.kTimeoutMs);
+            hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower, Constants.HoodConstants.kTimeoutMs);   
+            
+            setCoastMode();  //Allow hood to be moved manually
+
+            // DEBUG
+            if (Constants.debug) {
                 
-                setCoastMode();  //Allow hood to be moved manually
+                hoodPositionTalon = tab.add("Hood Position (Talon)", 0)
+                .withPosition(0,1)   
+                .withSize(1,1)
+                .getEntry();
+                hoodPower = tab.add("Hood Power", 0)
+                .withPosition(1,1)
+                .withSize(1,1)
+                .getEntry();
+            }
         }   
     }
 
@@ -69,7 +68,6 @@ public class Hood extends SubsystemBase{
   public void periodic() {
     hoodPositionTalon.setDouble(getPosition());
     isHomeIndicator.setBoolean(isAtHome());
-    isHomedIndicator.setBoolean(isHomed());
     hoodPower.setDouble(hood.getMotorOutputPercent());
   }
 
