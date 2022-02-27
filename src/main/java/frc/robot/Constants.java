@@ -26,7 +26,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
     public static final boolean hoodEnabled = true;
-    //public static final boolean debugModeEnabled = false;
+    public static final boolean debugEnabled = false;
 
     public static final int controllerConfigTimeoutMs = 50;
 
