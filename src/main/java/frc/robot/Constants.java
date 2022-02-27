@@ -28,7 +28,8 @@ public final class Constants {
     public static final boolean shooterEnabled = true;
     public static final boolean kickerEnabled = true;
     public static final boolean climberEnabled = false;
-    public static final boolean gyroEnabled = true;
+    public static final boolean gyroEnabled = false;
+    public static final boolean hoodEnabled = true;
 
     public static final int controllerConfigTimeoutMs = 50;
 
@@ -135,5 +136,39 @@ public final class Constants {
 
         public static final double minEjectVel = 0;
         public static double kickerPower = 0.5;
+    }
+    
+    public static final class HoodConstants {
+            //All Constants values need to be adjusted from last years code
+        public static final int hoodTalon_ID = 14;
+        public static final int hoodMaxPosition = 9300; 
+        public static int hoodMinPosition = 0;     //allows to be changed in demo mode
+        public static final int hoodDecellerationDistance = 500; 
+        public static final int hoodTolerance = 20;
+        public static final double homingTimeout = 5.0; 
+        public static final double autoTimeout = 3.0; 
+
+        public static double maxForwardPower = 1.0;    //allows to be changed in demo mode
+        public static double maxReversePower = -1.0;   //allows to be changed in demo mode
+        public static final double minForwardPower = 0.1;
+        public static final double minReversePower = -0.1;
+        public static final double homingPower = -0.4;
+        public static final double manualDeadband = 0.05;
+
+
+        public static final int kPIDLoopIdx = 0;
+        public static final int kTimeoutMs = 30;
+        public static final boolean kSensorPhase = false;
+        public static final boolean kMotorInvert = false;
+
+        public static class PID_Values {
+            public static final double kP = 0;
+            public static final double kI = 0;
+            public static final double kD = 0;
+        }
+
+        public static class Positions {
+            //For preset positions
+        }
     }
 }
