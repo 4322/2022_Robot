@@ -30,6 +30,8 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
     public static final boolean hoodEnabled = true;
+    public static final boolean conveyorEnabled = true;
+    public static final boolean ultrasonicEnabled = false;
 
     public static final int controllerConfigTimeoutMs = 50;
 
@@ -173,7 +175,17 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
+
         public static final int intakeTalon_ID = 0;
         public static final double intake_speed = 0.85;
+        
+    }
+
+    public static final class ConveyorConstants {
+
+        public static int conveyorID = 0;
+        public static double minBallDistIn = 2;
+        public static double conveyorPower = 0.5;
+
     }
 }

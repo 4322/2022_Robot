@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.Conveyor_Stop;
 import frc.robot.commands.Drive_Manual;
 import frc.robot.commands.Hood_Manual;
 import frc.robot.commands.Hood_Reset;
@@ -14,6 +15,7 @@ import frc.robot.commands.Intake_Intake;
 import frc.robot.commands.Intake_Stop;
 import frc.robot.commands.Shooter_ManualEject;
 import frc.robot.commands.Shooter_Stop;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
@@ -41,6 +43,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
+  private final Conveyor conveyor = new Conveyor();
 
   // Drive Commands
   private final Drive_Manual driveManual = new Drive_Manual(driveunbun);
@@ -56,12 +59,16 @@ public class RobotContainer {
   private final Hood_Manual hoodManual = new Hood_Manual(hood);
   private final Hood_Reset hoodReset = new Hood_Reset(hood);
 
+  // Conveyor Commands
+  private final Conveyor_Stop stopConveyor = new Conveyor_Stop(conveyor);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
     driveunbun.setDefaultCommand(driveManual);
+    conveyor.setDefaultCommand(stopConveyor);
   }
 
   public void disableSubsystems() {
@@ -80,7 +87,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driveTopLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
-    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, 3000, coPilot));
+    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 3000, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
     coPilot.lt.whenHeld(stopIntake);
