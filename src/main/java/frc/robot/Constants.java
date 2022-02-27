@@ -30,6 +30,8 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean gyroEnabled = false;
     public static final boolean hoodEnabled = true;
+    public static final boolean conveyorEnabled = true;
+    public static final boolean ultrasonicEnabled = false;
 
     public static final int controllerConfigTimeoutMs = 50;
 
@@ -170,5 +172,12 @@ public final class Constants {
         public static class Positions {
             //For preset positions
         }
+    }
+
+    public static final class ConveyorConstants {
+
+        public static double minBallDistIn = 2;
+        public static double conveyorPower = 0.5;
+
     }
 }
