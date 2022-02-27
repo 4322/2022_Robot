@@ -171,4 +171,9 @@ public final class Constants {
             //For preset positions
         }
     }
+
+    public static final class IntakeConstants {
+        public static final int intakeTalon_ID = 0;
+        public static final double intake_speed = 0.85;
+    }
 }
