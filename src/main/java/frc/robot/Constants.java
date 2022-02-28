@@ -61,8 +61,8 @@ public final class Constants {
             public static final double kD = 6.0;
 
             public static final double configCLosedLoopRamp = 0.08;
-            public static final double minPower = 0.0;  // resistance on carpet
-            public static final double maxPower = 0.0;   // reduce gear wear and overshoot
+            public static final double minPower = 0.0;  // allow for tighter tolerance
+            public static final double maxPower = 0.3;  // reduce gear wear and overshoot
             public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
             public static final double configVoltageCompSaturation = 12;
