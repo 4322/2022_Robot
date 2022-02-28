@@ -57,12 +57,12 @@ public final class Constants {
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
         public final static class Rotation {
-            public static final double kP = 0.1;
-            public static final double kD = 0.0;
+            public static final double kP = 1.2;
+            public static final double kD = 6.0;
 
             public static final double configCLosedLoopRamp = 0.08;
-            public static final double minPower = 0.16;  // resistance on carpet
-            public static final double maxPower = 0.3;   // reduce gear wear and overshoot
+            public static final double minPower = 0.0;  // resistance on carpet
+            public static final double maxPower = 0.0;   // reduce gear wear and overshoot
             public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
             public static final double configVoltageCompSaturation = 12;
@@ -78,7 +78,7 @@ public final class Constants {
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
 
-            public static final double allowableClosedloopError = 2.0 / countToDegrees;
+            public static final double allowableClosedloopError = 0.35 / countToDegrees;
 
             // values obtained from swerve module zeroing procedure
             public static final double[] CANCoderOffsetDegrees;
