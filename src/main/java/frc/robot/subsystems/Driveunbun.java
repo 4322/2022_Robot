@@ -66,12 +66,24 @@ public class Driveunbun extends SubsystemBase {
         }   
     }
 
+    // activate field centric driving using the previously set forward orientation
+    public void setToFieldCentric() {
+        if (gyro != null) {
+            SwerveHelper.setToFieldCentric();
+        }
+    }
+
     // make the current robot direction be forward
     public void resetFieldCentric() {
         if (gyro != null) {
             gyro.setAngleAdjustment(0);
-            gyro.setAngleAdjustment(-gyro.getAngle());  
+            gyro.setAngleAdjustment(-gyro.getAngle()); 
+            setToFieldCentric(); 
         }
+    }
+
+    public void setToRobotCentric() {
+        SwerveHelper.setToBotCentric();
     }
 
     public void setSpeedAndAngle(double driveX, double driveY, double rotate) {

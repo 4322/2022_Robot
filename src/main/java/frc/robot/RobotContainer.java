@@ -7,9 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.Drive_Manual;
-import frc.robot.commands.ResetFieldCentric;
-import frc.robot.subsystems.Driveunbun;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -25,6 +24,8 @@ public class RobotContainer {
   public static Joystick rotateStick = new Joystick(0);
   public static Joystick driveStick = new Joystick(1);
   private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
+  private static JoystickButton driveBottomLeftButton = new JoystickButton(driveStick, 3);
+  private static JoystickButton driveTopRightButton = new JoystickButton(driveStick, 6);
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -54,8 +55,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveTopLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
-  }
+    driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
+    driveBottomLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
+    driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
+   }
   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
