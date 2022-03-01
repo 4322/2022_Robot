@@ -6,20 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.Conveyor_Stop;
-import frc.robot.commands.Drive_Manual;
-import frc.robot.commands.Hood_Manual;
-import frc.robot.commands.Hood_Reset;
-import frc.robot.commands.ResetFieldCentric;
-import frc.robot.commands.Intake_Intake;
-import frc.robot.commands.Intake_Stop;
-import frc.robot.commands.Shooter_ManualEject;
-import frc.robot.commands.Shooter_Stop;
-import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Driveunbun;
-import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+import frc.robot.XboxController;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -33,10 +22,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // Define controllers
-  public static Joystick rotateStick = new Joystick(0);
-  public static Joystick driveStick = new Joystick(1);
-  private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
+  public static Joystick driveStick = new Joystick(0);
   public static XboxController coPilot = new XboxController(2);
+
+  private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
+  private static JoystickButton driveBottomLeftButton = new JoystickButton(driveStick, 3);
+  private static JoystickButton driveTopRightButton = new JoystickButton(driveStick, 6);
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -87,14 +78,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driveTopLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
-    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 3000, coPilot));
+    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 3000.0, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
     coPilot.lt.whenHeld(stopIntake);
     coPilot.rb.whenHeld(hoodManual);
     coPilot.lb.whenHeld(hoodReset);
-  }
-
+    driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
+    driveBottomLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
+    driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
+   }
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

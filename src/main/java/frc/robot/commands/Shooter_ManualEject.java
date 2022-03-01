@@ -8,9 +8,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.XboxController;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
-import frc.robot.XboxController;
 
 public class Shooter_ManualEject extends CommandBase {
   /**
@@ -23,11 +23,11 @@ public class Shooter_ManualEject extends CommandBase {
   private XboxController m_copilot;
 
 
-  public Shooter_ManualEject(Shooter shooterSubsystem, Conveyor conveyorSubsystem, double rpm, XboxController copilot) {
+  public Shooter_ManualEject(Shooter shooterSubsystem, Conveyor conveyorSubsystem, double rpm, XboxController coPilot) {
     shooter = shooterSubsystem;
     conveyor = conveyorSubsystem;
     m_rpm = rpm;
-    m_copilot = copilot;
+    m_copilot = coPilot;
     addRequirements(shooter);
   }
 

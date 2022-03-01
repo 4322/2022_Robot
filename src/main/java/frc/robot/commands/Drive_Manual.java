@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import frc.robot.RobotContainer;
@@ -36,7 +32,7 @@ public class Drive_Manual extends CommandBase {
   public void execute() {
     if (Constants.joysticksEnabled) {
       driveunbun.setSpeedAndAngle(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
-        RobotContainer.rotateStick.getX());
+        RobotContainer.driveStick.getZ());
     }
   }
 
