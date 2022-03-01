@@ -21,8 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // Define controllers
-  public static Joystick rotateStick = new Joystick(0);
-  public static Joystick driveStick = new Joystick(1);
+  public static Joystick driveStick = new Joystick(0);
   private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
   private static JoystickButton driveBottomLeftButton = new JoystickButton(driveStick, 3);
   private static JoystickButton driveTopRightButton = new JoystickButton(driveStick, 6);
