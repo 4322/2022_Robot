@@ -94,7 +94,7 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
             
-            if (Math.abs(rotate) < 0.1) {
+            if (Math.abs(rotate) < Constants.DriveConstants.Rotation.twistDeadband) {
                 rotate = 0;
             }
 
