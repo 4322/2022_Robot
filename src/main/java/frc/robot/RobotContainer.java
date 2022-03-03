@@ -58,8 +58,12 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    driveunbun.setDefaultCommand(driveManual);
-    conveyor.setDefaultCommand(stopConveyor);
+    if (Constants.driveEnabled) {
+      driveunbun.setDefaultCommand(driveManual);
+    }
+    if (Constants.conveyorEnabled) {
+      conveyor.setDefaultCommand(stopConveyor);
+    }
   }
 
   public void disableSubsystems() {

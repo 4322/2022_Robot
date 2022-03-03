@@ -24,13 +24,13 @@ public final class Constants {
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
+    public static final boolean gyroEnabled = true;
     public static final boolean intakeEnabled = false;
-    public static final boolean shooterEnabled = true;
-    public static final boolean kickerEnabled = true;
+    public static final boolean shooterEnabled = false;
+    public static final boolean kickerEnabled = false;
     public static final boolean climberEnabled = false;
-    public static final boolean gyroEnabled = false;
-    public static final boolean hoodEnabled = true;
-    public static final boolean conveyorEnabled = true;
+    public static final boolean hoodEnabled = false;
+    public static final boolean conveyorEnabled = false;
     public static final boolean ultrasonicEnabled = false;
 
     public static final int controllerConfigTimeoutMs = 50;
@@ -86,6 +86,7 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double allowableClosedloopError = 0.35 / countToDegrees;
+            public static final double twistDeadband = 0.05;
 
             // values obtained from swerve module zeroing procedure
             public static final double[] CANCoderOffsetDegrees;
