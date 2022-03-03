@@ -86,7 +86,7 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double allowableClosedloopError = 0.35 / countToDegrees;
-            public static final double twistDeadband = 0.05;
+            public static final double twistDeadband = 0.08;
 
             // values obtained from swerve module zeroing procedure
             public static final double[] CANCoderOffsetDegrees;

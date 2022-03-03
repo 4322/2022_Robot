@@ -94,8 +94,15 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
             
-            if (Math.abs(rotate) < Constants.DriveConstants.Rotation.twistDeadband) {
+            double twistDeadband = Constants.DriveConstants.Rotation.twistDeadband;
+            if (Math.abs(rotate) < twistDeadband) {
                 rotate = 0;
+            }
+            else if (rotate > 0) {
+                rotate = (rotate - twistDeadband) / (1 - twistDeadband);  // rescale to full positive range
+            }
+            else {
+                rotate = (rotate + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
             }
 
             /* cube joystick inputs to increase sensitivity
