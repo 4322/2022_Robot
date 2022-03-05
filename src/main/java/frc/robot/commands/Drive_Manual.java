@@ -19,7 +19,7 @@ public class Drive_Manual extends CommandBase {
   private final Driveunbun driveunbun;
   private final double twistDeadband = DriveConstants.twistDeadband;
   private final double rotDeadband = DriveConstants.rotateToDeadband; // Deadband for turning to angle of joystick
-  private boolean rotTo;
+  private boolean rotTo = false;
   private double rotate;
 
   public Drive_Manual(Driveunbun drivesubsystem) {
@@ -59,12 +59,15 @@ public class Drive_Manual extends CommandBase {
 
         driveunbun.drive(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
           rotate);
+
       } else {
+
         // Get angle of joystick
-        rotate = Math.atan2(RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX());
+        rotate = 90 - Math.toDegrees(Math.atan2(RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX()));
 
         driveunbun.driveAutoRotate(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
           rotate);
+
       }
     }
   }

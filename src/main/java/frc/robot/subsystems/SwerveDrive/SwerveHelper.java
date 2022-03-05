@@ -164,7 +164,11 @@ public class SwerveHelper {
 
 	// convert angle to range of +/- 180 degrees
 	public static double boundDegrees(double angleDegrees) {
-		return ((angleDegrees + 180) % 360) - 180;
+		double x = ((angleDegrees + 180) % 360) - 180;
+		if (x < -180) {
+			x += 360;
+		}
+		return x;
 	}
 }
 

@@ -5,7 +5,10 @@ import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -32,6 +35,10 @@ public class Driveunbun extends SubsystemBase {
     private AHRS gyro;
 
     private PIDController rotPID;
+
+    private ShuffleboardTab tab;
+    private NetworkTableEntry errorDisplay;
+    private NetworkTableEntry rotSpeedDisplay;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -66,6 +73,17 @@ public class Driveunbun extends SubsystemBase {
 
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
+                if (Constants.driveEnabled) {
+                    tab = Shuffleboard.getTab("Drivebase");
+                    errorDisplay = tab.add("Rot Error", 0)
+                    .withPosition(0,0)   
+                    .withSize(1,1)
+                    .getEntry();
+                    rotSpeedDisplay = tab.add("Rot Speed Display", 0)
+                    .withPosition(0,1)   
+                    .withSize(1,1)
+                    .getEntry();
+                }
             }
 
             SwerveHelper.setReversingToSpeed();
@@ -124,14 +142,17 @@ public class Driveunbun extends SubsystemBase {
     // Uses a PID Controller to rotate the robot to a certain degree
     // Must be periodically updated to work
     public void driveAutoRotate(double driveX, double driveY, double autoRotateDeg) {
-        double error = SwerveHelper.boundDegrees(gyro.getAngle() - autoRotateDeg);
-        drive(driveX, driveY, rotPID.calculate(error, 0));
+        double error = SwerveHelper.boundDegrees(autoRotateDeg - gyro.getAngle());
+        double rotPIDSpeed = rotPID.calculate(error, 0);
+        drive(driveX, driveY, rotPIDSpeed);
+        errorDisplay.setDouble(error);
+        rotSpeedDisplay.setDouble(rotPIDSpeed);
     }
 
-    // Drives the robot at a certain angle
+    // Drives the robot at a certain angle (relative to front of robot)
     // Must be periodically updated to work
     public void drivePolar(double angle, double speed, double rotationDeg) {
-        angle = Math.toRadians(angle);
+        angle = Math.toRadians(-angle + 90); // adjust for front of robot as 0 and clockwise rotation
         double x = speed * Math.cos(angle);
         double y = speed * Math.sin(angle);
         driveAutoRotate(x, y, rotationDeg);
