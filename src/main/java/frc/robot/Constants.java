@@ -33,7 +33,7 @@ public final class Constants {
     public static final boolean conveyorEnabled = false;
     public static final boolean ultrasonicEnabled = false;
 
-    public static final boolean driveTwoJoystick = false; // defaults to one joystick drive
+    public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
     public static final int controllerConfigTimeoutMs = 50;
 
