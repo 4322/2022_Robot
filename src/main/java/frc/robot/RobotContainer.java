@@ -23,6 +23,7 @@ public class RobotContainer {
 
   // Define controllers
   public static Joystick driveStick = new Joystick(0);
+  public static Joystick rotateStick;
   public static XboxController coPilot = new XboxController(2);
 
   private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
@@ -55,6 +56,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    rotateStick = new Joystick(1);
+
     // Configure the button bindings
     configureButtonBindings();
 

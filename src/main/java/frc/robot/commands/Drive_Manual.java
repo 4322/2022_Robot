@@ -31,8 +31,13 @@ public class Drive_Manual extends CommandBase {
   @Override
   public void execute() {
     if (Constants.joysticksEnabled) {
-      driveunbun.setSpeedAndAngle(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
-        RobotContainer.driveStick.getZ());
+      if (Constants.driveTwoJoystick) {
+        driveunbun.setSpeedAndAngle(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
+          RobotContainer.rotateStick.getX());
+      } else {
+        driveunbun.setSpeedAndAngle(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
+          RobotContainer.driveStick.getZ());
+      }
     }
   }
 
