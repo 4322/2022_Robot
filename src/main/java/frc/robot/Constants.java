@@ -65,6 +65,12 @@ public final class Constants {
         public static final double wheelBaseLengthFeet = 26.75/12.0;
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
+        public static final double autoRotkP = 0;
+        public static final double autoRotkD = 0;
+
+        public static final double twistDeadband = 0.08;
+        public static final double rotateToDeadband = 0.25;
+
         public final static class Rotation {
             public static final double kP = 1.2;
             public static final double kD = 6.0;
@@ -88,7 +94,6 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double allowableClosedloopError = 0.35 / countToDegrees;
-            public static final double twistDeadband = 0.08;
 
             // values obtained from swerve module zeroing procedure
             public static final double[] CANCoderOffsetDegrees;

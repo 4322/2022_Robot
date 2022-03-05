@@ -4,9 +4,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -29,6 +31,8 @@ public class Driveunbun extends SubsystemBase {
 
     private AHRS gyro;
 
+    private PIDController rotPID;
+
     public Driveunbun() {
         if (Constants.driveEnabled) {
             frontRightDrive = new WPI_TalonFX(Constants.DriveConstants.frontRightDriveID);
@@ -39,6 +43,8 @@ public class Driveunbun extends SubsystemBase {
             frontLeftRotation = new WPI_TalonFX(Constants.DriveConstants.frontLeftRotationID);
             rearRightRotation = new WPI_TalonFX(Constants.DriveConstants.rearRightRotationID);
             rearLeftRotation = new WPI_TalonFX(Constants.DriveConstants.rearLeftRotationID);
+
+            rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
             
             frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, 
                 WheelPosition.FRONT_RIGHT, Constants.DriveConstants.frontRightEncoderID);
@@ -86,25 +92,14 @@ public class Driveunbun extends SubsystemBase {
         SwerveHelper.setToBotCentric();
     }
 
-    public void setSpeedAndAngle(double driveX, double driveY, double rotate) {
+    public void drive(double driveX, double driveY, double rotate) {
         if (Constants.driveEnabled) {
             double[] currentAngle = new double[4];
             currentAngle[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
-            
-            double twistDeadband = Constants.DriveConstants.Rotation.twistDeadband;
-            if (Math.abs(rotate) < twistDeadband) {
-                rotate = 0;
-            }
-            else if (rotate > 0) {
-                rotate = (rotate - twistDeadband) / (1 - twistDeadband);  // rescale to full positive range
-            }
-            else {
-                rotate = (rotate + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
-            }  
-
+    
             /* cube joystick inputs to increase sensitivity
              x = smaller value
              y = greater value
@@ -124,6 +119,22 @@ public class Driveunbun extends SubsystemBase {
             rearLeft.setSpeedAndAngle();
             rearRight.setSpeedAndAngle();
         }  
+    }
+
+    // Uses a PID Controller to rotate the robot to a certain degree
+    // Must be periodically updated to work
+    public void driveAutoRotate(double driveX, double driveY, double autoRotateDeg) {
+        double error = SwerveHelper.boundDegrees(gyro.getAngle() - autoRotateDeg);
+        drive(driveX, driveY, rotPID.calculate(error, 0));
+    }
+
+    // Drives the robot at a certain angle
+    // Must be periodically updated to work
+    public void drivePolar(double angle, double speed, double rotationDeg) {
+        angle = Math.toRadians(angle);
+        double x = speed * Math.cos(angle);
+        double y = speed * Math.sin(angle);
+        driveAutoRotate(x, y, rotationDeg);
     }
 
     public void setCoastMode () {
