@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import javax.naming.spi.InitialContextFactoryBuilder;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +25,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private PowerDistribution pdp = new PowerDistribution();
+  private ShuffleboardTab tab;
+  private NetworkTableEntry ampsTab;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,6 +43,10 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer = new RobotContainer();
+
+    if (Constants.debug) {
+      InitCurrentDisplay();
+    }
   }
 
   /**
@@ -49,6 +63,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    if (Constants.debug) {
+      UpdateCurrentDisplay();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -103,4 +120,25 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  private void InitCurrentDisplay() {
+    tab = Shuffleboard.getTab("PDP");
+
+    ampsTab = tab.add("Current", 0)
+    .withPosition(0,0)   
+    .withSize(1,3)
+    .getEntry();
+  }
+
+  private void UpdateCurrentDisplay() {
+    String[] text = {"Right Front Drive: " + pdp.getCurrent(Constants.PDP.driveFrontRight),
+                     "Left Front Drive:  " + pdp.getCurrent(Constants.PDP.driveFrontLeft),
+                     "Left Rear Drive: " + pdp.getCurrent(Constants.PDP.driveRearLeft),
+                     "Right Rear Drive: " + pdp.getCurrent(Constants.PDP.driveRearRight),
+                     "Right Front Rotation: " + pdp.getCurrent(Constants.PDP.rotationFrontRight),
+                     "Left Front Rotation:  " + pdp.getCurrent(Constants.PDP.rotationFrontLeft),
+                     "Left Rear Rotation: " + pdp.getCurrent(Constants.PDP.rotationRearLeft),
+                     "Right Rear Rotation: " + pdp.getCurrent(Constants.PDP.rotationRearRight)};
+    ampsTab.setStringArray(text);
+  }
 }
