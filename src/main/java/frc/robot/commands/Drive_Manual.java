@@ -19,6 +19,10 @@ public class Drive_Manual extends CommandBase {
   private final Driveunbun driveunbun;
   private final double twistDeadband = DriveConstants.twistDeadband;
   private final double rotDeadband = DriveConstants.rotateToDeadband; // Deadband for turning to angle of joystick
+  private double rawX;
+  private double rawY;
+  private double driveX;
+  private double driveY;
   private boolean rotTo = false;
   private double rotate;
 
@@ -36,7 +40,23 @@ public class Drive_Manual extends CommandBase {
   @Override
   public void execute() {
     if (Constants.joysticksEnabled) {
-      
+      rawX = RobotContainer.driveStick.getX();
+      rawY = RobotContainer.driveStick.getY();
+
+      /* 
+        cube joystick inputs to increase sensitivity
+        x = smaller value
+        y = greater value
+        x = (y^3 / y) * x 
+      */
+      if (Math.abs(rawX) >= Math.abs(rawY)) {
+        driveX = rawX*rawX*rawX;
+        driveY = rawX*rawX*rawY;
+      } else {
+        driveX = rawY*rawY*rawX;
+        driveY = rawY*rawY*rawY;
+      }
+
       if (Constants.driveTwoJoystick) {
         // Uses pythagorean theorem to get deadband in any direction
         rotTo = Math.sqrt(Math.pow(RobotContainer.rotateStick.getX(), 2) + 
@@ -57,15 +77,15 @@ public class Drive_Manual extends CommandBase {
             rotate = (rotate + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
         } 
 
-        driveunbun.drive(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
-          rotate);
+        driveunbun.drive(driveX, driveY, 
+          rotate*rotate*rotate);
 
       } else {
 
         // Get angle of joystick
         rotate = 90 - Math.toDegrees(Math.atan2(RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX()));
 
-        driveunbun.driveAutoRotate(RobotContainer.driveStick.getX(), RobotContainer.driveStick.getY(), 
+        driveunbun.driveAutoRotate(driveX, driveY, 
           rotate);
 
       }
