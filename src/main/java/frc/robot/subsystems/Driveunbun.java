@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.Drive;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -39,6 +40,8 @@ public class Driveunbun extends SubsystemBase {
     private ShuffleboardTab tab;
     private NetworkTableEntry errorDisplay;
     private NetworkTableEntry rotSpeedDisplay;
+    private NetworkTableEntry rotkP;
+    private NetworkTableEntry rotkD;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -87,6 +90,16 @@ public class Driveunbun extends SubsystemBase {
                 .withPosition(0,1)   
                 .withSize(1,1)
                 .getEntry();
+
+                rotkP = tab.add("Rotation kP", 0)
+                .withPosition(1,0)   
+                .withSize(1,1)
+                .getEntry();
+
+                rotkD = tab.add("Rotation kD", 0)
+                .withPosition(2,0)   
+                .withSize(1,1)
+                .getEntry();
             }
 
             SwerveHelper.setReversingToSpeed();
@@ -121,6 +134,12 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
     
+            if (rotate > DriveConstants.maxAutoRotSpd) {
+                rotate = DriveConstants.maxAutoRotSpd;
+            } else if (rotate < -DriveConstants.maxAutoRotSpd) {
+                rotate = -DriveConstants.maxAutoRotSpd;
+            }
+
             SwerveHelper.calculate(
                     driveX, driveY, rotate, currentAngle
             );
@@ -135,13 +154,14 @@ public class Driveunbun extends SubsystemBase {
     // Uses a PID Controller to rotate the robot to a certain degree
     // Must be periodically updated to work
     public void driveAutoRotate(double driveX, double driveY, double autoRotateDeg) {
+
+        if (Constants.debug) {
+            rotPID.setP(rotkP.getDouble(DriveConstants.autoRotkP));
+            rotPID.setD(rotkD.getDouble(DriveConstants.autoRotkD));
+        }
+
         double error = SwerveHelper.boundDegrees(autoRotateDeg - gyro.getAngle());
         double rotPIDSpeed = rotPID.calculate(error, 0);
-
-        // Normalize PID to between max and min set in constants
-        // Referenced from: https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
-        rotPIDSpeed = (rotPIDSpeed - DriveConstants.minAutoRotSpd) /
-            (DriveConstants.maxAutoRotSpd - DriveConstants.minAutoRotSpd);
 
         drive(driveX, driveY, rotPIDSpeed);
 

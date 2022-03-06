@@ -83,7 +83,7 @@ public class Drive_Manual extends CommandBase {
       } else {
 
         // Get angle of joystick
-        rotate = 90 - Math.toDegrees(Math.atan2(RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX()));
+        rotate =  90 - Math.toDegrees(Math.atan2(-RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX()));
 
         driveunbun.driveAutoRotate(driveX, driveY, 
           rotate);
