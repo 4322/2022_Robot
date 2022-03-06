@@ -73,17 +73,20 @@ public class Driveunbun extends SubsystemBase {
 
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
-                if (Constants.driveEnabled) {
-                    tab = Shuffleboard.getTab("Drivebase");
-                    errorDisplay = tab.add("Rot Error", 0)
-                    .withPosition(0,0)   
-                    .withSize(1,1)
-                    .getEntry();
-                    rotSpeedDisplay = tab.add("Rot Speed Display", 0)
-                    .withPosition(0,1)   
-                    .withSize(1,1)
-                    .getEntry();
-                }
+            }
+
+            if (Constants.debug) {
+                tab = Shuffleboard.getTab("Drivebase");
+
+                errorDisplay = tab.add("Rot Error", 0)
+                .withPosition(0,0)   
+                .withSize(1,1)
+                .getEntry();
+
+                rotSpeedDisplay = tab.add("Rotation Speed", 0)
+                .withPosition(0,1)   
+                .withSize(1,1)
+                .getEntry();
             }
 
             SwerveHelper.setReversingToSpeed();
@@ -134,9 +137,18 @@ public class Driveunbun extends SubsystemBase {
     public void driveAutoRotate(double driveX, double driveY, double autoRotateDeg) {
         double error = SwerveHelper.boundDegrees(autoRotateDeg - gyro.getAngle());
         double rotPIDSpeed = rotPID.calculate(error, 0);
+
+        // Normalize PID to between max and min set in constants
+        // Referenced from: https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
+        rotPIDSpeed = (rotPIDSpeed - DriveConstants.minAutoRotSpd) /
+            (DriveConstants.maxAutoRotSpd - DriveConstants.minAutoRotSpd);
+
         drive(driveX, driveY, rotPIDSpeed);
-        errorDisplay.setDouble(error);
-        rotSpeedDisplay.setDouble(rotPIDSpeed);
+
+        if (Constants.debug) {
+            errorDisplay.setDouble(error);
+            rotSpeedDisplay.setDouble(rotPIDSpeed);
+        }
     }
 
     // Drives the robot at a certain angle (relative to front of robot)
