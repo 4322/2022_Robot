@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import javax.naming.spi.InitialContextFactoryBuilder;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,8 +25,15 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private PowerDistribution pdp = new PowerDistribution();
-  private ShuffleboardTab tab;
-  private NetworkTableEntry ampsTab;
+  private ShuffleboardTab tabPDP = Shuffleboard.getTab("PDP");
+  private NetworkTableEntry rightFrontDriveEntry = tabPDP.add("Right Front Drive Amps", 0).getEntry();
+  private NetworkTableEntry leftFrontDriveEntry = tabPDP.add("Left Front Drive Amps", 0).getEntry();
+  private NetworkTableEntry leftRearDriveEntry = tabPDP.add("Left Rear Drive Amps", 0).getEntry();
+  private NetworkTableEntry rightRearDriveEntry = tabPDP.add("Right Rear Drive Amps", 0).getEntry();
+  private NetworkTableEntry rightFrontRotationEntry = tabPDP.add("Right Front Rotation Amps", 0).getEntry();
+  private NetworkTableEntry leftFrontRotationEntry = tabPDP.add("Left Front Rotation Amps", 0).getEntry();
+  private NetworkTableEntry leftRearRotationEntry = tabPDP.add("Left Rear Rotation Amps", 0).getEntry();
+  private NetworkTableEntry rightRearRotationEntry = tabPDP.add("Right Rear Rotation Amps", 0).getEntry();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,10 +48,6 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer = new RobotContainer();
-
-    if (Constants.debug) {
-      InitCurrentDisplay();
-    }
   }
 
   /**
@@ -121,24 +122,14 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {}
 
-  private void InitCurrentDisplay() {
-    tab = Shuffleboard.getTab("PDP");
-
-    ampsTab = tab.add("Current", 0)
-    .withPosition(0,0)   
-    .withSize(1,3)
-    .getEntry();
-  }
-
   private void UpdateCurrentDisplay() {
-    String[] text = {"Right Front Drive: " + pdp.getCurrent(Constants.PDP.driveFrontRight),
-                     "Left Front Drive:  " + pdp.getCurrent(Constants.PDP.driveFrontLeft),
-                     "Left Rear Drive: " + pdp.getCurrent(Constants.PDP.driveRearLeft),
-                     "Right Rear Drive: " + pdp.getCurrent(Constants.PDP.driveRearRight),
-                     "Right Front Rotation: " + pdp.getCurrent(Constants.PDP.rotationFrontRight),
-                     "Left Front Rotation:  " + pdp.getCurrent(Constants.PDP.rotationFrontLeft),
-                     "Left Rear Rotation: " + pdp.getCurrent(Constants.PDP.rotationRearLeft),
-                     "Right Rear Rotation: " + pdp.getCurrent(Constants.PDP.rotationRearRight)};
-    ampsTab.setStringArray(text);
+    rightFrontDriveEntry.setDouble(pdp.getCurrent(Constants.PDP.driveFrontRight));
+    leftFrontDriveEntry.setDouble(pdp.getCurrent(Constants.PDP.driveFrontLeft));
+    leftRearDriveEntry.setDouble(pdp.getCurrent(Constants.PDP.driveRearLeft));
+    rightRearDriveEntry.setDouble(pdp.getCurrent(Constants.PDP.driveRearRight));
+    rightFrontRotationEntry.setDouble(pdp.getCurrent(Constants.PDP.rotationFrontRight));
+    leftFrontRotationEntry.setDouble(pdp.getCurrent(Constants.PDP.rotationFrontLeft));
+    leftRearRotationEntry.setDouble(pdp.getCurrent(Constants.PDP.rotationRearLeft));
+    rightRearRotationEntry.setDouble(pdp.getCurrent(Constants.PDP.rotationRearRight));
   }
 }
