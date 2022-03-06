@@ -65,8 +65,8 @@ public final class Constants {
         public static final double wheelBaseLengthFeet = 26.75/12.0;
         public static final double wheelBaseWidthFeet = 19.25/12.0;
 
-        public static final double autoRotkP = 0.01;
-        public static final double autoRotkD = 0.0;
+        public static final double autoRotkP = 0.015;
+        public static final double autoRotkD = 0.0015;
 
         public static final double maxAutoRotSpd = 0.7;
 
