@@ -22,7 +22,7 @@ public final class Constants {
 
     public static final boolean debug = true;
 
-    public static final boolean driveEnabled = true;
+    public static final boolean driveEnabled = false;
     public static final boolean joysticksEnabled = true;
     public static final boolean gyroEnabled = true;
     public static final boolean intakeEnabled = false;
@@ -36,17 +36,6 @@ public final class Constants {
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
     public static final int controllerConfigTimeoutMs = 50;
-
-    public static final class PDP {
-        public static final int driveFrontRight = 11;
-        public static final int driveFrontLeft = 10;
-        public static final int driveRearLeft = 0;
-        public static final int driveRearRight = 1;
-        public static final int rotationFrontRight = 12;
-        public static final int rotationFrontLeft = 15;
-        public static final int rotationRearLeft = 4;
-        public static final int rotationRearRight = 5;
-    }
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
