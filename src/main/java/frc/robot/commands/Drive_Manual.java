@@ -50,10 +50,10 @@ public class Drive_Manual extends CommandBase {
         x = (y^3 / y) * x 
       */
       if (Math.abs(rawX) >= Math.abs(rawY)) {
-        driveX = rawX*rawX*rawX;
+        driveX = -rawX*rawX*rawX; // reverse polarity of drive x axis
         driveY = rawX*rawX*rawY;
       } else {
-        driveX = rawY*rawY*rawX;
+        driveX = -rawY*rawY*rawX;
         driveY = rawY*rawY*rawY;
       }
 
@@ -78,7 +78,7 @@ public class Drive_Manual extends CommandBase {
         } 
 
         driveunbun.drive(driveX, driveY, 
-          rotate*rotate*rotate);
+          -rotate*rotate*rotate); // reverse polarity of rotation on joystick
 
       } else {
 
