@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // Define controllers
-  public static Joystick driveStick = new Joystick(0);
+  public static Joystick driveStick;
   public static Joystick rotateStick;
   public static XboxController coPilot = new XboxController(2);
 
-  private static JoystickButton driveTopLeftButton = new JoystickButton(driveStick, 5);
-  private static JoystickButton driveBottomLeftButton = new JoystickButton(driveStick, 3);
-  private static JoystickButton driveTopRightButton = new JoystickButton(driveStick, 6);
+  private static JoystickButton driveTopLeftButton;
+  private static JoystickButton driveBottomLeftButton;
+  private static JoystickButton driveTopRightButton;
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -53,8 +53,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    rotateStick = new Joystick(1);
-
     // Configure the button bindings
     configureButtonBindings();
 
@@ -78,16 +76,24 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveTopLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
     coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 3000.0, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
     coPilot.lt.whenHeld(stopIntake);
     coPilot.rb.whenHeld(hoodManual);
     coPilot.lb.whenHeld(hoodReset);
-    driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
-    driveBottomLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
-    driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
+    if (Constants.joysticksEnabled) {
+      driveStick = new Joystick(0);
+      driveTopLeftButton = new JoystickButton(driveStick, 5);
+      driveBottomLeftButton = new JoystickButton(driveStick, 3);
+      driveTopRightButton = new JoystickButton(driveStick, 6);
+      if (Constants.driveTwoJoystick) {
+        rotateStick = new Joystick(1);
+      }
+      driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
+      driveBottomLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
+      driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
+    }
    }
   
   /**

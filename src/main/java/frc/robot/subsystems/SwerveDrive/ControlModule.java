@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * A ControlModule allows you to easily control the speed controllers for 
  * both rotation and speed</br>
  * The rotation speed controller has a PIDController with an potentiometer source. 
- * <i>(TODO: setup an option to use absolute encoders in place of rotation potentiometers)</i></br>
- * <i>(TODO:Create a TalonSRXModule based on this)</i></br>
  * 
  * @author created by Unnas Hussain on 8/2/2017
  */
