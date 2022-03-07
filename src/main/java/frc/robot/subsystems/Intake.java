@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase{
         if (Constants.intakeEnabled) {
             intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
             intakeMotor.restoreFactoryDefaults();
-            intakeMotor.setInverted(false);
+            intakeMotor.setInverted(true);
             intakeMotor.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
             intakeMotor.burnFlash();
         }
