@@ -28,7 +28,7 @@ public class Shooter_ManualEject extends CommandBase {
     conveyor = conveyorSubsystem;
     m_rpm = rpm;
     m_copilot = coPilot;
-    addRequirements(shooter);
+    addRequirements(shooter, conveyor);
   }
 
   // Called when the command is initially scheduled.
@@ -54,6 +54,7 @@ public class Shooter_ManualEject extends CommandBase {
   public void end(boolean interrupted) {
     shooter.stopShooter();
     shooter.disableKicker();
+    conveyor.disableConveyor();
   }
 
   // Returns true when the command should end.

@@ -50,9 +50,6 @@ public class RobotContainer {
   private final Hood_Manual hoodManual = new Hood_Manual(hood);
   private final Hood_Reset hoodReset = new Hood_Reset(hood);
 
-  // Conveyor Commands
-  private final Conveyor_Stop stopConveyor = new Conveyor_Stop(conveyor);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -63,9 +60,6 @@ public class RobotContainer {
 
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
-    }
-    if (Constants.conveyorEnabled) {
-      conveyor.setDefaultCommand(stopConveyor);
     }
   }
 
