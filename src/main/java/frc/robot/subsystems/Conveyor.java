@@ -7,25 +7,23 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.Constants.ConveyorConstants;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Conveyor extends SubsystemBase {
 
-  private CANSparkMax conveyor;
+  private WPI_TalonSRX conveyor;
   private Ultrasonic ultrasonic;
 
   public Conveyor() {
     if (Constants.conveyorEnabled) {
-      conveyor = new CANSparkMax(ConveyorConstants.conveyorID, MotorType.kBrushless);
-      conveyor.restoreFactoryDefaults();
-      conveyor.setInverted(true);
-      conveyor.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
-      conveyor.burnFlash();
+      conveyor = new WPI_TalonSRX(ConveyorConstants.conveyorID);
+
+      conveyor.configFactoryDefault();
+      setCoastMode();
 
       if (Constants.ultrasonicEnabled) {
         ultrasonic = new Ultrasonic(1, 2);
@@ -53,6 +51,18 @@ public class Conveyor extends SubsystemBase {
   public void disableConveyor() {
     if (Constants.conveyorEnabled) {
       conveyor.stopMotor();
+    }
+  }
+
+  public void setCoastMode() {
+    if (Constants.hoodEnabled) {
+      conveyor.setNeutralMode(NeutralMode.Coast);
+    }
+  }
+
+  public void setBrakeMode() {
+    if (Constants.hoodEnabled) {
+      conveyor.setNeutralMode(NeutralMode.Brake);
     }
   }
 }

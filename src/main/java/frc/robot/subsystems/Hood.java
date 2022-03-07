@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -13,7 +13,7 @@ import frc.robot.Constants;
 
 public class Hood extends SubsystemBase {
     
-    private WPI_TalonFX hood;
+    private WPI_TalonSRX hood;
 
     //SHUFFLEBOARD
     private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
@@ -28,7 +28,7 @@ public class Hood extends SubsystemBase {
     
     public Hood() {
         if (Constants.hoodEnabled) {
-            hood = new WPI_TalonFX(Constants.HoodConstants.hoodTalon_ID);
+            hood = new WPI_TalonSRX(Constants.HoodConstants.hoodTalon_ID);
 
             hood.configFactoryDefault();
             hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
