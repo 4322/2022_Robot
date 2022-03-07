@@ -22,15 +22,15 @@ public final class Constants {
 
     public static final boolean debug = true;
 
-    public static final boolean driveEnabled = true;
-    public static final boolean joysticksEnabled = true;
+    public static final boolean driveEnabled = false;
+    public static final boolean joysticksEnabled = false;
     public static final boolean gyroEnabled = true;
     public static final boolean intakeEnabled = false;
-    public static final boolean shooterEnabled = false;
+    public static final boolean shooterEnabled = true;
     public static final boolean kickerEnabled = false;
     public static final boolean climberEnabled = false;
     public static final boolean hoodEnabled = false;
-    public static final boolean conveyorEnabled = false;
+    public static final boolean conveyorEnabled = true;
     public static final boolean ultrasonicEnabled = false;
 
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
