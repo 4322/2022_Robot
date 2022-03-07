@@ -47,6 +47,7 @@ public class Shooter extends SubsystemBase {
       flywheelLeft.setIdleMode(IdleMode.kCoast);
       flywheelRight.setIdleMode(IdleMode.kCoast);
       flywheelLeft.setClosedLoopRampRate(ShooterConstants.rampRate);  // don't eject the shooter
+      flywheelLeft.setOpenLoopRampRate(ShooterConstants.rampRate);    // for PID tuning
 
       flywheelEncoder = flywheelLeft.getEncoder();
       flywheelPID = flywheelLeft.getPIDController();
@@ -57,6 +58,9 @@ public class Shooter extends SubsystemBase {
       flywheelPID.setIZone(ShooterConstants.kIz);
       flywheelPID.setFF(ShooterConstants.kFF);
       flywheelPID.setOutputRange(ShooterConstants.kMinRange, ShooterConstants.kMaxRange);
+
+      flywheelLeft.burnFlash();
+      flywheelRight.burnFlash();
 
       kicker.restoreFactoryDefaults();
       kicker.setInverted(true);

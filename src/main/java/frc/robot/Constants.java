@@ -137,16 +137,16 @@ public final class Constants {
         public static final int flywheelRightID = 15;
         public static final int kickerID = 16;
 
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kIz = 0;
-        public static final double kFF = 0;
-        public static final double kMinRange = 0;
-        public static final double kMaxRange = 0;
-        public static final double rampRate = 0;
+        public static final double kP = .00025;
+        public static final double kI = 0.000001;
+        public static final double kD = 0.004;
+        public static final double kIz = 300;
+        public static final double kFF = 0.00015;
+        public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
+        public static final double kMaxRange = 1.0;
+        public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
-        public static final double minEjectVel = 0;
+        public static final double minEjectVel = 500;
         public static double kickerPower = 0.5;
     }
     
