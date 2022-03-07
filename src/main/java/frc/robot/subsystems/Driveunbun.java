@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.DriveConstants.Drive;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -45,25 +44,25 @@ public class Driveunbun extends SubsystemBase {
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
-            frontRightDrive = new WPI_TalonFX(Constants.DriveConstants.frontRightDriveID);
-            frontLeftDrive = new WPI_TalonFX(Constants.DriveConstants.frontLeftDriveID);
-            rearRightDrive = new WPI_TalonFX(Constants.DriveConstants.rearRightDriveID);
-            rearLeftDrive = new WPI_TalonFX(Constants.DriveConstants.rearLeftDriveID);
-            frontRightRotation = new WPI_TalonFX(Constants.DriveConstants.frontRightRotationID);
-            frontLeftRotation = new WPI_TalonFX(Constants.DriveConstants.frontLeftRotationID);
-            rearRightRotation = new WPI_TalonFX(Constants.DriveConstants.rearRightRotationID);
-            rearLeftRotation = new WPI_TalonFX(Constants.DriveConstants.rearLeftRotationID);
+            frontRightDrive = new WPI_TalonFX(DriveConstants.frontRightDriveID);
+            frontLeftDrive = new WPI_TalonFX(DriveConstants.frontLeftDriveID);
+            rearRightDrive = new WPI_TalonFX(DriveConstants.rearRightDriveID);
+            rearLeftDrive = new WPI_TalonFX(DriveConstants.rearLeftDriveID);
+            frontRightRotation = new WPI_TalonFX(DriveConstants.frontRightRotationID);
+            frontLeftRotation = new WPI_TalonFX(DriveConstants.frontLeftRotationID);
+            rearRightRotation = new WPI_TalonFX(DriveConstants.rearRightRotationID);
+            rearLeftRotation = new WPI_TalonFX(DriveConstants.rearLeftRotationID);
 
             rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
             
             frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, 
-                WheelPosition.FRONT_RIGHT, Constants.DriveConstants.frontRightEncoderID);
+                WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
             frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, 
-                WheelPosition.FRONT_LEFT, Constants.DriveConstants.frontLeftEncoderID);
+                WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
             rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, 
-                WheelPosition.BACK_RIGHT, Constants.DriveConstants.rearRightEncoderID); 
+                WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID); 
             rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, 
-                WheelPosition.BACK_LEFT, Constants.DriveConstants.rearLeftEncoderID);
+                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
 
             if (Constants.gyroEnabled) {
                 gyro = new AHRS(SPI.Port.kMXP);
