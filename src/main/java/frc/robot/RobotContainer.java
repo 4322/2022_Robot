@@ -76,7 +76,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 3000.0, coPilot));
+    coPilot.x.whenPressed(new Shooter_ManualEject(shooter, conveyor, 1000.0, coPilot));
+    coPilot.y.whenPressed(new Shooter_ManualEject(shooter, conveyor, 2500.0, coPilot));
+    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 4000.0, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rt.whenHeld(intakeIntake);
     coPilot.lt.whenHeld(stopIntake);
