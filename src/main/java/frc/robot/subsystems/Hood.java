@@ -31,20 +31,17 @@ public class Hood extends SubsystemBase {
             hood = new WPI_TalonSRX(Constants.HoodConstants.motorID);
 
             hood.configFactoryDefault();
-            hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                Constants.HoodConstants.kPIDLoopIdx,
-                Constants.HoodConstants.kTimeoutMs);
-            hood.setSensorPhase(Constants.HoodConstants.kSensorPhase);
+            hood.setInverted(true);
+            hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+            hood.setSensorPhase(false);
         
             /* Config the peak and nominal outputs */
-            hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower, 
-                Constants.HoodConstants.kTimeoutMs);
-            hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower, 
-                Constants.HoodConstants.kTimeoutMs);
-            hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower, Constants.HoodConstants.kTimeoutMs);
-            hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower, Constants.HoodConstants.kTimeoutMs);   
+            hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower);
+            hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower);
+            hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower);
+            hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower);   
             
-            setCoastMode();  // Allow hood to be moved manually
+            setCoastMode();  // Allow manual movement until enabled
 
             // DEBUG
             if (Constants.debug) {
@@ -144,8 +141,7 @@ public class Hood extends SubsystemBase {
 
   // This is only valid following a set position command
   public boolean isAtTarget() {
-    return (hood.getClosedLoopError(Constants.HoodConstants.kPIDLoopIdx) <= 
-            Constants.HoodConstants.hoodTolerance);
+    return (hood.getClosedLoopError() <= Constants.HoodConstants.hoodTolerance);
   }
 
   public boolean getHomed() {

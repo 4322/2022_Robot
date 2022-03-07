@@ -63,10 +63,16 @@ public class RobotContainer {
 
   public void disableSubsystems() {
     driveunbun.setCoastMode();
+    hood.setCoastMode();
+    conveyor.setCoastMode();
+    intake.setCoastMode();
   }
 
   public void enableSubsystems() {
     driveunbun.setBrakeMode();
+    hood.setBrakeMode();
+    conveyor.setBrakeMode();
+    intake.setBrakeMode();
   }
 
   /**

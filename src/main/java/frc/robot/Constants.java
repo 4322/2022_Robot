@@ -29,7 +29,7 @@ public final class Constants {
     public static final boolean shooterEnabled = true;
     public static final boolean kickerEnabled = true;
     public static final boolean climberEnabled = false;
-    public static final boolean hoodEnabled = false;
+    public static final boolean hoodEnabled = true;
     public static final boolean conveyorEnabled = true;
     public static final boolean ultrasonicEnabled = false;
 
@@ -167,14 +167,8 @@ public final class Constants {
         public static final double homingPower = -0.4;
         public static final double manualDeadband = 0.05;
 
-
-        public static final int kPIDLoopIdx = 0;
-        public static final int kTimeoutMs = 30;
-        public static final boolean kSensorPhase = false;
-        public static final boolean kMotorInvert = false;
-
         public static class PID_Values {
-            public static final double kP = 0;
+            public static final double kP = 3.0;
             public static final double kI = 0;
             public static final double kD = 0;
         }

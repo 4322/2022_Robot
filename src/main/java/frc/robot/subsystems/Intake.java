@@ -9,40 +9,50 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Intake extends SubsystemBase{
 
-    private CANSparkMax intakeMotor;
+  private CANSparkMax intakeMotor;
 
-    public Intake() {
-        if (Constants.intakeEnabled) {
-            intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
-            intakeMotor.restoreFactoryDefaults();
-            intakeMotor.setInverted(true);
-            intakeMotor.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
-            intakeMotor.burnFlash();
-        }
+  public Intake() {
+      if (Constants.intakeEnabled) {
+          intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
+          intakeMotor.restoreFactoryDefaults();
+          intakeMotor.setInverted(true);
+          intakeMotor.setIdleMode(IdleMode.kCoast);  // Allow manual movement until enabled
+          intakeMotor.burnFlash();
       }
-    
-      public void intake() {
-        if (Constants.intakeEnabled) {
-          intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
-        }
+    }
+  
+    public void intake() {
+      if (Constants.intakeEnabled) {
+        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
       }
+    }
 
-      public void eject() {
-        if (Constants.intakeEnabled) {
-          intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
-        }
+    public void eject() {
+      if (Constants.intakeEnabled) {
+        intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
       }
-    
-      public void stop() {
-        if (Constants.intakeEnabled) {
-          intakeMotor.stopMotor();
-        }
+    }
+  
+    public void stop() {
+      if (Constants.intakeEnabled) {
+        intakeMotor.stopMotor();
       }
-      
+    }
+  
+    @Override
+    public void periodic() {
+      // This method will be called once per scheduler run
+    }
     
-      @Override
-      public void periodic() {
-        // This method will be called once per scheduler run
+    public void setCoastMode() {
+      if (Constants.intakeEnabled) {
+        intakeMotor.setIdleMode(IdleMode.kCoast);
       }
-    
+    }
+  
+    public void setBrakeMode() {
+      if (Constants.intakeEnabled) {
+        intakeMotor.setIdleMode(IdleMode.kBrake);
+      }
+    }
 }

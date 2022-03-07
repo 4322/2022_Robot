@@ -23,7 +23,7 @@ public class Conveyor extends SubsystemBase {
       conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
 
       conveyor.configFactoryDefault();
-      setCoastMode();
+      setCoastMode();  // Allow manual movement until enabled
 
       if (Constants.ultrasonicEnabled) {
         ultrasonic = new Ultrasonic(1, 2);
