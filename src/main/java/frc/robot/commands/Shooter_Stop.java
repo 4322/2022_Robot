@@ -26,7 +26,7 @@ public class Shooter_Stop extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.stopShooter();
+    shooter.stop();
   }
 
   // Called once the command ends or is interrupted.

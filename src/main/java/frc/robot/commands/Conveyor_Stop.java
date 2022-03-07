@@ -26,7 +26,7 @@ public class Conveyor_Stop extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      conveyor.disableConveyor();
+      conveyor.stop();
   }
 
   // Called once the command ends or is interrupted.

@@ -48,7 +48,7 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
-  public void disableConveyor() {
+  public void stop() {
     if (Constants.conveyorEnabled) {
       conveyor.stopMotor();
     }

@@ -126,19 +126,20 @@ public class Shooter extends SubsystemBase {
     }
   }
   
-  public void stopShooter() {
+  public void stop() {
     if (Constants.shooterEnabled) {
       flywheelLeft.stopMotor();
     }
+    stopKicker();
   }
 
-  public void enableKicker() {
+  public void startKicker() {
     if (Constants.kickerEnabled) {
       kicker.set(ShooterConstants.kickerPower);
     }
   }
 
-  public void disableKicker() {
+  public void stopKicker() {
     if (Constants.kickerEnabled) {
       kicker.stopMotor();
     }

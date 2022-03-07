@@ -80,10 +80,10 @@ public class RobotContainer {
     coPilot.y.whenPressed(new Shooter_ManualEject(shooter, conveyor, 2500.0, coPilot));
     coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 4000.0, coPilot));
     coPilot.a.whenPressed(stopShooter);
-    coPilot.rt.whenHeld(intakeIntake);
-    coPilot.lt.whenHeld(stopIntake);
-    coPilot.rb.whenHeld(hoodManual);
-    coPilot.lb.whenHeld(hoodReset);
+    coPilot.rb.whileHeld(intakeIntake);
+    coPilot.lb.whenPressed(stopIntake);
+    //coPilot.rb.whenHeld(hoodManual);
+    coPilot.back.whenHeld(hoodReset);
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
       driveTopLeftButton = new JoystickButton(driveStick, 5);

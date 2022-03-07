@@ -41,20 +41,19 @@ public class Shooter_ManualEject extends CommandBase {
   @Override
   public void execute() {
     if (shooter.isAbleToEject() && m_copilot.rt.get()) {
-      shooter.enableKicker();
+      shooter.startKicker();
       conveyor.enableConveyorOverride();
     } else {
-      shooter.disableKicker();
-      conveyor.disableConveyor();
+      shooter.stopKicker();
+      conveyor.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooter();
-    shooter.disableKicker();
-    conveyor.disableConveyor();
+    shooter.stop();
+    conveyor.stop();
   }
 
   // Returns true when the command should end.
