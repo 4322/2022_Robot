@@ -16,14 +16,16 @@ public class Intake extends SubsystemBase{
         }
       }
     
-      public void intake()
-      {
-        intakeMotor.set(Constants.IntakeConstants.intake_speed);
+      public void intake() {
+        if (Constants.intakeEnabled) {
+          intakeMotor.set(Constants.IntakeConstants.intake_speed);
+        }
       }
     
-      public void stop()
-      {
-        intakeMotor.set(0);
+      public void stop() {
+        if (Constants.intakeEnabled) {
+          intakeMotor.stopMotor();
+        }
       }
       
     
