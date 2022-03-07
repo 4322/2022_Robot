@@ -38,10 +38,9 @@ public class Shooter extends SubsystemBase {
     if (Constants.shooterEnabled) {
       flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
       flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
-      kicker = new CANSparkMax(ShooterConstants.kickerID, MotorType.kBrushless);
 
       flywheelLeft.restoreFactoryDefaults();
-      flywheelLeft.setInverted(true);
+      flywheelLeft.setInverted(false);
       flywheelRight.restoreFactoryDefaults();
       flywheelRight.follow(flywheelLeft, true);
       flywheelLeft.setIdleMode(IdleMode.kCoast);
@@ -62,10 +61,13 @@ public class Shooter extends SubsystemBase {
       flywheelLeft.burnFlash();
       flywheelRight.burnFlash();
 
-      kicker.restoreFactoryDefaults();
-      kicker.setInverted(true);
-      kicker.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
-      kicker.burnFlash();
+      if (Constants.kickerEnabled) {
+        kicker = new CANSparkMax(ShooterConstants.kickerID, MotorType.kBrushless);
+        kicker.restoreFactoryDefaults();
+        kicker.setInverted(false);
+        kicker.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
+        kicker.burnFlash();
+      }
 
       // DEBUG
       if (Constants.debug) {

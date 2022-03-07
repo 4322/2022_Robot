@@ -25,9 +25,9 @@ public final class Constants {
     public static final boolean driveEnabled = false;
     public static final boolean joysticksEnabled = false;
     public static final boolean gyroEnabled = true;
-    public static final boolean intakeEnabled = false;
+    public static final boolean intakeEnabled = true;
     public static final boolean shooterEnabled = true;
-    public static final boolean kickerEnabled = false;
+    public static final boolean kickerEnabled = true;
     public static final boolean climberEnabled = false;
     public static final boolean hoodEnabled = false;
     public static final boolean conveyorEnabled = true;
@@ -152,7 +152,7 @@ public final class Constants {
     
     public static final class HoodConstants {
         // All Constants values need to be adjusted from last years code
-        public static final int hoodTalon_ID = 17;
+        public static final int motorID = 17;
         public static final int hoodMaxPosition = 9300; 
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
@@ -186,14 +186,14 @@ public final class Constants {
 
     public static final class IntakeConstants {
 
-        public static final int intakeTalon_ID = 18;
-        public static final double intake_speed = 0.85;
+        public static final int motorID = 18;
+        public static final double intakeSpeed = 0.85;
         
     }
 
     public static final class ConveyorConstants {
 
-        public static int conveyorID = 19;
+        public static int motorID = 19;
         public static double minBallDistIn = 2;
         public static double conveyorPower = 0.5;
 

@@ -20,7 +20,7 @@ public class Conveyor extends SubsystemBase {
 
   public Conveyor() {
     if (Constants.conveyorEnabled) {
-      conveyor = new WPI_TalonSRX(ConveyorConstants.conveyorID);
+      conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
 
       conveyor.configFactoryDefault();
       setCoastMode();

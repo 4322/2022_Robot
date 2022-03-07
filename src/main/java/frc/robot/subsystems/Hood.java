@@ -28,7 +28,7 @@ public class Hood extends SubsystemBase {
     
     public Hood() {
         if (Constants.hoodEnabled) {
-            hood = new WPI_TalonSRX(Constants.HoodConstants.hoodTalon_ID);
+            hood = new WPI_TalonSRX(Constants.HoodConstants.motorID);
 
             hood.configFactoryDefault();
             hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,

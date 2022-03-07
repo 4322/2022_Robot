@@ -1,24 +1,35 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public class Intake extends SubsystemBase{
 
-    private WPI_TalonFX intakeMotor;
+    private CANSparkMax intakeMotor;
 
     public Intake() {
         if (Constants.intakeEnabled) {
-            intakeMotor = new WPI_TalonFX(Constants.IntakeConstants.intakeTalon_ID);
-            intakeMotor.setInverted(true);
+            intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
+            intakeMotor.restoreFactoryDefaults();
+            intakeMotor.setInverted(false);
+            intakeMotor.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
+            intakeMotor.burnFlash();
         }
       }
     
       public void intake() {
         if (Constants.intakeEnabled) {
-          intakeMotor.set(Constants.IntakeConstants.intake_speed);
+          intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+        }
+      }
+
+      public void eject() {
+        if (Constants.intakeEnabled) {
+          intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
         }
       }
     
