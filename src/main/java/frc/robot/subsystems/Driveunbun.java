@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,6 +44,7 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotkD;
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
+    private Timer timer;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -115,13 +117,37 @@ public class Driveunbun extends SubsystemBase {
 
             SwerveHelper.setReversingToSpeed();
         }   
+        timer.start();
     }
+
+    private int nextTest = 0;
 
     @Override
     public void periodic() {
         if (Constants.gyroEnabled && Constants.debug) {
             roll.setDouble(gyro.getRoll());
             pitch.setDouble(gyro.getPitch());
+        }
+        if (timer.hasElapsed(0.2)) {
+            timer.reset();
+            switch (nextTest++) {
+                case 0: 
+                frontRight.testCAN();
+                break;
+
+                case 1: 
+                frontLeft.testCAN();
+                break;
+                
+                case 2: 
+                rearLeft.testCAN();
+                break;
+                
+                case 3: 
+                rearRight.testCAN();
+                nextTest = 0;
+                break;
+            }
         }
     }
 

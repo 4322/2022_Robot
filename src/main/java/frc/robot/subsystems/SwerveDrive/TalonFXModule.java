@@ -171,4 +171,18 @@ public class TalonFXModule extends ControlModule {
 	public double getAcceleration() {
 		return super.getAcceleration();
 	}
+
+	public void testCAN() {
+		m_wheel.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+			DriveConstants.Drive.statorEnabled, 
+			DriveConstants.Drive.statorLimit, 
+			DriveConstants.Drive.statorThreshold, 
+			DriveConstants.Drive.statorTime));
+
+		m_rotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+			DriveConstants.Rotation.statorEnabled, 
+			DriveConstants.Rotation.statorLimit, 
+			DriveConstants.Rotation.statorThreshold, 
+			DriveConstants.Rotation.statorTime));
+	}
 }
