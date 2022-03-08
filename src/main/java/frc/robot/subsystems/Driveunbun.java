@@ -41,6 +41,8 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotSpeedDisplay;
     private NetworkTableEntry rotkP;
     private NetworkTableEntry rotkD;
+    private NetworkTableEntry roll;
+    private NetworkTableEntry pitch;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -99,10 +101,28 @@ public class Driveunbun extends SubsystemBase {
                 .withPosition(2,0)   
                 .withSize(1,1)
                 .getEntry();
+
+                roll = tab.add("Roll", 0)
+                .withPosition(1,1)
+                .withSize(1,1)
+                .getEntry();
+
+                pitch = tab.add("Pitch", 0)
+                .withPosition(2,1)
+                .withSize(1,1)
+                .getEntry();
             }
 
             SwerveHelper.setReversingToSpeed();
         }   
+    }
+
+    @Override
+    public void periodic() {
+        if (Constants.gyroEnabled && Constants.debug) {
+            roll.setDouble(gyro.getRoll());
+            pitch.setDouble(gyro.getPitch());
+        }
     }
 
     // activate field centric driving using the previously set forward orientation

@@ -153,6 +153,7 @@ public final class Constants {
 
         public static double kickerPower = 0.5;
         public static final int kickerID = 16;
+        public static double rampRate = 0.2;
 
     }
     
@@ -188,6 +189,7 @@ public final class Constants {
 
         public static final int motorID = 18;
         public static final double intakeSpeed = 0.2;
+        public static double rampRate = 0.5;
         
     }
 

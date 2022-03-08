@@ -15,6 +15,7 @@ public class Kicker extends SubsystemBase {
   public Kicker() {
     if (Constants.kickerEnabled) {
       kicker = new CANSparkMax(KickerConstants.kickerID, MotorType.kBrushless);
+      kicker.setOpenLoopRampRate(KickerConstants.rampRate);
       kicker.restoreFactoryDefaults();
       kicker.setInverted(false);
       kicker.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter

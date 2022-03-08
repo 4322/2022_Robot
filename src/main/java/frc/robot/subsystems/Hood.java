@@ -22,7 +22,7 @@ public class Hood extends SubsystemBase {
     private NetworkTableEntry isHomeIndicator =
         tab.add("Is @ home", false)
         .withWidget(BuiltInWidgets.kBooleanBox)
-        .withPosition(0,2)
+        .withPosition(0,0)
         .withSize(1,1)
         .getEntry();
     
