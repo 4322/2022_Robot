@@ -3,24 +3,25 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 
-public class Intake_Intake extends InstantCommand {
-    
-    private Intake intake;
+public class IntakeStop extends InstantCommand {
 
-    public Intake_Intake(Intake intakeSubsytem) {
-            // Use addRequirements() here to declare subsystem dependencies.
-    intake = intakeSubsytem;
+  private Intake intake;
+
+  public IntakeStop(Intake intakeSubsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    intake = intakeSubsystem;
     addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.intake();
+    intake.stop(); 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.stop();
   }
 }

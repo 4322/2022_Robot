@@ -1,16 +1,13 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class Intake_Stop extends InstantCommand {
-  /**
-   * Creates a new Collector_Stop.
-   */
+public class IntakeEject extends CommandBase {
 
-   private Intake intake;
+  private Intake intake;
 
-  public Intake_Stop(Intake intakeSubsystem) {
+  public IntakeEject(Intake intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     intake = intakeSubsystem;
     addRequirements(intake);
@@ -19,11 +16,18 @@ public class Intake_Stop extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.stop(); 
+    intake.eject(); 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.stop();
+  }
+
+  // Run until interrupted
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

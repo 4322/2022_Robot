@@ -43,8 +43,8 @@ public class RobotContainer {
   private final Shooter_Stop stopShooter = new Shooter_Stop(shooter);
 
   // Intake Commands
-  private final Intake_Intake intakeIntake = new Intake_Intake(intake);
-  private final Intake_Stop stopIntake = new Intake_Stop(intake);
+  private final IntakeIntake intakeIntake = new IntakeIntake(intake);
+  private final IntakeEject intakeEject = new IntakeEject(intake);
 
   // Hood Commands
   private final Hood_Manual hoodManual = new Hood_Manual(hood);
@@ -87,7 +87,7 @@ public class RobotContainer {
     coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 4000.0, coPilot));
     coPilot.a.whenPressed(stopShooter);
     coPilot.rb.whileHeld(intakeIntake);
-    coPilot.lb.whenPressed(stopIntake);
+    coPilot.lb.whileHeld(intakeEject);
     //coPilot.rb.whenHeld(hoodManual);
     coPilot.back.whenHeld(hoodReset);
     if (Constants.joysticksEnabled) {
