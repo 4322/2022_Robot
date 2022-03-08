@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class IntakeEject extends CommandBase {
+public class IntakeOut extends CommandBase {
 
   private Intake intake;
 
-  public IntakeEject(Intake intakeSubsystem) {
+  public IntakeOut(Intake intakeSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     intake = intakeSubsystem;
     addRequirements(intake);

@@ -8,27 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.XboxController;
-import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 
-public class Shooter_ManualEject extends CommandBase {
+public class ShooterSetSpeed extends CommandBase {
   /**
    * Creates a new Enable_Shooter_Power.
    */
 
   private Shooter shooter;
-  private Conveyor conveyor;
   private double m_rpm;
-  private XboxController m_copilot;
 
 
-  public Shooter_ManualEject(Shooter shooterSubsystem, Conveyor conveyorSubsystem, double rpm, XboxController coPilot) {
+  public ShooterSetSpeed(Shooter shooterSubsystem, double rpm) {
     shooter = shooterSubsystem;
-    conveyor = conveyorSubsystem;
     m_rpm = rpm;
-    m_copilot = coPilot;
-    addRequirements(shooter, conveyor);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -40,25 +34,18 @@ public class Shooter_ManualEject extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isAbleToEject() && m_copilot.rt.get()) {
-      shooter.startKicker();
-      conveyor.enableConveyorOverride();
-    } else {
-      shooter.stopKicker();
-      conveyor.stop();
-    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stop();
-    conveyor.stop();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;     
+    return shooter.isAbleToEject();     
   }
 }

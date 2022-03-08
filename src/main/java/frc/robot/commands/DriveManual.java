@@ -7,7 +7,7 @@ import frc.robot.subsystems.Driveunbun;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class Drive_Manual extends CommandBase {
+public class DriveManual extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   /**
@@ -26,7 +26,7 @@ public class Drive_Manual extends CommandBase {
   private boolean rotTo = false;
   private double rotate;
 
-  public Drive_Manual(Driveunbun drivesubsystem) {
+  public DriveManual(Driveunbun drivesubsystem) {
     driveunbun = drivesubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveunbun);

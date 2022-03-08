@@ -135,7 +135,6 @@ public final class Constants {
 
         public static final int flywheelLeftID = 14;
         public static final int flywheelRightID = 15;
-        public static final int kickerID = 16;
 
         public static final double kP = .00025;
         public static final double kI = 0.000001;
@@ -147,7 +146,14 @@ public final class Constants {
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
         public static final double minEjectVel = 500;
+        
+    }
+
+    public static final class KickerConstants {
+
         public static double kickerPower = 0.5;
+        public static final int kickerID = 16;
+
     }
     
     public static final class HoodConstants {

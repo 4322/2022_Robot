@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.subsystems.Hood;
 
-public class Hood_Reset extends CommandBase {
+public class HoodReset extends CommandBase {
   /**
    * Creates a new Hood_Manual.
    */
@@ -13,7 +13,7 @@ public class Hood_Reset extends CommandBase {
   private Hood hood;
   private Timer timer = new Timer();
 
-  public Hood_Reset(Hood hoodSubsystem) {
+  public HoodReset(Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     hood = hoodSubsystem;
@@ -32,6 +32,7 @@ public class Hood_Reset extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
   }
 
   // Called once the command ends or is interrupted.

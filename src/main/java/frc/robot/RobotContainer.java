@@ -32,23 +32,26 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
   private final Shooter shooter = new Shooter();
+  private final Kicker kicker = new Kicker();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
 
   // Drive Commands
-  private final Drive_Manual driveManual = new Drive_Manual(driveunbun);
+  private final DriveManual driveManual = new DriveManual(driveunbun);
 
   // Shooter Commands
-  private final Shooter_Stop stopShooter = new Shooter_Stop(shooter);
+  private final ShooterStop stopShooter = new ShooterStop(shooter);
 
   // Intake Commands
-  private final IntakeIntake intakeIntake = new IntakeIntake(intake);
-  private final IntakeEject intakeEject = new IntakeEject(intake);
+  private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
+  private final IntakeOut intakeOut = new IntakeOut(intake);
 
   // Hood Commands
-  private final Hood_Manual hoodManual = new Hood_Manual(hood);
-  private final Hood_Reset hoodReset = new Hood_Reset(hood);
+  private final HoodReset hoodReset = new HoodReset(hood);
+
+  // Kicker Commands
+  private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -82,14 +85,19 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    coPilot.x.whenPressed(new Shooter_ManualEject(shooter, conveyor, 1000.0, coPilot));
-    coPilot.y.whenPressed(new Shooter_ManualEject(shooter, conveyor, 2500.0, coPilot));
-    coPilot.b.whenPressed(new Shooter_ManualEject(shooter, conveyor, 4000.0, coPilot));
+
+    coPilot.x.whenPressed(new ShooterSetSpeed(shooter, 1000.0));
+    coPilot.y.whenPressed(new ShooterSetSpeed(shooter, 2500.0));
+    coPilot.b.whenPressed(new ShooterSetSpeed(shooter, 4000.0));
     coPilot.a.whenPressed(stopShooter);
-    coPilot.rb.whileHeld(intakeIntake);
-    coPilot.lb.whileHeld(intakeEject);
-    //coPilot.rb.whenHeld(hoodManual);
+
+    coPilot.rb.whileHeld(intakeIn);
+    coPilot.rt.whileHeld(intakeOut);
+
+    coPilot.lt.whileHeld(kickerEnable);
+
     coPilot.back.whenHeld(hoodReset);
+
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
       driveTopLeftButton = new JoystickButton(driveStick, 5);
