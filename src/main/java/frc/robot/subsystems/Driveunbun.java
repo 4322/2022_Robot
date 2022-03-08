@@ -190,7 +190,7 @@ public class Driveunbun extends SubsystemBase {
         }
     }
 
-    // Drives the robot at a certain angle (relative to front of robot)
+    // Drives the robot at a certain angle (relative to the field, forward = 0 deg)
     // Must be periodically updated to work
     public void drivePolar(double angle, double speed, double rotationDeg) {
         angle = Math.toRadians(-angle + 90); // adjust for front of robot as 0 and clockwise rotation
