@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -121,7 +122,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      new ShooterSetSpeed(shooter, 3000),
+      new ParallelCommandGroup(
+        new ShooterSetSpeed(shooter, 3000),
+        new HoodSet(hood, 3000)
+      ),
       new KickerEnable(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new DriveRobotCentric(driveunbun, 0, -0.7, 0, 3)
