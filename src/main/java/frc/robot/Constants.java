@@ -72,6 +72,7 @@ public final class Constants {
 
         public static final double twistDeadband = 0.08;
         public static final double rotateToDeadband = 0.25;
+        public static final double autoRotateToleranceDegrees = 3.0;
 
         public final static class Rotation {
             public static final double kP = 1.2;
