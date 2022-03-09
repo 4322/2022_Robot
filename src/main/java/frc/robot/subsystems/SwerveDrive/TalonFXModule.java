@@ -5,7 +5,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -125,10 +124,6 @@ public class TalonFXModule extends ControlModule {
 		double count = 	(m_encoder.getAbsolutePosition() - 
 		DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
 	   	DriveConstants.Rotation.countToDegrees;
-
-		// don't need the CANCoder any longer, so increase reporting period to
-		// reduce CAN bus utilization
-		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 500, 100);
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {
