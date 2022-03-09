@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    if (Constants.ultrasonicEnabled) {
+    if (Constants.ballSensorEnabled) {
       Ultrasonic.setAutomaticMode(true);
     }
 
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 
     subsystemEnabled("Joysticks", 0, 1, Constants.joysticksEnabled);
     subsystemEnabled("Gyro", 1, 1, Constants.gyroEnabled);
-    subsystemEnabled("Ball Sensor", 2, 1, Constants.ultrasonicEnabled);
+    subsystemEnabled("Ball Sensor", 2, 1, Constants.ballSensorEnabled);
 
     m_robotContainer = new RobotContainer();
   }

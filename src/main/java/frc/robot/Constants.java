@@ -31,7 +31,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean hoodEnabled = true;
     public static final boolean conveyorEnabled = true;
-    public static final boolean ultrasonicEnabled = false;
+    public static final boolean ballSensorEnabled = false;
 
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
@@ -198,6 +198,7 @@ public final class Constants {
         public static int motorID = 19;
         public static double minBallDistIn = 2;
         public static double conveyorPower = 0.5;
+        public static int ballSensorPort = 0; // DIO port for ball sensor
 
     }
 }

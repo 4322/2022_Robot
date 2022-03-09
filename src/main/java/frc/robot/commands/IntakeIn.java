@@ -20,7 +20,9 @@ public class IntakeIn extends CommandBase {
   @Override
   public void initialize() {
     intake.intake();
-    conveyor.enableConveyor();
+    if (!conveyor.getSensedBall()) {
+      conveyor.enableConveyor();
+    }
   }
 
   // Called once the command ends or is interrupted.
