@@ -36,6 +36,7 @@ public final class Constants {
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
     public static final int controllerConfigTimeoutMs = 50;
+    public static final int slowControllerStatusPeriodMs = 255;  // for non-essential status
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
@@ -95,6 +96,8 @@ public final class Constants {
             public static final double supplyLimit = 30;
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
+
+            public static final int CANCoderStatusFramePeriodMs = 1000;
 
             public static final double allowableClosedloopError = 0.35 / countToDegrees;
 
