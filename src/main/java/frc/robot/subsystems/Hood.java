@@ -19,12 +19,7 @@ public class Hood extends SubsystemBase {
     private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
     private NetworkTableEntry hoodPositionTalon;
     private NetworkTableEntry hoodPower;
-    private NetworkTableEntry isHomeIndicator =
-        tab.add("Is @ home", false)
-        .withWidget(BuiltInWidgets.kBooleanBox)
-        .withPosition(0,0)
-        .withSize(1,1)
-        .getEntry();
+    private NetworkTableEntry isHomeIndicator;
     
     public Hood() {
         if (Constants.hoodEnabled) {
@@ -56,6 +51,12 @@ public class Hood extends SubsystemBase {
                 .withSize(1,1)
                 .getEntry();
 
+                isHomeIndicator = tab.add("Is @ home", false)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(0,0)
+                .withSize(1,1)
+                .getEntry();
+
             }
         }   
     }
@@ -68,8 +69,8 @@ public class Hood extends SubsystemBase {
       if (Constants.debug) {
         hoodPositionTalon.setDouble(getPosition());
         hoodPower.setDouble(hood.getMotorOutputPercent());
+        isHomeIndicator.setBoolean(getHomed());
       }
-      isHomeIndicator.setBoolean(getHomed());
 
       // Reset encoder if hood is at home
       if (this.getHomed()) {

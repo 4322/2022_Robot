@@ -31,11 +31,12 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean hoodEnabled = false;
     public static final boolean conveyorEnabled = true;
-    public static final boolean ultrasonicEnabled = false;
+    public static final boolean ballSensorEnabled = true;
 
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
     public static final int controllerConfigTimeoutMs = 50;
+    public static final int slowControllerStatusPeriodMs = 255;  // for non-essential status
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
@@ -96,6 +97,8 @@ public final class Constants {
             public static final double supplyThreshold = 35;
             public static final double supplyTime = 0.5;
 
+            public static final int CANCoderStatusFramePeriodMs = 1000;
+
             public static final double allowableClosedloopError = 0.35 / countToDegrees;
 
             // values obtained from swerve module zeroing procedure
@@ -146,7 +149,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
-        public static final double minEjectVel = 500;
+        public static final double minVelError = 200; // allowable error to shoot (in rpm)
         
     }
 
@@ -189,7 +192,7 @@ public final class Constants {
     public static final class IntakeConstants {
 
         public static final int motorID = 18;
-        public static final double intakeSpeed = 0.2;
+        public static final double intakeSpeed = 0.5;
         public static double rampRate = 0.5;
         
     }
@@ -199,6 +202,7 @@ public final class Constants {
         public static int motorID = 19;
         public static double minBallDistIn = 2;
         public static double conveyorPower = 0.5;
+        public static int ballSensorPort = 0; // DIO port for ball sensor
 
     }
 }

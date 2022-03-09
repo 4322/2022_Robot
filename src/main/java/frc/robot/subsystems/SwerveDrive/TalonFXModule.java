@@ -7,6 +7,7 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
@@ -31,6 +32,19 @@ public class TalonFXModule extends ControlModule {
 		m_wheel = wheel;
 		configDrive(wheel, pos);
 		configRotation(rotation, encoderID);
+
+		// increase status reporting periods to reduce CAN bus utilization
+		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+
+		// don't need the CANCoder any longer, so a slow frame rate is OK
+		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+			DriveConstants.Rotation.CANCoderStatusFramePeriodMs, 
+			Constants.controllerConfigTimeoutMs);
 	}
 
     private void configDrive(WPI_TalonFX talon, WheelPosition pos) {
