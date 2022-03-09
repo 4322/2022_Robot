@@ -6,8 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 
 /**
@@ -20,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private ShuffleboardTab tab;
 
   private PowerDistribution pdp = new PowerDistribution();  // leave unused for live window display
 
@@ -35,7 +41,34 @@ public class Robot extends TimedRobot {
       Ultrasonic.setAutomaticMode(true);
     }
 
+    tab = Shuffleboard.getTab("Enabled Subsystems");
+
+    subsystemEnabled("Drivebase", 0, 0, Constants.driveEnabled);
+    subsystemEnabled("Shooter", 1, 0, Constants.shooterEnabled);
+    subsystemEnabled("Hood", 2, 0, Constants.hoodEnabled);
+    subsystemEnabled("Intake", 3, 0, Constants.intakeEnabled);
+    subsystemEnabled("Kicker", 4, 0, Constants.kickerEnabled);
+    subsystemEnabled("Conveyor", 5, 0, Constants.conveyorEnabled);
+    subsystemEnabled("Climber", 6, 0, Constants.climberEnabled);
+
+    subsystemEnabled("Joysticks", 0, 1, Constants.joysticksEnabled);
+    subsystemEnabled("Gyro", 1, 1, Constants.gyroEnabled);
+    subsystemEnabled("Ball Sensor", 2, 1, Constants.ultrasonicEnabled);
+
     m_robotContainer = new RobotContainer();
+  }
+
+  // create new shuffleboard tab to show whether or not subsystem is enabled
+  // also print error to driver station if not
+  private void subsystemEnabled(String title, int posX, int posY, boolean enabled) {
+    tab.add(title, enabled)
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withPosition(posX, posY)
+    .withSize(1, 1);
+
+    if (!enabled) {
+      DriverStation.reportError(title + " not enabled", false);
+    }
   }
 
   /**
