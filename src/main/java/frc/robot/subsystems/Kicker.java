@@ -23,32 +23,32 @@ public class Kicker extends SubsystemBase {
     }
   }
   
-    public void intake() {
-      if (Constants.kickerEnabled) {
-        kicker.set(KickerConstants.kickerPower);
-      }
+  public void intake() {
+    if (Constants.kickerEnabled) {
+      kicker.set(KickerConstants.kickerPower);
     }
+  }
+
+  public void stop() {
+    if (Constants.kickerEnabled) {
+      kicker.stopMotor();
+    }
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
   
-    public void stop() {
-      if (Constants.kickerEnabled) {
-        kicker.stopMotor();
-      }
+  public void setCoastMode() {
+    if (Constants.kickerEnabled) {
+      kicker.setIdleMode(IdleMode.kCoast);
     }
-  
-    @Override
-    public void periodic() {
-      // This method will be called once per scheduler run
+  }
+
+  public void setBrakeMode() {
+    if (Constants.kickerEnabled) {
+      kicker.setIdleMode(IdleMode.kBrake);
     }
-    
-    public void setCoastMode() {
-      if (Constants.kickerEnabled) {
-        kicker.setIdleMode(IdleMode.kCoast);
-      }
-    }
-  
-    public void setBrakeMode() {
-      if (Constants.kickerEnabled) {
-        kicker.setIdleMode(IdleMode.kBrake);
-      }
-    }
+  }
 }

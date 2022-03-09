@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -109,6 +110,10 @@ public class TalonFXModule extends ControlModule {
 		double count = 	(m_encoder.getAbsolutePosition() - 
 		DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
 	   	DriveConstants.Rotation.countToDegrees;
+
+		// don't need the CANCoder any longer, so increase reporting period to
+		// reduce CAN bus utilization
+		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 500, 100);
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {

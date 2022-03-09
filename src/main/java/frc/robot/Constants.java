@@ -20,7 +20,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -72,6 +72,7 @@ public final class Constants {
 
         public static final double twistDeadband = 0.08;
         public static final double rotateToDeadband = 0.25;
+        public static final double autoRotateToleranceDegrees = 3.0;
 
         public final static class Rotation {
             public static final double kP = 1.2;
