@@ -146,7 +146,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
-        public static final double minEjectVel = 500;
+        public static final double minVelError = 200; // allowable error to shoot (in rpm)
         
     }
 

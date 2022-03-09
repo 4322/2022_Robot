@@ -23,6 +23,8 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax flywheelLeft;
   private CANSparkMax flywheelRight;
 
+  private double target;
+
   private RelativeEncoder flywheelEncoder;
   private SparkMaxPIDController flywheelPID;
 
@@ -96,6 +98,7 @@ public class Shooter extends SubsystemBase {
   public void setSpeed(double rpm) {
     if (Constants.shooterEnabled) {
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      target = rpm;
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }
@@ -113,7 +116,7 @@ public class Shooter extends SubsystemBase {
   // don't let balls get stuck in the shooter
   public boolean isAbleToEject() {
     if (Constants.shooterEnabled) {
-      return getSpeed() >= ShooterConstants.minEjectVel;
+      return (Math.abs(target - getSpeed()) <= ShooterConstants.minVelError);
     } else {
       return false;
     }
