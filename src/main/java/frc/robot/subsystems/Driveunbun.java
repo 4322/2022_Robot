@@ -119,9 +119,11 @@ public class Driveunbun extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Constants.gyroEnabled && Constants.debug) {
-            roll.setDouble(gyro.getRoll());
-            pitch.setDouble(gyro.getPitch());
+        if (Constants.debug) {  // don't combine if statements to avoid dead code warning
+            if (Constants.gyroEnabled) {
+                roll.setDouble(gyro.getRoll());
+                pitch.setDouble(gyro.getPitch());
+            }
         }
     }
 
