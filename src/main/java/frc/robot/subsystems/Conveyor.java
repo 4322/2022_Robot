@@ -43,7 +43,11 @@ public class Conveyor extends SubsystemBase {
   }
 
   public boolean getSensedBall() {
-    return ballSensor.get();
+    if (Constants.ballSensorEnabled) {
+      return ballSensor.get();
+    } else {
+      return false;
+    }
   }
 
   public void stop() {
