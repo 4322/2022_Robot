@@ -44,7 +44,7 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotkD;
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
-    private Timer timer;
+    private Timer timer = new Timer();
 
     public Driveunbun() {
         if (Constants.driveEnabled) {

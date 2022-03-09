@@ -118,10 +118,6 @@ public class TalonFXModule extends ControlModule {
     }
 	
 	public void setSpeedAndAngle(){
-		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
-		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
-			SwerveHelper.getAngleChange(position) / 
-			DriveConstants.Rotation.countToDegrees);
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
@@ -172,17 +168,11 @@ public class TalonFXModule extends ControlModule {
 		return super.getAcceleration();
 	}
 
-	public void testCAN() {
-		m_wheel.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			DriveConstants.Drive.statorEnabled, 
-			DriveConstants.Drive.statorLimit, 
-			DriveConstants.Drive.statorThreshold, 
-			DriveConstants.Drive.statorTime));
+	private int unique = 0;
 
-		m_rotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			DriveConstants.Rotation.statorEnabled, 
-			DriveConstants.Rotation.statorLimit, 
-			DriveConstants.Rotation.statorThreshold, 
-			DriveConstants.Rotation.statorTime));
+	public void testCAN() {
+		m_wheel.setSelectedSensorPosition(unique++, 0, 10);
+		m_rotation.setSelectedSensorPosition(unique++, 0, 10);
 	}
 }
+ 
