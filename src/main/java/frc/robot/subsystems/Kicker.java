@@ -2,11 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.KickerConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class Kicker extends SubsystemBase {
 
@@ -20,6 +22,14 @@ public class Kicker extends SubsystemBase {
       kicker.setInverted(false);
       kicker.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
       kicker.burnFlash();
+
+      // increase status reporting periods to reduce CAN bus utilization
+      kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextVerySlowStatusPeriodMs());
+      kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextVerySlowStatusPeriodMs());
+      kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodMs());
     }
   }
   

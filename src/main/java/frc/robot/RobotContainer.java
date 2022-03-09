@@ -131,4 +131,17 @@ public class RobotContainer {
       new DriveRobotCentric(driveunbun, 0, -0.7, 0, 3)
     );
   }
+
+  // space out status frame periods so that status frames don't all come in at once
+  private static int nextSlowStatusPeriodMs = Constants.slowStatusPeriodBaseMs;
+  private static int nextVerySlowStatusPeriodMs = Constants.verySlowStatusPeriodBaseMs;
+  
+  public static int nextSlowStatusPeriodMs() {
+    return nextSlowStatusPeriodMs++;
+  }
+
+  public static int nextVerySlowStatusPeriodMs() {
+    nextVerySlowStatusPeriodMs += 10;
+    return nextVerySlowStatusPeriodMs;
+  }
 }

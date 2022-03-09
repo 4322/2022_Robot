@@ -2,11 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.IntakeConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 public class Intake extends SubsystemBase{
 
@@ -20,6 +22,14 @@ public class Intake extends SubsystemBase{
           intakeMotor.setInverted(true);
           intakeMotor.setIdleMode(IdleMode.kCoast);  // Allow manual movement until enabled
           intakeMotor.burnFlash();
+
+          // increase status reporting periods to reduce CAN bus utilization
+          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+            RobotContainer.nextVerySlowStatusPeriodMs());
+          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+            RobotContainer.nextVerySlowStatusPeriodMs());
+          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+            RobotContainer.nextVerySlowStatusPeriodMs());
       }
     }
   
