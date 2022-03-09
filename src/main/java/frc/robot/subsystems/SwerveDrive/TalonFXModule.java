@@ -1,6 +1,7 @@
 package frc.robot.subsystems.SwerveDrive;
 
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 import com.ctre.phoenix.ErrorCode;
@@ -35,15 +36,15 @@ public class TalonFXModule extends ControlModule {
 
 		// increase status reporting periods to reduce CAN bus utilization
 		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			Constants.slowControllerStatusPeriodMs, Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 
 		// don't need the CANCoder any longer, so a slow frame rate is OK
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
-			DriveConstants.Rotation.CANCoderStatusFramePeriodMs, 
+			RobotContainer.nextVerySlowStatusPeriodMs(),
 			Constants.controllerConfigTimeoutMs);
 	}
 
