@@ -31,7 +31,7 @@ public final class Constants {
     public static final boolean climberEnabled = false;
     public static final boolean hoodEnabled = true;
     public static final boolean conveyorEnabled = true;
-    public static final boolean ballSensorEnabled = false;
+    public static final boolean ballSensorEnabled = true;
 
     public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
 
