@@ -107,6 +107,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     if (Constants.debug) {  // don't combine if statements to avoid dead code warning
       if (Constants.shooterEnabled) {
+        setSpeed(targetRPM.getDouble(0));
         power.setDouble(flywheelLeft.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
       }
