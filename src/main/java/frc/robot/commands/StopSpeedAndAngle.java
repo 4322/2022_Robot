@@ -8,18 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterStop extends InstantCommand {
+public class StopSpeedAndAngle extends InstantCommand {
   /**
    * Creates a new Disable_Shooter.
    */
 
    private Shooter shooter;
+   private Hood hood;
 
-  public ShooterStop(Shooter shooterSubsystem) {
+  public StopSpeedAndAngle(Shooter shooterSubsystem, Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooterSubsystem;
+    hood = hoodSubsystem;
     addRequirements(shooter);
   }
 
@@ -27,6 +30,7 @@ public class ShooterStop extends InstantCommand {
   @Override
   public void initialize() {
     shooter.stop();
+    hood.stop();
   }
 
   // Called once the command ends or is interrupted.

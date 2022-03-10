@@ -48,7 +48,7 @@ public class RobotContainer {
   private final DriveManual driveManual = new DriveManual(driveunbun);
 
   // Shooter Commands
-  private final ShooterStop stopShooter = new ShooterStop(shooter);
+  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -61,9 +61,9 @@ public class RobotContainer {
   private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
-  private final FiringSolution test = new FiringSolution(3000, 3000, 0);
-  private final FiringSolution fenderLow = new FiringSolution(2000, 3000, 7.3);
-  private final FiringSolution fenderHigh = new FiringSolution(3000, 1000, 7.3);
+  private final FiringSolution testY = new FiringSolution(3000, 2000, 0);
+  private final FiringSolution testX = new FiringSolution(1200, 6000, 7.3);
+  private final FiringSolution testB = new FiringSolution(3500, 2500, 7.3);
   private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 46.2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -110,10 +110,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, test));
-    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
-    coPilot.a.whenPressed(stopShooter);
+    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, testX));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, testY));
+    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, testB));
+    coPilot.a.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
     coPilot.rt.whileHeld(intakeOut);

@@ -185,5 +185,9 @@ public class Hood extends SubsystemBase {
 
   public boolean getHomed() {
     return hood.isRevLimitSwitchClosed() == 1 ? true : false;
+  }
+
+  public void stop() {
+    hood.stopMotor();
   } 
 }
