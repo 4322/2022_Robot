@@ -37,7 +37,7 @@ public final class Constants {
 
     public static final int controllerConfigTimeoutMs = 50;
     public static final int slowStatusPeriodBaseMs = 180;  // for non-essential status
-    public static final int verySlowStatusPeriodBaseMs = 1000;  // for unused status
+    public static final int verySlowStatusPeriodBaseMs = 100;  // for unused status
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;

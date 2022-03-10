@@ -159,7 +159,7 @@ public class RobotContainer {
   }
 
   public static int nextVerySlowStatusPeriodMs() {
-    nextVerySlowStatusPeriodMs += 10;
+    nextVerySlowStatusPeriodMs += 1;
     return nextVerySlowStatusPeriodMs;
   }
 
