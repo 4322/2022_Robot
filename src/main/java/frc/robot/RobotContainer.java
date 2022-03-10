@@ -143,11 +143,18 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
+      new HoodReset(hood),
       new SetSpeedAndAngle(shooter, hood, tarmacEdge),
       new KickerEnable(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new DriveRobotCentric(driveunbun, 0, -0.7, 0, 3)
     );
+  }
+
+  public void hoodReset() {
+    if (!hood.getHomed()) {
+      hoodReset.schedule(false);
+    }
   }
 
   // space out status frame periods so that status frames don't all come in at once
