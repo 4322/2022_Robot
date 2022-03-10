@@ -166,7 +166,7 @@ public final class Constants {
     public static final class HoodConstants {
         // All Constants values need to be adjusted from last years code
         public static final int motorID = 17;
-        public static final int hoodMaxPosition = 9300; 
+        public static final int hoodMaxPosition = 7388; 
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
         public static final int hoodTolerance = 20;
@@ -175,8 +175,8 @@ public final class Constants {
 
         public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
         public static double maxReversePower = -0.5;   //allows to be changed in demo mode
-        public static final double minForwardPower = 0.2;
-        public static final double minReversePower = -0.2;
+        public static final double minForwardPower = 0.1;
+        public static final double minReversePower = -0.1;
         public static final double homingPower = -0.3;
 
         public static final int kPIDLoopIdx = 0;

@@ -52,6 +52,10 @@ public class Hood extends SubsystemBase {
   
       setCoastMode();  // Allow manual movement until enabled
 
+      /**
+      * Grab the 360 degree position of the MagEncoder's absolute
+      * position, and intitally set the relative sensor to match.
+      */
       hood.configAllowableClosedloopError(HoodConstants.kPIDLoopIdx,
         HoodConstants.hoodTolerance,
         HoodConstants.kTimeoutMs);
