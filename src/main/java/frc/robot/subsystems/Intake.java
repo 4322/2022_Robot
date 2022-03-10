@@ -30,8 +30,8 @@ public class Intake extends SubsystemBase{
 
   public void init() {
     if (Constants.intakeEnabled) {
-      intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
       intakeMotor.restoreFactoryDefaults();
+      intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
       intakeMotor.setInverted(true);
       intakeMotor.burnFlash();
       setCoastMode();  // Allow manual movement until enabled

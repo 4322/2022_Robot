@@ -152,19 +152,15 @@ public final class Constants {
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
         public static final double minVelError = 200; // allowable error to shoot (in rpm)
-        
     }
 
     public static final class KickerConstants {
-
         public static double kickerPower = 0.5;
         public static final int kickerID = 16;
         public static double rampRate = 0.2;
-
     }
     
     public static final class HoodConstants {
-        // All Constants values need to be adjusted from last years code
         public static final int motorID = 17;
         public static final int hoodMaxPosition = 7388; 
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
@@ -190,19 +186,15 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-
         public static final int motorID = 18;
         public static final double intakeSpeed = 0.5;
         public static double rampRate = 0.5;
-        
     }
 
     public static final class ConveyorConstants {
-
         public static int motorID = 19;
         public static double minBallDistIn = 2;
         public static double conveyorPower = 0.5;
         public static int ballSensorPort = 0; // DIO port for ball sensor
-
     }
 }

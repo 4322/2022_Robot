@@ -30,8 +30,8 @@ public class Kicker extends SubsystemBase {
 
   public void init() {
     if (Constants.kickerEnabled) {
-      kicker.setOpenLoopRampRate(KickerConstants.rampRate);
       kicker.restoreFactoryDefaults();
+      kicker.setOpenLoopRampRate(KickerConstants.rampRate);
       kicker.setInverted(false);
       kicker.burnFlash();
       setCoastMode();  // Allow manual movement until enabled
