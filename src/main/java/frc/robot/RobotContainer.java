@@ -61,9 +61,10 @@ public class RobotContainer {
   private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
-  private final FiringSolution testY = new FiringSolution(3000, 1800, 0);
-  private final FiringSolution testX = new FiringSolution(1200, 6000, 7.3);
+  private final FiringSolution fenderHigh = new FiringSolution(3000, 1800, 7.3);
+  private final FiringSolution fenderLow = new FiringSolution(1200, 6000, 7.3);
   private final FiringSolution testB = new FiringSolution(3500, 2500, 7.3);
+  // to be calibrated
   private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 46.2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -110,8 +111,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, testX));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, testY));
+    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
     coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, testB));
     coPilot.a.whenPressed(stopSpeedAndAngle);
 
@@ -144,7 +145,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetSpeedAndAngle(shooter, hood, tarmacEdge),
+      new SetSpeedAndAngle(shooter, hood, fenderHigh),
       new KickerEnable(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new DriveRobotCentric(driveunbun, 0, -0.7, 0, 1)
