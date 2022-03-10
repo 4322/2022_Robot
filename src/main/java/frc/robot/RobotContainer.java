@@ -61,7 +61,7 @@ public class RobotContainer {
   private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
-  private final FiringSolution testY = new FiringSolution(3000, 2000, 0);
+  private final FiringSolution testY = new FiringSolution(3000, 1800, 0);
   private final FiringSolution testX = new FiringSolution(1200, 6000, 7.3);
   private final FiringSolution testB = new FiringSolution(3500, 2500, 7.3);
   private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 46.2);
