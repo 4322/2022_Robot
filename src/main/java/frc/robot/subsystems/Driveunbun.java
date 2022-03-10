@@ -70,7 +70,7 @@ public class Driveunbun extends SubsystemBase {
         if (Constants.driveEnabled) {
             frontRight.init();
             frontLeft.init();
-            rearLeft.init();
+            rearRight.init();
             rearLeft.init();
 
             rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
