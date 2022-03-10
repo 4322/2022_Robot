@@ -22,6 +22,8 @@ public class Hood extends SubsystemBase {
   private NetworkTableEntry hoodPositionTalon;
   private NetworkTableEntry hoodPower;
   private NetworkTableEntry isHomeIndicator;
+
+  private boolean initialHome = false;
   
   public Hood() {
     if (Constants.hoodEnabled) {
@@ -105,16 +107,12 @@ public class Hood extends SubsystemBase {
 
       // SHUFFLEBOARD
       if (Constants.debug) {
-        setTargetPosition(hoodPositionTalon.getDouble(0));
+        if (initialHome) {
+          setTargetPosition(hoodPositionTalon.getDouble(0));
+        }
         hoodPower.setDouble(hood.getMotorOutputPercent());
         isHomeIndicator.setBoolean(getHomed());
       }
-
-      // Reset encoder if hood is at home
-      if (this.getHomed()) {
-        hood.setSelectedSensorPosition(0);
-      }
-
     }
   }
 
@@ -181,6 +179,19 @@ public class Hood extends SubsystemBase {
   // This is only valid following a set position command
   public boolean isAtTarget() {
     return (hood.getClosedLoopError() <= HoodConstants.hoodTolerance);
+  }
+
+  public void clearInitialHome() {
+    initialHome = false;
+  }
+
+  public void setInitiallyHomed() {
+    hood.setSelectedSensorPosition(0);
+    initialHome = true;
+  }
+
+  public boolean isInitialHomed() {
+    return initialHome;
   }
 
   public boolean getHomed() {

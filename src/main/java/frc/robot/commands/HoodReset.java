@@ -26,6 +26,7 @@ public class HoodReset extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
+    hood.clearInitialHome();
     hood.moveHome();
   }
 
@@ -45,6 +46,7 @@ public class HoodReset extends CommandBase {
   @Override
   public boolean isFinished() {
     if (hood.getHomed()) {
+      hood.setInitiallyHomed();
       return true;
     }
     else if (timer.hasElapsed(Constants.HoodConstants.homingTimeout)) {

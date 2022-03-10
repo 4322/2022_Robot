@@ -120,7 +120,7 @@ public class RobotContainer {
 
     coPilot.lt.whileHeld(kickerEnable);
 
-    coPilot.back.whenHeld(hoodReset);
+    coPilot.back.whenPressed(hoodReset);
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
@@ -152,8 +152,8 @@ public class RobotContainer {
   }
 
   public void hoodReset() {
-    if (!hood.getHomed()) {
-      hoodReset.schedule(false);
+    if (!hood.isInitialHomed()) {
+      hoodReset.schedule(false); // doesn't allow interrupts
     }
   }
 
