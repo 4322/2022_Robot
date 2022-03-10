@@ -193,7 +193,7 @@ public class Driveunbun extends SubsystemBase {
         double error = SwerveHelper.boundDegrees(autoRotateDeg - gyro.getAngle());
         double rotPIDSpeed = rotPID.calculate(error, 0);
 
-        if (error <= DriveConstants.autoRotateToleranceDegrees) {
+        if (Math.abs(error) <= DriveConstants.autoRotateToleranceDegrees) {
             rotPIDSpeed = 0;
         }
 

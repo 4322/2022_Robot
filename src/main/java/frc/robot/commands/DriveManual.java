@@ -73,8 +73,6 @@ public class DriveManual extends CommandBase {
         // Uses pythagorean theorem to get deadband in any direction
         rotTo = Math.sqrt(Math.pow(rotationRawX, 2) + 
           Math.pow(rotationRawY, 2)) >= rotDeadband;
-        // disable rotate to for competition
-        rotTo = false;
         rotate = rotationRawZ;
       } else {
         rotate = driveRawZ;
