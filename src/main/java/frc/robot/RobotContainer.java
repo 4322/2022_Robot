@@ -152,44 +152,47 @@ public class RobotContainer {
 
   // space out status frame periods so that status frames don't all come in at once
   private static int nextSlowStatusPeriodMs = Constants.slowStatusPeriodBaseMs;
-  private static int nextVerySlowStatusPeriodMs = Constants.verySlowStatusPeriodBaseMs;
+  private static int nextVerySlowStatusPeriodSparkMs = Constants.verySlowStatusPeriodSparkBaseMs;
   
   public static int nextSlowStatusPeriodMs() {
-    return nextSlowStatusPeriodMs++;
+    if (++nextSlowStatusPeriodMs > Constants.slowStatusPeriodMaxMs) {
+      nextSlowStatusPeriodMs = Constants.slowStatusPeriodBaseMs;
+    }
+    return nextSlowStatusPeriodMs;
   }
 
-  public static int nextVerySlowStatusPeriodMs() {
-    nextVerySlowStatusPeriodMs += 10;
-    return nextVerySlowStatusPeriodMs;
+  public static int nextVerySlowStatusPeriodSparkMs() {
+    nextVerySlowStatusPeriodSparkMs += 10;
+    return nextVerySlowStatusPeriodSparkMs;
   }
 
   // stagger unused status frames from Talon controllers
   public static void staggerTalonStatusFrames(WPI_TalonFX talon) {
 		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, 
-			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
 }
