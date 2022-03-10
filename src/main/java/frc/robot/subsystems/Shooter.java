@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.CANSparkMax;
@@ -12,6 +13,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,6 +42,20 @@ public class Shooter extends SubsystemBase {
       flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
       flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
 
+      // increase status reporting periods to reduce CAN bus utilization
+      flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodMs());  
+      flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextSlowStatusPeriodMs());
+      flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextVerySlowStatusPeriodMs());
+      flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodMs());  
+    }
+  }
+
+  public void init() {
+    if (Constants.shooterEnabled) {
       flywheelLeft.restoreFactoryDefaults();
       flywheelLeft.setInverted(false);
       flywheelRight.restoreFactoryDefaults();
@@ -129,6 +145,4 @@ public class Shooter extends SubsystemBase {
       flywheelLeft.stopMotor();
     }
   }
-
-
 }

@@ -17,19 +17,24 @@ public class Kicker extends SubsystemBase {
   public Kicker() {
     if (Constants.kickerEnabled) {
       kicker = new CANSparkMax(KickerConstants.kickerID, MotorType.kBrushless);
-      kicker.setOpenLoopRampRate(KickerConstants.rampRate);
-      kicker.restoreFactoryDefaults();
-      kicker.setInverted(false);
-      kicker.setIdleMode(IdleMode.kBrake);   // don't let balls partially fall into the shooter
-      kicker.burnFlash();
-
+      
       // increase status reporting periods to reduce CAN bus utilization
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
-        RobotContainer.nextVerySlowStatusPeriodMs());
+        RobotContainer.nextSlowStatusPeriodMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
         RobotContainer.nextVerySlowStatusPeriodMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextVerySlowStatusPeriodMs());
+        RobotContainer.nextVerySlowStatusPeriodMs()); 
+    } 
+  }
+
+  public void init() {
+    if (Constants.kickerEnabled) {
+      kicker.setOpenLoopRampRate(KickerConstants.rampRate);
+      kicker.restoreFactoryDefaults();
+      kicker.setInverted(false);
+      kicker.burnFlash();
+      setCoastMode();  // Allow manual movement until enabled
     }
   }
   

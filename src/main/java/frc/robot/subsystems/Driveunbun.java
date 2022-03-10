@@ -57,8 +57,6 @@ public class Driveunbun extends SubsystemBase {
             rearRightRotation = new WPI_TalonFX(DriveConstants.rearRightRotationID);
             rearLeftRotation = new WPI_TalonFX(DriveConstants.rearLeftRotationID);
 
-            rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
-            
             frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, 
                 WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
             frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, 
@@ -66,7 +64,18 @@ public class Driveunbun extends SubsystemBase {
             rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, 
                 WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID); 
             rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, 
-                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
+                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);   
+         }
+    }
+
+    public void init() {
+        if (Constants.driveEnabled) {
+            frontRight.init();
+            frontLeft.init();
+            rearLeft.init();
+            rearLeft.init();
+
+            rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
 
             if (Constants.gyroEnabled) {
                 gyro = new AHRS(SPI.Port.kMXP);
