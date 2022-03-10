@@ -239,4 +239,11 @@ public class Driveunbun extends SubsystemBase {
             rearLeftRotation.setNeutralMode(NeutralMode.Brake);
         }
     } 
+
+    public void stop() {
+        frontRight.stop();
+        frontLeft.stop();
+        rearRight.stop();
+        rearLeft.stop();
+    }
 }

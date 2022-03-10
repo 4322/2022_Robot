@@ -47,11 +47,6 @@ public class DriveManual extends CommandBase {
       // get distance from center of joystick
       polarDrive = Math.sqrt(rawX*rawX + rawY*rawY);
 
-      if (polarDrive <= DriveConstants.polarManualDeadband) {
-        rawX = 0;
-        rawY = 0;
-      }
-
       /* 
         cube joystick inputs to increase sensitivity
         x = smaller value
@@ -74,6 +69,16 @@ public class DriveManual extends CommandBase {
       } else {
         rotate = RobotContainer.driveStick.getZ();
       }
+
+      if (
+          (Math.abs(polarDrive) < DriveConstants.polarManualDeadband) &&
+          (Math.abs(rotate) < twistDeadband) &&
+          (!rotTo)
+          ) {
+        driveunbun.stop();
+        return;
+      }
+
 
       if (!rotTo) {
         if (Math.abs(rotate) < twistDeadband) {

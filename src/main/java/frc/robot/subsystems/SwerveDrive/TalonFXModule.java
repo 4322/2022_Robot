@@ -202,4 +202,9 @@ public class TalonFXModule extends ControlModule {
 	public double getAcceleration() {
 		return super.getAcceleration();
 	}
+
+	public void stop() {
+		m_wheel.stopMotor();
+		m_rotation.stopMotor();
+	}
 }
