@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,6 +60,12 @@ public class RobotContainer {
   // Kicker Commands
   private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
+  // Firing Solutions
+  private final FiringSolution test = new FiringSolution(3000, 3000, 0);
+  private final FiringSolution fenderLow = new FiringSolution(2000, 3000, 0);
+  private final FiringSolution fenderHigh = new FiringSolution(3000, 1000, 0);
+  private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 10);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -100,9 +110,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new ShooterSetSpeed(shooter, 1000.0));
-    coPilot.y.whenPressed(new ShooterSetSpeed(shooter, 2500.0));
-    coPilot.b.whenPressed(new ShooterSetSpeed(shooter, 4000.0));
+    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, test));
+    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
     coPilot.a.whenPressed(stopShooter);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -133,10 +143,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-      new ParallelCommandGroup(
-        new ShooterSetSpeed(shooter, 3000),
-        new HoodSet(hood, 3000)
-      ),
+      new SetSpeedAndAngle(shooter, hood, tarmacEdge),
       new KickerEnable(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new DriveRobotCentric(driveunbun, 0, -0.7, 0, 3)
@@ -154,5 +161,35 @@ public class RobotContainer {
   public static int nextVerySlowStatusPeriodMs() {
     nextVerySlowStatusPeriodMs += 10;
     return nextVerySlowStatusPeriodMs;
+  }
+
+  // stagger unused status frames from Talon controllers
+  public static void staggerTalonStatusFrames(WPI_TalonFX talon) {
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
 }
