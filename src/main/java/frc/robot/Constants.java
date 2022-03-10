@@ -118,6 +118,8 @@ public final class Constants {
             public static final double configVoltageCompSaturation = 12;
             public static final boolean enableVoltageCompensation = true;
 
+            public static final double brakeModeDeadband = 0.01;
+
             public static final boolean statorEnabled = true;
             public static final double statorLimit = 40;
             public static final double statorThreshold = 45;

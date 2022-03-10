@@ -59,8 +59,8 @@ public class TalonFXModule extends ControlModule {
        
         TalonFXConfiguration config = new TalonFXConfiguration();
 		config.openloopRamp = DriveConstants.Drive.configOpenLoopRamp;
+		config.neutralDeadband = DriveConstants.Drive.brakeModeDeadband; // delay brake mode activation for tipping
 
-		talon.configFactoryDefault();
 		talon.configAllSettings(config);
 
         talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
