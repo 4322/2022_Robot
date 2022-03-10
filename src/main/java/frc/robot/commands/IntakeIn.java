@@ -25,6 +25,13 @@ public class IntakeIn extends CommandBase {
     }
   }
 
+  @Override
+  public void execute() {
+    if (conveyor.getSensedBall()) {
+      conveyor.stop();
+    }
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

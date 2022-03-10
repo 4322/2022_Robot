@@ -23,6 +23,7 @@ public class DriveManual extends CommandBase {
   private double rawY;
   private double driveX;
   private double driveY;
+  private double polarDrive;
   private boolean rotTo = false;
   private double rotate;
 
@@ -42,6 +43,14 @@ public class DriveManual extends CommandBase {
     if (Constants.joysticksEnabled) {
       rawX = RobotContainer.driveStick.getX();
       rawY = RobotContainer.driveStick.getY();
+
+      // get distance from center of joystick
+      polarDrive = Math.sqrt(rawX*rawX + rawY*rawY);
+
+      if (polarDrive <= DriveConstants.polarManualDeadband) {
+        rawX = 0;
+        rawY = 0;
+      }
 
       /* 
         cube joystick inputs to increase sensitivity
