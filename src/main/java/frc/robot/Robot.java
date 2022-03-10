@@ -39,13 +39,14 @@ public class Robot extends TimedRobot {
 
     tab = Shuffleboard.getTab("Enabled Subsystems");
 
-    subsystemEnabled("Drivebase", 0, 0, Constants.driveEnabled);
-    subsystemEnabled("Shooter", 1, 0, Constants.shooterEnabled);
-    subsystemEnabled("Hood", 2, 0, Constants.hoodEnabled);
-    subsystemEnabled("Intake", 3, 0, Constants.intakeEnabled);
-    subsystemEnabled("Kicker", 4, 0, Constants.kickerEnabled);
-    subsystemEnabled("Conveyor", 5, 0, Constants.conveyorEnabled);
-    // subsystemEnabled("Climber", 6, 0, Constants.climberEnabled);
+    subsystemEnabled("Comp Mode", 0, 0, !Constants.debug);
+    subsystemEnabled("Drivebase", 1, 0, Constants.driveEnabled);
+    subsystemEnabled("Shooter", 2, 0, Constants.shooterEnabled);
+    subsystemEnabled("Hood", 3, 0, Constants.hoodEnabled);
+    subsystemEnabled("Intake", 4, 0, Constants.intakeEnabled);
+    subsystemEnabled("Kicker", 5, 0, Constants.kickerEnabled);
+    subsystemEnabled("Conveyor", 6, 0, Constants.conveyorEnabled);
+    // subsystemEnabled("Climber", 7, 0, Constants.climberEnabled);
 
     subsystemEnabled("Joysticks", 0, 1, Constants.joysticksEnabled);
     subsystemEnabled("Gyro", 1, 1, Constants.gyroEnabled);
