@@ -61,7 +61,7 @@ public class RobotContainer {
   private final FiringSolution test = new FiringSolution(3000, 3000, 0);
   private final FiringSolution fenderLow = new FiringSolution(2000, 3000, 7.3);
   private final FiringSolution fenderHigh = new FiringSolution(3000, 1000, 7.3);
-  private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 79.7);
+  private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 46.2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
