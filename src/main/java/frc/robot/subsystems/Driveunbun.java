@@ -101,12 +101,12 @@ public class Driveunbun extends SubsystemBase {
                 .withSize(1,1)
                 .getEntry();
 
-                rotkP = tab.add("Rotation kP", 0)
+                rotkP = tab.add("Rotation kP", DriveConstants.autoRotkP)
                 .withPosition(1,0)   
                 .withSize(1,1)
                 .getEntry();
 
-                rotkD = tab.add("Rotation kD", 0)
+                rotkD = tab.add("Rotation kD", DriveConstants.autoRotkD)
                 .withPosition(2,0)   
                 .withSize(1,1)
                 .getEntry();
