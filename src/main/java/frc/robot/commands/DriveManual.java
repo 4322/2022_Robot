@@ -19,8 +19,12 @@ public class DriveManual extends CommandBase {
   private final Driveunbun driveunbun;
   private final double twistDeadband = DriveConstants.twistDeadband;
   private final double rotDeadband = DriveConstants.rotateToDeadband; // Deadband for turning to angle of joystick
-  private double rawX;
-  private double rawY;
+  private double driveRawX;
+  private double driveRawY;
+  private double driveRawZ;
+  private double rotationRawX;
+  private double rotationRawY;
+  private double rotationRawZ;
   private double driveX;
   private double driveY;
   private double polarDrive;
@@ -41,11 +45,15 @@ public class DriveManual extends CommandBase {
   @Override
   public void execute() {
     if (Constants.joysticksEnabled) {
-      rawX = RobotContainer.driveStick.getX();
-      rawY = RobotContainer.driveStick.getY();
+      driveRawX = RobotContainer.driveStick.getX();
+      driveRawY = RobotContainer.driveStick.getY();
+      driveRawZ = RobotContainer.driveStick.getZ();
+      rotationRawX = RobotContainer.rotateStick.getX();
+      rotationRawY = RobotContainer.rotateStick.getY();
+      rotationRawZ = RobotContainer.rotateStick.getZ();
 
       // get distance from center of joystick
-      polarDrive = Math.sqrt(rawX*rawX + rawY*rawY);
+      polarDrive = Math.sqrt(driveRawX*driveRawX + driveRawY*driveRawY);
 
       /* 
         cube joystick inputs to increase sensitivity
@@ -53,21 +61,23 @@ public class DriveManual extends CommandBase {
         y = greater value
         x = (y^3 / y) * x 
       */
-      if (Math.abs(rawX) >= Math.abs(rawY)) {
-        driveX = -rawX*rawX*rawX; // reverse polarity of drive x axis
-        driveY = rawX*rawX*rawY;
+      if (Math.abs(driveRawX) >= Math.abs(driveRawY)) {
+        driveX = -driveRawX*driveRawX*driveRawX; // reverse polarity of drive x axis
+        driveY = driveRawX*driveRawX*driveRawY;
       } else {
-        driveX = -rawY*rawY*rawX;
-        driveY = rawY*rawY*rawY;
+        driveX = -driveRawY*driveRawY*driveRawX;
+        driveY = driveRawY*driveRawY*driveRawY;
       }
 
       if (Constants.driveTwoJoystick) {
         // Uses pythagorean theorem to get deadband in any direction
-        rotTo = Math.sqrt(Math.pow(RobotContainer.rotateStick.getX(), 2) + 
-          Math.pow(RobotContainer.rotateStick.getY(), 2)) >= rotDeadband;
-        rotate = RobotContainer.rotateStick.getZ();
+        rotTo = Math.sqrt(Math.pow(rotationRawX, 2) + 
+          Math.pow(rotationRawY, 2)) >= rotDeadband;
+        // disable rotate to for competition
+        rotTo = false;
+        rotate = rotationRawZ;
       } else {
-        rotate = RobotContainer.driveStick.getZ();
+        rotate = driveRawZ;
       }
 
       if (
@@ -97,7 +107,7 @@ public class DriveManual extends CommandBase {
       } else {
 
         // Get angle of joystick
-        rotate =  90 - Math.toDegrees(Math.atan2(-RobotContainer.rotateStick.getY(), RobotContainer.rotateStick.getX()));
+        rotate =  90 - Math.toDegrees(Math.atan2(-rotationRawY, rotationRawX));
 
         driveunbun.driveAutoRotate(driveX, driveY, 
           rotate);

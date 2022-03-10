@@ -146,9 +146,11 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new HoodReset(hood),
       new SetSpeedAndAngle(shooter, hood, fenderHigh),
-      new KickerEnable(kicker, conveyor, shooter),
+      new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
-      new DriveRobotCentric(driveunbun, 0, -0.7, 0, 1)
+      new KickerStop(kicker, conveyor),
+      new StopSpeedAndAngle(shooter, hood),
+      new DriveRobotCentric(driveunbun, 0, -0.7, 0, 2)
     );
   }
 
