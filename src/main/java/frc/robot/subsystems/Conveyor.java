@@ -28,7 +28,7 @@ public class Conveyor extends SubsystemBase {
       conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
         RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-        RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+        RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
  }
 
