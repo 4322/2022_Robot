@@ -40,8 +40,10 @@ public class TalonFXModule extends ControlModule {
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
 			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+		RobotContainer.staggerTalonStatusFrames(m_wheel);
 		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+		RobotContainer.staggerTalonStatusFrames(m_rotation);
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 	}

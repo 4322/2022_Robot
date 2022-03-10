@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.FiringSolution.FiringSolution;
@@ -158,5 +161,35 @@ public class RobotContainer {
   public static int nextVerySlowStatusPeriodMs() {
     nextVerySlowStatusPeriodMs += 10;
     return nextVerySlowStatusPeriodMs;
+  }
+
+  // stagger unused status frames from Talon controllers
+  public static void staggerTalonStatusFrames(WPI_TalonFX talon) {
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+    talon.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, 
+			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
 }
