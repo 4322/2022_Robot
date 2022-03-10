@@ -8,27 +8,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.FiringSolution.FiringSolution;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Shooter;
 
-public class ShooterSetSpeed extends CommandBase {
+public class SetSpeedAndAngle extends CommandBase {
   /**
    * Creates a new Enable_Shooter_Power.
    */
 
   private Shooter shooter;
-  private double m_rpm;
+  private Hood hood;
+  private FiringSolution firingSolution;
 
 
-  public ShooterSetSpeed(Shooter shooterSubsystem, double rpm) {
+  public SetSpeedAndAngle(Shooter shooterSubsystem, Hood hoodSubsystem, FiringSolution m_firingSolution) {
     shooter = shooterSubsystem;
-    m_rpm = rpm;
+    hood = hoodSubsystem;
+    firingSolution = m_firingSolution;
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setSpeed(m_rpm);
+    shooter.setSpeed(firingSolution.getflywheelSpeed());
+    hood.setTargetPosition(firingSolution.gethoodPosition());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +51,6 @@ public class ShooterSetSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.isAbleToEject();     
+    return (shooter.isAbleToEject() && hood.isAtTarget());
   }
 }
