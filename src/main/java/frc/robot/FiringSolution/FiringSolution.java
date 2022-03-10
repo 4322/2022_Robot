@@ -6,10 +6,10 @@ public class FiringSolution {
     private double distance;
 
 
-    public FiringSolution(double flywheelSpeed, double hoodPosition, double distanceFt) {
+    public FiringSolution(double flywheelSpeed, double hoodPosition, double distanceIn) {
         this.flywheelSpeed = flywheelSpeed;
         this.hoodPosition = hoodPosition;
-        this.distance = distanceFt;
+        this.distance = distanceIn;
     }
 
     public double getflywheelSpeed() { return flywheelSpeed; }
