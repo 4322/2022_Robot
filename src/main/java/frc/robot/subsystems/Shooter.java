@@ -44,13 +44,13 @@ public class Shooter extends SubsystemBase {
 
       // increase status reporting periods to reduce CAN bus utilization
       flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextVerySlowStatusPeriodMs());  
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
       flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextVerySlowStatusPeriodMs());
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());
       flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextVerySlowStatusPeriodMs());  
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
     }
   }
 
