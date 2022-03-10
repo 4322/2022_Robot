@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -10,56 +11,65 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Hood extends SubsystemBase {
     
-    private WPI_TalonSRX hood;
+  private WPI_TalonSRX hood;
 
-    //SHUFFLEBOARD
-    private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
-    private NetworkTableEntry hoodPositionTalon;
-    private NetworkTableEntry hoodPower;
-    private NetworkTableEntry isHomeIndicator;
-    
-    public Hood() {
-        if (Constants.hoodEnabled) {
-            hood = new WPI_TalonSRX(Constants.HoodConstants.motorID);
+  //SHUFFLEBOARD
+  private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
+  private NetworkTableEntry hoodPositionTalon;
+  private NetworkTableEntry hoodPower;
+  private NetworkTableEntry isHomeIndicator;
+  
+  public Hood() {
+    if (Constants.hoodEnabled) {
+      hood = new WPI_TalonSRX(Constants.HoodConstants.motorID);
 
-            hood.configFactoryDefault();
-            hood.setInverted(true);
-            hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-            hood.setSensorPhase(false);
-        
-            /* Config the peak and nominal outputs */
-            hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower);
-            hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower);
-            hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower);
-            hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower);   
-            
-            setCoastMode();  // Allow manual movement until enabled
-
-            // DEBUG
-            if (Constants.debug) {
-
-                hoodPositionTalon = tab.add("Hood Position (Talon)", 0)
-                .withPosition(0,1)   
-                .withSize(1,1)
-                .getEntry();
-                
-                hoodPower = tab.add("Hood Power", 0)
-                .withPosition(1,1)
-                .withSize(1,1)
-                .getEntry();
-
-                isHomeIndicator = tab.add("Is @ home", false)
-                .withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(0,0)
-                .withSize(1,1)
-                .getEntry();
-
-            }
-        }   
+      // increase status reporting periods to reduce CAN bus utilization
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+        20, Constants.controllerConfigTimeoutMs);
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+        50, Constants.controllerConfigTimeoutMs);      
     }
+  }
+
+  public void init() {
+    if (Constants.hoodEnabled) {
+      hood.configFactoryDefault();
+      hood.setInverted(true);
+      hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+      hood.setSensorPhase(false);
+      
+      /* Config the peak and nominal outputs */
+      hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower);
+      hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower);
+      hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower);
+      hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower);       
+  
+      setCoastMode();  // Allow manual movement until enabled
+
+      // DEBUG
+      if (Constants.debug) {
+        hoodPositionTalon = tab.add("Hood Position (Talon)", 0)
+        .withPosition(0,1)   
+        .withSize(1,1)
+        .getEntry();
+        
+        hoodPower = tab.add("Hood Power", 0)
+        .withPosition(1,1)
+        .withSize(1,1)
+        .getEntry();
+
+        isHomeIndicator = tab.add("Is @ home", false)
+        .withWidget(BuiltInWidgets.kBooleanBox)
+        .withPosition(0,0)
+        .withSize(1,1)
+        .getEntry();
+      }
+    }   
+  }
 
   @Override
   public void periodic() {

@@ -24,14 +24,17 @@ public class Conveyor extends SubsystemBase {
     if (Constants.conveyorEnabled) {
       conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
 
-      conveyor.configFactoryDefault();
-
-      // increase status reporting periods to reduce CAN bus utilization
+       // increase status reporting periods to reduce CAN bus utilization
       conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
         RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
         RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-     
+    }
+ }
+
+  public void init() {
+    if (Constants.conveyorEnabled) {
+      conveyor.configFactoryDefault();
       setCoastMode();  // Allow manual movement until enabled
 
       if (Constants.ballSensorEnabled) {
@@ -42,7 +45,6 @@ public class Conveyor extends SubsystemBase {
 
   @Override
   public void periodic() {
-
   }
 
   public void enableConveyor() {

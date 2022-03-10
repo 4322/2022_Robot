@@ -59,6 +59,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // Initialize subsystems after all of them have been constructed because the 
+    // constructors lower CAN bus utilization to make configuration reliable.
+    driveunbun.init();
+    shooter.init();
+    kicker.init();
+    intake.init();
+    hood.init();
+    conveyor.init();
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -72,6 +81,7 @@ public class RobotContainer {
     hood.setCoastMode();
     conveyor.setCoastMode();
     intake.setCoastMode();
+    kicker.setCoastMode();
   }
 
   public void enableSubsystems() {
@@ -79,6 +89,7 @@ public class RobotContainer {
     hood.setBrakeMode();
     conveyor.setBrakeMode();
     intake.setBrakeMode();
+    kicker.setBrakeMode();
   }
 
   /**

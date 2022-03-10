@@ -15,56 +15,61 @@ public class Intake extends SubsystemBase{
   private CANSparkMax intakeMotor;
 
   public Intake() {
-      if (Constants.intakeEnabled) {
-          intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
-          intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
-          intakeMotor.restoreFactoryDefaults();
-          intakeMotor.setInverted(true);
-          intakeMotor.setIdleMode(IdleMode.kCoast);  // Allow manual movement until enabled
-          intakeMotor.burnFlash();
+    if (Constants.intakeEnabled) {
+      intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
 
-          // increase status reporting periods to reduce CAN bus utilization
-          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
-            RobotContainer.nextVerySlowStatusPeriodMs());
-          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-            RobotContainer.nextVerySlowStatusPeriodMs());
-          intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-            RobotContainer.nextVerySlowStatusPeriodMs());
-      }
+      // increase status reporting periods to reduce CAN bus utilization
+      intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextSlowStatusPeriodMs());
+      intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextVerySlowStatusPeriodMs());
+      intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodMs());  
     }
-  
-    public void intake() {
-      if (Constants.intakeEnabled) {
-        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
-      }
-    }
+  }
 
-    public void eject() {
-      if (Constants.intakeEnabled) {
-        intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
-      }
+  public void init() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
+      intakeMotor.restoreFactoryDefaults();
+      intakeMotor.setInverted(true);
+      intakeMotor.burnFlash();
+      setCoastMode();  // Allow manual movement until enabled
     }
+  }
+
+  public void intake() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+    }
+  }
+
+  public void eject() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
+    }
+  }
+
+  public void stop() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.stopMotor();
+    }
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
   
-    public void stop() {
-      if (Constants.intakeEnabled) {
-        intakeMotor.stopMotor();
-      }
+  public void setCoastMode() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.setIdleMode(IdleMode.kCoast);
     }
-  
-    @Override
-    public void periodic() {
-      // This method will be called once per scheduler run
+  }
+
+  public void setBrakeMode() {
+    if (Constants.intakeEnabled) {
+      intakeMotor.setIdleMode(IdleMode.kBrake);
     }
-    
-    public void setCoastMode() {
-      if (Constants.intakeEnabled) {
-        intakeMotor.setIdleMode(IdleMode.kCoast);
-      }
-    }
-  
-    public void setBrakeMode() {
-      if (Constants.intakeEnabled) {
-        intakeMotor.setIdleMode(IdleMode.kBrake);
-      }
-    }
+  }
 }
