@@ -111,7 +111,7 @@ public class Hood extends SubsystemBase {
           setTargetPosition(hoodPositionTalon.getDouble(0));
         }
         hoodPower.setDouble(hood.getMotorOutputPercent());
-        isHomeIndicator.setBoolean(getHomed());
+        isHomeIndicator.setBoolean(isAtHome());
       }
     }
   }
@@ -194,7 +194,7 @@ public class Hood extends SubsystemBase {
     return initialHome;
   }
 
-  public boolean getHomed() {
+  public boolean isAtHome() {
     return hood.isRevLimitSwitchClosed() == 1 ? true : false;
   }
 

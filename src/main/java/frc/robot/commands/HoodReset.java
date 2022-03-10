@@ -45,7 +45,7 @@ public class HoodReset extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (hood.getHomed()) {
+    if (hood.isAtHome()) {
       hood.setInitiallyHomed();
       return true;
     }
