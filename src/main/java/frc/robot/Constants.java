@@ -173,12 +173,11 @@ public final class Constants {
         public static final double homingTimeout = 5.0; 
         public static final double autoTimeout = 3.0; 
 
-        public static double maxForwardPower = 1.0;    //allows to be changed in demo mode
-        public static double maxReversePower = -1.0;   //allows to be changed in demo mode
-        public static final double minForwardPower = 0.1;
-        public static final double minReversePower = -0.1;
-        public static final double homingPower = -0.4;
-        public static final double manualDeadband = 0.05;
+        public static double maxForwardPower = 0.7;    //allows to be changed in demo mode
+        public static double maxReversePower = -0.6;   //allows to be changed in demo mode
+        public static final double minForwardPower = 0.2;
+        public static final double minReversePower = -0.2;
+        public static final double homingPower = -0.3;
 
         public static class PID_Values {
             public static final double kP = 3.0;
