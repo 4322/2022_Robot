@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.HoodConstants;
 
 public class Hood extends SubsystemBase {
     
@@ -24,7 +25,7 @@ public class Hood extends SubsystemBase {
   
   public Hood() {
     if (Constants.hoodEnabled) {
-      hood = new WPI_TalonSRX(Constants.HoodConstants.motorID);
+      hood = new WPI_TalonSRX(HoodConstants.motorID);
 
       // increase status reporting periods to reduce CAN bus utilization
       hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
@@ -38,16 +39,40 @@ public class Hood extends SubsystemBase {
     if (Constants.hoodEnabled) {
       hood.configFactoryDefault();
       hood.setInverted(true);
-      hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+      hood.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        HoodConstants.kPIDLoopIdx,
+        HoodConstants.kTimeoutMs);
       hood.setSensorPhase(false);
       
       /* Config the peak and nominal outputs */
-      hood.configNominalOutputForward(Constants.HoodConstants.minForwardPower);
-      hood.configNominalOutputReverse(Constants.HoodConstants.minReversePower);
-      hood.configPeakOutputForward(Constants.HoodConstants.maxForwardPower);
-      hood.configPeakOutputReverse(Constants.HoodConstants.maxReversePower);       
+      hood.configNominalOutputForward(HoodConstants.minForwardPower);
+      hood.configNominalOutputReverse(HoodConstants.minReversePower);
+      hood.configPeakOutputForward(HoodConstants.maxForwardPower);
+      hood.configPeakOutputReverse(HoodConstants.maxReversePower);       
   
       setCoastMode();  // Allow manual movement until enabled
+
+      hood.configAllowableClosedloopError(HoodConstants.kPIDLoopIdx,
+        HoodConstants.hoodTolerance,
+        HoodConstants.kTimeoutMs);
+      hood.config_kP(HoodConstants.kPIDLoopIdx,
+        HoodConstants.kP, HoodConstants.kTimeoutMs);
+      hood.config_kI(HoodConstants.kPIDLoopIdx,
+        HoodConstants.kI, HoodConstants.kTimeoutMs);
+      hood.config_kD(HoodConstants.kPIDLoopIdx,
+        HoodConstants.kD, HoodConstants.kTimeoutMs);
+
+      int absolutePosition = hood.getSensorCollection().getPulseWidthPosition();
+
+      /* Mask out overflows, keep bottom 12 bits */
+      absolutePosition &= 0xFFF;
+      if (HoodConstants.kSensorPhase) { absolutePosition *= -1; }
+      if (HoodConstants.kMotorInvert) { absolutePosition *= -1; }
+      
+      /* Set the quadrature (relative) sensor to match absolute */
+      hood.setSelectedSensorPosition(absolutePosition,
+        HoodConstants.kPIDLoopIdx,
+        HoodConstants.kTimeoutMs);
 
       // DEBUG
       if (Constants.debug) {
@@ -107,25 +132,25 @@ public class Hood extends SubsystemBase {
       double _power = power;
       
       if (_power > 0) {
-        if (encValue >= Constants.HoodConstants.hoodMaxPosition) {
+        if (encValue >= HoodConstants.hoodMaxPosition) {
           hood.stopMotor();
         } else {
-          if (encValue >= Constants.HoodConstants.hoodMaxPosition - Constants.HoodConstants.hoodDecellerationDistance) {
-            _power *= (Constants.HoodConstants.hoodMaxPosition - encValue) /
-                      Constants.HoodConstants.hoodDecellerationDistance;
+          if (encValue >= HoodConstants.hoodMaxPosition - HoodConstants.hoodDecellerationDistance) {
+            _power *= (HoodConstants.hoodMaxPosition - encValue) /
+                      HoodConstants.hoodDecellerationDistance;
           }
           // let motor controller apply minimum power bound for easier tuning
-          hood.set(Math.min(_power, Constants.HoodConstants.maxForwardPower));
+          hood.set(Math.min(_power, HoodConstants.maxForwardPower));
         }
       } else if (_power < 0) {
-        if (encValue <= Constants.HoodConstants.hoodMinPosition) {
+        if (encValue <= HoodConstants.hoodMinPosition) {
           hood.stopMotor();
         } else {
-          if (encValue <= Constants.HoodConstants.hoodDecellerationDistance) {
-            _power *= -encValue / Constants.HoodConstants.hoodDecellerationDistance;
+          if (encValue <= HoodConstants.hoodDecellerationDistance) {
+            _power *= -encValue / HoodConstants.hoodDecellerationDistance;
           }
           // let motor controller apply minimum power bound for easier tuning
-          hood.set(Math.max(_power, Constants.HoodConstants.maxReversePower));
+          hood.set(Math.max(_power, HoodConstants.maxReversePower));
         }
       } else {
         hood.stopMotor();
@@ -139,7 +164,7 @@ public class Hood extends SubsystemBase {
 
   public void moveHome() {
     if (Constants.hoodEnabled) {
-      hood.set(Constants.HoodConstants.homingPower);
+      hood.set(HoodConstants.homingPower);
     }
   }
 
@@ -151,7 +176,7 @@ public class Hood extends SubsystemBase {
 
   // This is only valid following a set position command
   public boolean isAtTarget() {
-    return (hood.getClosedLoopError() <= Constants.HoodConstants.hoodTolerance);
+    return (hood.getClosedLoopError() <= HoodConstants.hoodTolerance);
   }
 
   public boolean getHomed() {

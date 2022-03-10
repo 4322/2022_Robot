@@ -175,19 +175,19 @@ public final class Constants {
 
         public static double maxForwardPower = 0.7;    //allows to be changed in demo mode
         public static double maxReversePower = -0.6;   //allows to be changed in demo mode
+
         public static final double minForwardPower = 0.2;
         public static final double minReversePower = -0.2;
         public static final double homingPower = -0.3;
 
-        public static class PID_Values {
-            public static final double kP = 3.0;
-            public static final double kI = 0;
-            public static final double kD = 0;
-        }
+        public static final int kPIDLoopIdx = 0;
+        public static final int kTimeoutMs = 30;
+        public static final boolean kSensorPhase = false;
+        public static final boolean kMotorInvert = false;
 
-        public static class Positions {
-            //For preset positions
-        }
+        public static final double kP = 3.0;
+        public static final double kI = 0;
+        public static final double kD = 0;
     }
 
     public static final class IntakeConstants {
