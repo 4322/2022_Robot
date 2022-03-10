@@ -26,13 +26,14 @@ public class TalonFXModule extends ControlModule {
 	private WPI_TalonFX m_rotation; 
 	private WPI_TalonFX m_wheel;
 	private CANCoder m_encoder;
+	private WheelPosition m_wheelPosition;
 	
 	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
 		super(pos);
 		m_rotation = rotation;
 		m_wheel = wheel;
-		configDrive(wheel, pos);
-		configRotation(rotation, encoderID);
+		m_encoder = new CANCoder(encoderID);
+		m_wheelPosition = pos;
 
 		// increase status reporting periods to reduce CAN bus utilization
 		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
@@ -41,11 +42,13 @@ public class TalonFXModule extends ControlModule {
 			RobotContainer.nextVerySlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-
-		// don't need the CANCoder any longer, so a slow frame rate is OK
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
-			RobotContainer.nextVerySlowStatusPeriodMs(),
-			Constants.controllerConfigTimeoutMs);
+			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+	}
+
+	public void init() {
+		configDrive(m_wheel, m_wheelPosition);
+		configRotation(m_rotation);
 	}
 
     private void configDrive(WPI_TalonFX talon, WheelPosition pos) {
@@ -76,7 +79,7 @@ public class TalonFXModule extends ControlModule {
 			DriveConstants.Drive.supplyTime));
     }
 
-	private void configRotation(WPI_TalonFX talon, int encoderID) {
+	private void configRotation(WPI_TalonFX talon) {
 
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = DriveConstants.Rotation.kP;
@@ -112,25 +115,33 @@ public class TalonFXModule extends ControlModule {
 		encoderConfig.sensorDirection = true;  // positive rotation is clockwise
 		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 		
-		m_encoder = new CANCoder(encoderID);
 		m_encoder.configAllSettings(encoderConfig);  // factory default is the baseline
+
+		// need fast initial reading from the CANCoder
+		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+			10, Constants.controllerConfigTimeoutMs);
 
 		// wait for CANCoder position to stabilize
 		try {
-			Thread.sleep(50); // can go as low as 10, 50 to be safe
+			Thread.sleep(50); // 5 status frames to be safe
 		}
 		catch (InterruptedException e) {}
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
 		double count = 	(m_encoder.getAbsolutePosition() - 
-		DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
-	   	DriveConstants.Rotation.countToDegrees;
+			DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
+			DriveConstants.Rotation.countToDegrees;
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {
 			DriverStation.reportError("Error " + error.value + " initializing Talon FX " + talon.getDeviceID() + 
 				" position ", false);
 		}
+
+		// don't need the CANCoder any longer, so a slow frame rate is OK
+		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+			RobotContainer.nextVerySlowStatusPeriodMs(),
+			Constants.controllerConfigTimeoutMs);
     }
 	
 	public void setSpeedAndAngle(){
