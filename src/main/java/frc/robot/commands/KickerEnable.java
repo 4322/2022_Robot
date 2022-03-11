@@ -25,6 +25,9 @@ public class KickerEnable extends CommandBase {
     if (shooter.isAbleToEject()) {
       kicker.intake();
       conveyor.enableConveyor();
+    } else {
+      kicker.stop();
+      conveyor.stop();
     }
   }
 
