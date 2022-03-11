@@ -71,7 +71,7 @@ public final class Constants {
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
 
-        public static final double polarManualDeadband = 0.03;
+        public static final double polarManualDeadband = 0.06;
 
         public static final double maxAutoRotSpd = 0.7;
 
@@ -153,7 +153,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
-        public static final double minVelError = 200; // allowable error to shoot (in rpm)
+        public static final double minVelError = 20; // allowable error to shoot (in rpm)
     }
 
     public static final class KickerConstants {

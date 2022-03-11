@@ -152,7 +152,7 @@ public class RobotContainer {
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),
       new StopSpeedAndAngle(shooter, hood),
-      new DriveRobotCentric(driveunbun, 0, -0.7, 0, 2)
+      new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
     );
   }
 
