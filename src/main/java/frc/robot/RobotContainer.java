@@ -141,6 +141,9 @@ public class RobotContainer {
       driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
       driveBottomLeftButton.whenPressed(new SetToRobotCentric(driveunbun, 90));
       driveBottomRightButton.whenPressed(new SetToRobotCentric(driveunbun, -90));
+      driveTopLeftButton.whenPressed(webcams::resetCameras);
+      driveBottomLeftButton.whenPressed(webcams::setLeft);
+      driveBottomRightButton.whenPressed(webcams::setRight);
       driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
       rotateTopRightButton.whenPressed(new ResetFieldCentric(driveunbun));
     }
