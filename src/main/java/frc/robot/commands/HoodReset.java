@@ -63,11 +63,13 @@ public class HoodReset extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (hood.isAtTarget() && secondReset) {
+    if (secondReset) {
+      hood.stop();
       hood.setInitiallyHomed();
       return true;
     }
     else if (timer.hasElapsed(Constants.HoodConstants.homingTimeout)) {
+      hood.stop();
       return true;
     }
     return false;
