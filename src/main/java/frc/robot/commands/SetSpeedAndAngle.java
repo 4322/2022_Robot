@@ -26,7 +26,7 @@ public class SetSpeedAndAngle extends CommandBase {
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     firingSolution = m_firingSolution;
-    addRequirements(shooter);
+    addRequirements(shooter, hood);
   }
 
   // Called when the command is initially scheduled.
