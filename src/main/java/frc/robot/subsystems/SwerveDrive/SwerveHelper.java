@@ -35,6 +35,7 @@ public class SwerveHelper {
 	protected static AHRS m_gyro = null;
 
 	public static boolean fieldCentric = true;
+	public static double robotCentricOffsetRadians = 0;
 
 	public static boolean useAngleToReverse = true;
 	
@@ -57,6 +58,10 @@ public class SwerveHelper {
 
 			double temp = forward * Math.cos(gyroAngle) + strafe*Math.sin(gyroAngle);
 			strafe = -forward*Math.sin(gyroAngle) + strafe*Math.cos(gyroAngle);
+			forward = temp;
+		} else if (robotCentricOffsetRadians != 0) {
+			double temp = forward * Math.cos(robotCentricOffsetRadians) + strafe*Math.sin(robotCentricOffsetRadians);
+			strafe = -forward*Math.sin(robotCentricOffsetRadians) + strafe*Math.cos(robotCentricOffsetRadians);
 			forward = temp;
 		}
 
@@ -126,10 +131,12 @@ public class SwerveHelper {
 
 	public static void setToFieldCentric(){
 		fieldCentric = true;
+		robotCentricOffsetRadians = 0;
 	}
 
-	public static void setToBotCentric(){
+	public static void setToBotCentric(double offsetDeg){
 		fieldCentric = false;
+		robotCentricOffsetRadians = Math.toRadians(offsetDeg);
 	}
 
 	

@@ -33,8 +33,6 @@ public final class Constants {
     public static final boolean conveyorEnabled = true;
     public static final boolean ballSensorEnabled = true;
 
-    public static final boolean driveTwoJoystick = true; // defaults to one joystick drive
-
     public static final int controllerConfigTimeoutMs = 50;
     public static final int slowStatusPeriodBaseMs = 180;  // for non-essential status
     public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period

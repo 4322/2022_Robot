@@ -152,8 +152,9 @@ public class Driveunbun extends SubsystemBase {
         }
     }
 
-    public void setToRobotCentric() {
-        SwerveHelper.setToBotCentric();
+    public void setToRobotCentric(double offsetDeg) {
+        // positive offset = counter-clockwise
+        SwerveHelper.setToBotCentric(offsetDeg);
     }
 
     public void drive(double driveX, double driveY, double rotate) {
@@ -214,7 +215,7 @@ public class Driveunbun extends SubsystemBase {
         driveAutoRotate(x, y, rotationDeg);
     }
 
-    public void setCoastMode () {
+    public void setCoastMode() {
         if (Constants.driveEnabled) {
             frontRightDrive.setNeutralMode(NeutralMode.Coast);
             frontLeftDrive.setNeutralMode(NeutralMode.Coast);

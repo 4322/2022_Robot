@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -35,6 +37,8 @@ public class RobotContainer {
   private static JoystickButton driveTopLeftButton;
   private static JoystickButton driveBottomLeftButton;
   private static JoystickButton driveTopRightButton;
+  private static JoystickButton driveBottomRightButton;
+  private static JoystickButton rotateTopRightButton;
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -43,6 +47,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
+  private final Webcams webcams = new Webcams();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun);
@@ -127,15 +132,17 @@ public class RobotContainer {
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
+      rotateStick = new Joystick(1);
       driveTopLeftButton = new JoystickButton(driveStick, 5);
       driveBottomLeftButton = new JoystickButton(driveStick, 3);
+      driveBottomRightButton = new JoystickButton(driveStick, 4);
       driveTopRightButton = new JoystickButton(driveStick, 6);
-      if (Constants.driveTwoJoystick) {
-        rotateStick = new Joystick(1);
-      }
+      rotateTopRightButton = new JoystickButton(rotateStick, 6);
       driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
-      driveBottomLeftButton.whenPressed(new ResetFieldCentric(driveunbun));
+      driveBottomLeftButton.whenPressed(new SetToRobotCentric(driveunbun, 90));
+      driveBottomRightButton.whenPressed(new SetToRobotCentric(driveunbun, -90));
       driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
+      rotateTopRightButton.whenPressed(new ResetFieldCentric(driveunbun));
     }
    }
   

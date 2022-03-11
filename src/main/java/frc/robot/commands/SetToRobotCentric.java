@@ -7,16 +7,22 @@ public class SetToRobotCentric extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final Driveunbun driveSubsystem;
+  private final double offset;
+
+  public SetToRobotCentric(Driveunbun driveSubsystem, double offsetDeg) {
+    this.driveSubsystem = driveSubsystem;
+    offset = offsetDeg;
+    // no need to interrupt other commands when changing drive mode
+  }
 
   public SetToRobotCentric(Driveunbun driveSubsystem) {
-    this.driveSubsystem = driveSubsystem;
-    // no need to interrupt other commands when changing drive mode
+    this(driveSubsystem, 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveSubsystem.setToRobotCentric();
+    driveSubsystem.setToRobotCentric(offset);
   }
 
   // Called once the command ends or is interrupted.

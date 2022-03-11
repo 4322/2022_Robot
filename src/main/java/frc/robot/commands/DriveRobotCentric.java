@@ -18,18 +18,24 @@ public class DriveRobotCentric extends CommandBase {
   private final double x;
   private final double y;
   private final double rotate;
+  private final double offset;
   private final double time; // seconds
 
   private Timer timer = new Timer();
 
-  public DriveRobotCentric(Driveunbun drivesubsystem, double m_x, double m_y, double m_rotate, double m_timeSeconds) {
+  public DriveRobotCentric(Driveunbun drivesubsystem, double m_x, double m_y, double m_rotate, double m_timeSeconds, double offsetDeg) {
     driveunbun = drivesubsystem;
     x = m_x;
     y = m_y;
     rotate = m_rotate;
+    offset = offsetDeg;
     time = m_timeSeconds;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveunbun);
+  }
+
+  public DriveRobotCentric(Driveunbun drivesubsystem, double m_x, double m_y, double m_rotate, double m_timeSeconds) {
+    this(drivesubsystem, m_x, m_y, m_rotate, m_timeSeconds, 0.0);
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +48,7 @@ public class DriveRobotCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveunbun.setToRobotCentric();
+    driveunbun.setToRobotCentric(offset);
     driveunbun.drive(x, y, rotate);
   }
 
