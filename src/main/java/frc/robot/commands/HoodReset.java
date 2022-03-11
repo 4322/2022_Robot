@@ -13,7 +13,9 @@ public class HoodReset extends CommandBase {
 
   private Hood hood;
   private boolean firstReset = false;
+  private boolean secondResetStarted = false;
   private boolean secondReset = false;
+  private boolean targetSet = false;
   private Timer timer = new Timer();
 
   public HoodReset(Hood hoodSubsystem) {
@@ -36,23 +38,32 @@ public class HoodReset extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    if (!firstReset && !hood.isAtHome()) {
+      hood.setHoodPower(HoodConstants.homingPower);
+    } else if (!firstReset && hood.isAtHome()) {
+      firstReset = true;
+      hood.setCurrentPosition(0);
+    } else if (!secondResetStarted && hood.isAtHome() && !targetSet) {
+      hood.setTargetPosition(1000, true);
+      targetSet = true;
+    } else if (!secondResetStarted && hood.isAtTarget() && targetSet) {
+      hood.setHoodPower(HoodConstants.secondHomingPower);
+      secondResetStarted = true;
+    } else if (secondResetStarted && hood.isAtHome()) {
+      secondReset = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!firstReset && !hood.isAtHome()) {
-      hood.setHoodPower(HoodConstants.homingPower);
-    } else if (!firstReset && hood.isAtHome()) {
-      
-    }
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (hood.isAtHome()) {
+    if (hood.isAtTarget() && secondReset) {
       hood.setInitiallyHomed();
       return true;
     }

@@ -166,14 +166,14 @@ public final class Constants {
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
         public static final int hoodTolerance = 20;
-        public static final double homingTimeout = 5.0; 
-        public static final double autoTimeout = 3.0; 
+        public static final double homingTimeout = 6.0; 
 
         public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
         public static double maxReversePower = -0.5;   //allows to be changed in demo mode
         public static final double minForwardPower = 0.1;
         public static final double minReversePower = -0.1;
         public static final double homingPower = -0.3;
+        public static double secondHomingPower = -0.2;
 
         public static final int kPIDLoopIdx = 0;
         public static final int kTimeoutMs = 30;

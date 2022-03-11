@@ -183,10 +183,16 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  public void setTargetPosition(double setpoint) {
+  public void setTargetPosition(double setpoint, boolean overrideInitialHome) {
     if (Constants.hoodEnabled) {
-      hood.set(ControlMode.Position, setpoint);
+      if (initialHome || overrideInitialHome) {
+        hood.set(ControlMode.Position, setpoint);
+      }
     }
+  }
+
+  public void setTargetPosition(double setpoint) {
+    setTargetPosition(setpoint, false);
   }
 
   // This is only valid following a set position command
@@ -201,6 +207,10 @@ public class Hood extends SubsystemBase {
   public void setInitiallyHomed() {
     hood.setSelectedSensorPosition(0);
     initialHome = true;
+  }
+
+  public void setCurrentPosition(double pos) {
+    hood.setSelectedSensorPosition(pos);
   }
 
   public boolean isInitialHomed() {
