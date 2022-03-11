@@ -120,8 +120,9 @@ public class Hood extends SubsystemBase {
       // SHUFFLEBOARD
       if (Constants.debug) {
         if (initialHome && override.getBoolean(false)) {
-          setTargetPosition(hoodPositionTalon.getDouble(0));
+          setTargetPosition(hoodTarget.getDouble(0));
         }
+        hoodPositionTalon.setDouble(getPosition());
         hoodPower.setDouble(hood.getMotorOutputPercent());
         isHomeIndicator.setBoolean(isAtHome());
       }
