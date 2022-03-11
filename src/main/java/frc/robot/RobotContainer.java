@@ -61,11 +61,13 @@ public class RobotContainer {
   private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
+  // fender distances need to be remeasured
+  // measurement from back of bumper for now
   private final FiringSolution fenderHigh = new FiringSolution(3000, 1800, 7.3);
   private final FiringSolution fenderLow = new FiringSolution(1200, 6000, 7.3);
-  private final FiringSolution testB = new FiringSolution(3500, 2500, 7.3);
-  // to be calibrated
-  private final FiringSolution tarmacEdge = new FiringSolution(3500, 3000, 46.2);
+  private final FiringSolution insideTarmac = new FiringSolution(3100, 4000, 84.75); // used to be 3100
+  private final FiringSolution outsideTarmac = new FiringSolution(3500, 4000, 120);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -111,9 +113,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
-    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, testB));
+    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, outsideTarmac));
+    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, insideTarmac));
     coPilot.a.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -145,7 +147,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetSpeedAndAngle(shooter, hood, fenderLow),
+      new SetSpeedAndAngle(shooter, hood, insideTarmac),
       new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),
