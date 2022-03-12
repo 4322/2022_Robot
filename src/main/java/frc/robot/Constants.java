@@ -197,10 +197,4 @@ public final class Constants {
         public static double conveyorPower = 0.5;
         public static int ballSensorPort = 0; // DIO port for ball sensor
     }
-
-    public static final class WebCams {
-        public static int offFPS = 1;
-        public static int slowFPS = 10;
-        public static int fastFPS = 20;
-    }
 }

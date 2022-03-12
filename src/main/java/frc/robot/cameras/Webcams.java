@@ -3,20 +3,14 @@ package frc.robot.cameras;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants;
 
 public class Webcams {
-
-    private ShuffleboardTab tab;
 
     private UsbCamera leftCamera;
     private UsbCamera rightCamera;
 
     public Webcams() {
-        tab = Shuffleboard.getTab("Webcams");
-
         leftCamera = CameraServer.startAutomaticCapture(0);
         rightCamera = CameraServer.startAutomaticCapture(1);
 
@@ -30,23 +24,19 @@ public class Webcams {
     }
 
     public void setLeft() {
-        rightCamera.setExposureManual(0);
-        rightCamera.setFPS(Constants.WebCams.offFPS);
+        rightCamera.setExposureManual(5);
         leftCamera.setExposureAuto();
-        leftCamera.setFPS(Constants.WebCams.fastFPS);
     }
 
     public void setRight() {
-        leftCamera.setExposureManual(0);
-        leftCamera.setFPS(Constants.WebCams.offFPS);
+        leftCamera.setExposureManual(5);
         rightCamera.setExposureAuto();
-        rightCamera.setFPS(Constants.WebCams.fastFPS);
     }
 
     public void resetCameras() {
         rightCamera.setExposureAuto();
-        rightCamera.setFPS(Constants.WebCams.slowFPS);
+        rightCamera.setFPS(15);
         leftCamera.setExposureAuto();
-        leftCamera.setFPS(Constants.WebCams.slowFPS);
+        leftCamera.setFPS(15);
     }
 }
