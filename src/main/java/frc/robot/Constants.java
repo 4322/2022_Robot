@@ -197,4 +197,9 @@ public final class Constants {
         public static double conveyorPower = 0.5;
         public static int ballSensorPort = 0; // DIO port for ball sensor
     }
+
+    public static final class WebCams {
+        public static final int fps = 15;
+        public static final int darkExposure = 5;
+    }
 }

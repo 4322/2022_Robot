@@ -24,19 +24,19 @@ public class Webcams {
     }
 
     public void setLeft() {
-        rightCamera.setExposureManual(5);
+        rightCamera.setExposureManual(Constants.WebCams.darkExposure);
         leftCamera.setExposureAuto();
     }
 
     public void setRight() {
-        leftCamera.setExposureManual(5);
+        leftCamera.setExposureManual(Constants.WebCams.darkExposure);
         rightCamera.setExposureAuto();
     }
 
     public void resetCameras() {
         rightCamera.setExposureAuto();
-        rightCamera.setFPS(15);
+        rightCamera.setFPS(Constants.WebCams.fps);
         leftCamera.setExposureAuto();
-        leftCamera.setFPS(15);
+        leftCamera.setFPS(Constants.WebCams.fps);
     }
 }
