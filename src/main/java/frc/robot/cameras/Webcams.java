@@ -9,29 +9,36 @@ public class Webcams {
 
     private UsbCamera leftCamera;
     private UsbCamera rightCamera;
+    private UsbCamera frontCamera;
 
     public Webcams() {
         leftCamera = CameraServer.startAutomaticCapture(0);
         rightCamera = CameraServer.startAutomaticCapture(1);
+        frontCamera = CameraServer.startAutomaticCapture(2);
 
         leftCamera.setResolution(320, 240);
         rightCamera.setResolution(320, 240);
+        frontCamera.setResolution(320, 240);
 
         leftCamera.setFPS(Constants.WebCams.fps);
         rightCamera.setFPS(Constants.WebCams.fps);
+        frontCamera.setFPS(Constants.WebCams.fps);
 
         leftCamera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
         rightCamera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
+        frontCamera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
         resetCameras();
     }
 
     public void setLeft() {
+        frontCamera.setExposureManual(Constants.WebCams.darkExposure);
         rightCamera.setExposureManual(Constants.WebCams.darkExposure);
         leftCamera.setExposureAuto();
     }
 
     public void setRight() {
+        frontCamera.setExposureManual(Constants.WebCams.darkExposure);
         leftCamera.setExposureManual(Constants.WebCams.darkExposure);
         rightCamera.setExposureAuto();
     }
@@ -39,5 +46,6 @@ public class Webcams {
     public void resetCameras() {
         rightCamera.setExposureAuto();
         leftCamera.setExposureAuto();
+        frontCamera.setExposureAuto();
     }
 }
