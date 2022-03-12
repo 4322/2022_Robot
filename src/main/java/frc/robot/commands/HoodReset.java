@@ -12,11 +12,16 @@ public class HoodReset extends CommandBase {
    */
 
   private Hood hood;
-  private boolean firstReset = false;
-  private boolean secondResetStarted = false;
-  private boolean secondReset = false;
-  private boolean targetSet = false;
   private Timer timer = new Timer();
+  private enum resetStates {
+    firstDown,
+    firstAtHome,
+    secondUp,
+    secondAtTarget,
+    secondDown,
+    secondAtHome
+  }
+  private resetStates currentState = resetStates.firstDown;
 
   public HoodReset(Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,19 +43,49 @@ public class HoodReset extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!firstReset && !hood.isAtHome()) {
-      hood.setHoodPower(HoodConstants.homingPower);
-    } else if (!firstReset && hood.isAtHome()) {
-      firstReset = true;
-      hood.setCurrentPosition(0);
-    } else if (!secondResetStarted && hood.isAtHome() && !targetSet) {
-      hood.setTargetPosition(1000, true);
-      targetSet = true;
-    } else if (!secondResetStarted && hood.isAtTarget() && targetSet) {
-      hood.setHoodPower(HoodConstants.secondHomingPower);
-      secondResetStarted = true;
-    } else if (secondResetStarted && hood.isAtHome()) {
-      secondReset = true;
+    // if (!firstReset && !hood.isAtHome()) {
+    //   hood.setHoodPower(HoodConstants.homingPower);
+    // } else if (!firstReset && hood.isAtHome()) {
+    //   firstReset = true;
+    //   hood.setCurrentPosition(0);
+    // } else if (!secondResetStarted && hood.isAtHome() && !targetSet) {
+    //   hood.setTargetPosition(1000, true);
+    //   targetSet = true;
+    // } else if (!secondResetStarted && hood.isAtTarget() && targetSet) {
+    //   hood.setHoodPower(HoodConstants.secondHomingPower);
+    //   secondResetStarted = true;
+    // } else if (secondResetStarted && hood.isAtHome()) {
+    //   secondReset = true;
+    // }
+
+    switch(currentState) {
+      case firstDown:
+        hood.setHoodPower(HoodConstants.homingPower);
+        if (hood.isAtHome()) {
+          currentState = resetStates.firstAtHome;
+        }
+        break;
+      case firstAtHome:
+        hood.setCurrentPosition(0);
+        currentState = resetStates.secondUp;
+        break;
+      case secondUp:
+        hood.setTargetPosition(500);
+        if (hood.isAtTarget()) {
+          currentState = resetStates.secondAtTarget;
+        }
+        break;
+      case secondAtTarget:
+        hood.setHoodPower(HoodConstants.secondHomingPower);
+        currentState = resetStates.secondDown;
+        break;
+      case secondDown:
+        if (hood.isAtHome()) {
+          currentState = resetStates.secondAtHome;
+        }
+        break;
+      case secondAtHome:
+        break;
     }
   }
 
@@ -63,7 +98,7 @@ public class HoodReset extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (secondReset) {
+    if (currentState == resetStates.secondAtHome) {
       hood.stop();
       hood.setInitiallyHomed();
       return true;
