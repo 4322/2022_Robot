@@ -34,6 +34,9 @@ public class KickerAutoStart extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 
+    // stop movement if autonomous command is interrupted
+    kicker.stop();
+    conveyor.stop();
   }
 
   // Run until interrupted
