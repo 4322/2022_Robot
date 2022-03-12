@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 
@@ -28,12 +29,18 @@ public class Robot extends TimedRobot {
 
   private PowerDistribution pdp = new PowerDistribution();  // leave unused for live window display
 
+  private int initWaitCycles = 50;  // each periodic wait cycle is about 20ms
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    // wait for webcams to stop sending video before initialization
+  }
+
+  public void realRobotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
@@ -77,6 +84,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    // wait for USB cameras to stop outputting after a restart to reduce CPU usage 
+    // to the point that the CAN bus can initialize
+    if (initWaitCycles > 0) {
+      if (--initWaitCycles == 0) {
+        realRobotInit();
+      }
+      return;
+    }
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
