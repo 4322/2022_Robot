@@ -38,7 +38,7 @@ public class RobotContainer {
   private static JoystickButton driveBottomLeftButton;
   private static JoystickButton driveTopRightButton;
   private static JoystickButton driveBottomRightButton;
-  private static JoystickButton rotateTopRightButton;
+  private static JoystickButton rotateButtonEleven;
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -138,7 +138,7 @@ public class RobotContainer {
       driveBottomLeftButton = new JoystickButton(driveStick, 3);
       driveBottomRightButton = new JoystickButton(driveStick, 4);
       driveTopRightButton = new JoystickButton(driveStick, 6);
-      rotateTopRightButton = new JoystickButton(rotateStick, 6);
+      rotateButtonEleven = new JoystickButton(rotateStick, 11);
       driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
       driveBottomLeftButton.whenPressed(new SetToRobotCentric(driveunbun, 90));
       driveBottomRightButton.whenPressed(new SetToRobotCentric(driveunbun, -90));
@@ -146,7 +146,7 @@ public class RobotContainer {
       driveBottomLeftButton.whenPressed(webcams::setLeft);
       driveBottomRightButton.whenPressed(webcams::setRight);
       driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
-      rotateTopRightButton.whenPressed(new ResetFieldCentric(driveunbun));
+      rotateButtonEleven.whenPressed(new ResetFieldCentric(driveunbun));
     }
    }
   
