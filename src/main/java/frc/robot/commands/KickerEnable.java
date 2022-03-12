@@ -22,9 +22,17 @@ public class KickerEnable extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+  
+  }
+
+  @Override
+  public void execute() {
     if (shooter.isAbleToEject()) {
       kicker.intake();
       conveyor.enableConveyor();
+    } else {
+      kicker.stop();
+      conveyor.stop();
     }
   }
 
