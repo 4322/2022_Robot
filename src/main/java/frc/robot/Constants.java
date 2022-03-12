@@ -77,6 +77,9 @@ public final class Constants {
         public static final double rotateToDeadband = 0.25;
         public static final double autoRotateToleranceDegrees = 3.0;
 
+        // 33% of normal
+        public static final double camLimiter = 0.33;
+
         public final static class Rotation {
             public static final double kP = 1.2;
             public static final double kD = 6.0;

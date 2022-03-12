@@ -50,6 +50,11 @@ public class DriveManual extends CommandBase {
       rotationRawY = RobotContainer.rotateStick.getY();
       rotationRawZ = RobotContainer.rotateStick.getZ();
 
+      if (driveunbun.getDrivingWithCams()) {
+        driveRawX = driveRawX * DriveConstants.camLimiter;
+        driveRawY = driveRawY * DriveConstants.camLimiter;
+      }
+
       // get distance from center of joystick
       polarDrive = Math.sqrt(driveRawX*driveRawX + driveRawY*driveRawY);
 
