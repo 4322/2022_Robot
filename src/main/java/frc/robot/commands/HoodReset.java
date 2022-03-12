@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.robot.Constants.HoodConstants;
@@ -62,29 +63,36 @@ public class HoodReset extends CommandBase {
       case firstDown:
         hood.setHoodPower(HoodConstants.homingPower);
         if (hood.isAtHome()) {
+          DriverStation.reportError("Reached Home 1st", false);
           currentState = resetStates.firstAtHome;
         }
         break;
       case firstAtHome:
+        hood.stop();
         hood.setCurrentPosition(0);
+        DriverStation.reportError("Going Up", false);
         currentState = resetStates.secondUp;
         break;
       case secondUp:
         hood.setTargetPosition(500);
         if (hood.isAtTarget()) {
+          DriverStation.reportError("Reached Target", false);
           currentState = resetStates.secondAtTarget;
         }
         break;
       case secondAtTarget:
         hood.setHoodPower(HoodConstants.secondHomingPower);
+        DriverStation.reportError("Going Down", false);
         currentState = resetStates.secondDown;
         break;
       case secondDown:
         if (hood.isAtHome()) {
+          DriverStation.reportError("At Home 2nd", false);
           currentState = resetStates.secondAtHome;
         }
         break;
       case secondAtHome:
+        hood.stop();
         break;
     }
   }
