@@ -61,7 +61,7 @@ public class HoodReset extends CommandBase {
       case firstDown:
         if (hood.isAtHome()) {
           hood.setCurrentPosition(0);
-          hood.setTargetPosition(1000, true);  // override lack of initial home
+          hood.setTargetPosition(5000, true);  // override lack of initial home
           currentState = resetStates.goingUp;
         }
         break;
@@ -75,6 +75,8 @@ public class HoodReset extends CommandBase {
         if (hood.isAtHome()) {
           currentState = resetStates.secondAtHome;
         }
+        break;
+      case secondAtHome:
         break;
     }
   }
