@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // wait for webcams to stop sending video before initialization
+    // can't wait here or the watchdog timer will go off and restart the code
   }
 
   public void realRobotInit() {
