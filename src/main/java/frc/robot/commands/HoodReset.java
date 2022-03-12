@@ -16,9 +16,7 @@ public class HoodReset extends CommandBase {
   private Timer timer = new Timer();
   private enum resetStates {
     firstDown,
-    firstAtHome,
-    secondUp,
-    secondAtTarget,
+    goingUp,
     secondDown,
     secondAtHome
   }
@@ -61,38 +59,22 @@ public class HoodReset extends CommandBase {
 
     switch(currentState) {
       case firstDown:
-        hood.setHoodPower(HoodConstants.homingPower);
         if (hood.isAtHome()) {
-          DriverStation.reportError("Reached Home 1st", false);
-          currentState = resetStates.firstAtHome;
+          hood.setCurrentPosition(0);
+          hood.setTargetPosition(1000, true);  // override lack of initial home
+          currentState = resetStates.goingUp;
         }
         break;
-      case firstAtHome:
-        hood.stop();
-        hood.setCurrentPosition(0);
-        DriverStation.reportError("Going Up", false);
-        currentState = resetStates.secondUp;
-        break;
-      case secondUp:
-        hood.setTargetPosition(500);
+      case goingUp:
         if (hood.isAtTarget()) {
-          DriverStation.reportError("Reached Target", false);
-          currentState = resetStates.secondAtTarget;
+          hood.setHoodPower(HoodConstants.secondHomingPower);
+          currentState = resetStates.secondDown;
         }
-        break;
-      case secondAtTarget:
-        hood.setHoodPower(HoodConstants.secondHomingPower);
-        DriverStation.reportError("Going Down", false);
-        currentState = resetStates.secondDown;
         break;
       case secondDown:
         if (hood.isAtHome()) {
-          DriverStation.reportError("At Home 2nd", false);
           currentState = resetStates.secondAtHome;
         }
-        break;
-      case secondAtHome:
-        hood.stop();
         break;
     }
   }
