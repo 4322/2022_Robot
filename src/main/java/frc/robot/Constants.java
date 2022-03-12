@@ -199,8 +199,7 @@ public final class Constants {
     }
 
     public static final class WebCams {
-        public static int offFPS = 1;
-        public static int slowFPS = 10;
-        public static int fastFPS = 20;
+        public static final int fps = 12;
+        public static final int darkExposure = 5;
     }
 }
