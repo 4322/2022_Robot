@@ -17,6 +17,9 @@ public class Webcams {
         leftCamera.setResolution(320, 240);
         rightCamera.setResolution(320, 240);
 
+        leftCamera.setFPS(Constants.WebCams.fps);
+        rightCamera.setFPS(Constants.WebCams.fps);
+
         leftCamera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
         rightCamera.setPixelFormat(VideoMode.PixelFormat.kYUYV);
 
@@ -35,8 +38,6 @@ public class Webcams {
 
     public void resetCameras() {
         rightCamera.setExposureAuto();
-        rightCamera.setFPS(Constants.WebCams.fps);
         leftCamera.setExposureAuto();
-        leftCamera.setFPS(Constants.WebCams.fps);
     }
 }
