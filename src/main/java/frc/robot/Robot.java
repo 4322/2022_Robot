@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
 
   private PowerDistribution pdp = new PowerDistribution();  // leave unused for live window display
 
+  private int waitCycles = 100;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -36,7 +38,16 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    if (waitCycles-- > 0) {
+      try {
+        Thread.sleep(10); // 5 status frames to be safe
+      }
+      catch (InterruptedException e) {}
+      return;
+    }
 
+    public 
+    
     tab = Shuffleboard.getTab("Enabled Subsystems");
 
     subsystemEnabled("Comp Mode", 0, 0, !Constants.debug);
