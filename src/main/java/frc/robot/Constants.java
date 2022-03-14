@@ -75,12 +75,12 @@ public final class Constants {
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
 
-        public static final double polarManualDeadband = 0.06;
+        public static final double drivePolarDeadband = 0.06;
 
         public static final double maxAutoRotSpd = 0.7;
 
         public static final double twistDeadband = 0.08;
-        public static final double rotateToDeadband = 0.25;
+        public static final double rotatePolarDeadband = 0.25;
         public static final double autoRotateToleranceDegrees = 3.0;
 
         // 33% of normal
