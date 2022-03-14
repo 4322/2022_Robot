@@ -36,6 +36,7 @@ public class DriveManual extends CommandBase {
     double rotate;
 
     if (Constants.joysticksEnabled) {
+
       // cache hardware status for consistency in logic
       final double driveRawX = RobotContainer.driveStick.getX();
       final double driveRawY = RobotContainer.driveStick.getY();
@@ -47,31 +48,46 @@ public class DriveManual extends CommandBase {
       final double driveRawR = Math.sqrt(driveRawX * driveRawX + driveRawY * driveRawY);
       final double rotateRawR = Math.sqrt(rotateRawX * rotateRawX + rotateRawY * rotateRawY);
 
-      final double twistDeadband = DriveConstants.twistDeadband;
+      // adjust for drive deadband
+      if (driveRawR < DriveConstants.drivePolarDeadband) {
+        driveX = 0;
+        driveY = 0;
+      } else {
+        double driveR = (driveRawR - DriveConstants.drivePolarDeadband) / 
+                        (1 - DriveConstants.drivePolarDeadband);
+        double driveRawThetaRad = Math.atan2(driveRawY, driveRawX);
+        driveX = driveR * Math.cos(driveRawThetaRad);
+        driveY = driveR * Math.sin(driveRawThetaRad);
+      }
 
       /* 
-        cube joystick inputs to increase sensitivity
+        cube drive joystick inputs to increase sensitivity
         x = smaller value
         y = greater value
         x = (y^3 / y) * x 
       */
       if (Math.abs(driveRawX) >= Math.abs(driveRawY)) {
-        driveX = -driveRawX * driveRawX * driveRawX; // reverse polarity of drive x axis
-        driveY = driveRawX * driveRawX * driveRawY;
+        driveX = driveX * driveX * driveX;
+        driveY = driveX * driveX * driveY;
       } else {
-        driveX = -driveRawY * driveRawY * driveRawX;
-        driveY = driveRawY * driveRawY * driveRawY;
+        driveX = driveY * driveY * driveX;
+        driveY = driveY * driveY * driveY;
       }
 
+      // adjust for twist deadband
+      final double twistDeadband = DriveConstants.twistDeadband;
       if (Math.abs(rotateRawZ) < twistDeadband) {
         rotate = 0;
       }
       else if (rotateRawZ > 0) {
-          rotate = (rotateRawZ - twistDeadband) / (1 - twistDeadband);  // rescale to full positive range
+        // rescale to full positive range
+        rotate = (rotateRawZ - twistDeadband) / (1 - twistDeadband);
       }
       else {
-          rotate = (rotateRawZ + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
+        // rescale to full negative range
+        rotate = (rotateRawZ + twistDeadband) / (1 - twistDeadband);
       }
+      rotate = rotate * rotate * rotate;  // increase sensitivity
 
       // move slowly in side cam driving mode for percise cargo alignment
       if (driveunbun.getDrivingWithSideCams()) {
@@ -80,19 +96,17 @@ public class DriveManual extends CommandBase {
         rotate *= DriveConstants.sideCamDriveScaleFactor;
       }
 
-      if (driveRawR < DriveConstants.drivePolarDeadband) {
-        driveX = 0;
-        driveY = 0;
-      }
-
+      // determine drive mode
       if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        driveunbun.driveAutoRotate(driveX, driveY, rotate);
+        driveunbun.driveAutoRotate(-driveX, driveY, rotate);
       } else if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
+        // don't rotate wheels such that we trip over them when decelerating
         driveunbun.stop();
       } else {
-        driveunbun.drive(driveX, driveY, -rotate * rotate * rotate);
+        // normal drive
+        driveunbun.drive(-driveX, driveY, -rotate);
       }
     }
   }
