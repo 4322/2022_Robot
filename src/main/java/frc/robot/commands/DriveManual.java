@@ -50,11 +50,6 @@ public class DriveManual extends CommandBase {
       rotationRawY = RobotContainer.rotateStick.getY();
       rotationRawZ = RobotContainer.rotateStick.getZ();
 
-      if (driveunbun.getDrivingWithCams()) {
-        driveRawX = driveRawX * DriveConstants.camLimiter;
-        driveRawY = driveRawY * DriveConstants.camLimiter;
-      }
-
       // get distance from center of joystick
       polarDrive = Math.sqrt(driveRawX*driveRawX + driveRawY*driveRawY);
 
@@ -86,6 +81,11 @@ public class DriveManual extends CommandBase {
         return;
       }
 
+      if (driveunbun.getDrivingWithCams()) {
+        driveX = driveX * DriveConstants.camLimiter;
+        driveY = driveY * DriveConstants.camLimiter;
+      }
+
 
       if (!rotTo) {
         if (Math.abs(rotate) < twistDeadband) {
@@ -98,8 +98,14 @@ public class DriveManual extends CommandBase {
             rotate = (rotate + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
         } 
 
+        rotate = -rotate*rotate*rotate;
+
+        if (driveunbun.getDrivingWithCams()) {
+          rotate = rotate * DriveConstants.camLimiter;
+        }
+
         driveunbun.drive(driveX, driveY, 
-          -rotate*rotate*rotate); // reverse polarity of rotation on joystick
+          rotate); // reverse polarity of rotation on joystick
 
       } else {
 
