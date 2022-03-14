@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
@@ -17,20 +14,8 @@ import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 public class Driveunbun extends SubsystemBase {
-    private WPI_TalonFX frontRightDrive;
-    private WPI_TalonFX frontLeftDrive;
-    private WPI_TalonFX rearRightDrive;
-    private WPI_TalonFX rearLeftDrive;
-    
-    private WPI_TalonFX frontRightRotation;
-    private WPI_TalonFX frontLeftRotation;
-    private WPI_TalonFX rearRightRotation;
-    private WPI_TalonFX rearLeftRotation;
 
-    private TalonFXModule frontRight;
-    private TalonFXModule frontLeft;
-    private TalonFXModule rearLeft;
-    private TalonFXModule rearRight;
+    private TalonFXModule[] swerveModules = new TalonFXModule[4];
 
     private AHRS gyro;
 
@@ -46,36 +31,28 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
 
-    private double[] acceleration = new double[4];
-
     public Driveunbun() {
         if (Constants.driveEnabled) {
-            frontRightDrive = new WPI_TalonFX(DriveConstants.frontRightDriveID);
-            frontLeftDrive = new WPI_TalonFX(DriveConstants.frontLeftDriveID);
-            rearRightDrive = new WPI_TalonFX(DriveConstants.rearRightDriveID);
-            rearLeftDrive = new WPI_TalonFX(DriveConstants.rearLeftDriveID);
-            frontRightRotation = new WPI_TalonFX(DriveConstants.frontRightRotationID);
-            frontLeftRotation = new WPI_TalonFX(DriveConstants.frontLeftRotationID);
-            rearRightRotation = new WPI_TalonFX(DriveConstants.rearRightRotationID);
-            rearLeftRotation = new WPI_TalonFX(DriveConstants.rearLeftRotationID);
-
-            frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, 
+            swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID, 
                 WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
-            frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, 
+            swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.frontLeftRotationID, DriveConstants.frontLeftDriveID, 
                 WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
-            rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, 
-                WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID); 
-            rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, 
-                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);   
+            swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.rearRightRotationID, DriveConstants.rearRightDriveID, 
+                WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID);
+            swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.rearLeftRotationID, DriveConstants.rearLeftDriveID, 
+                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
          }
     }
 
     public void init() {
         if (Constants.driveEnabled) {
-            frontRight.init();
-            frontLeft.init();
-            rearRight.init();
-            rearLeft.init();
+            for (TalonFXModule module:swerveModules) {
+                module.init();
+            }
 
             rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
 
@@ -133,10 +110,9 @@ public class Driveunbun extends SubsystemBase {
     @Override
     public void periodic() {
         // acceleration must be calculated once and only once per periodic interval
-        acceleration[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getAcceleration();
-        acceleration[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getAcceleration();
-        acceleration[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getAcceleration();
-        acceleration[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getAcceleration();
+        for (TalonFXModule module:swerveModules) {
+            module.snapshotAcceleration();
+        }
 
         if (Constants.debug) {  // don't combine if statements to avoid dead code warning
             if (Constants.gyroEnabled) {
@@ -176,10 +152,9 @@ public class Driveunbun extends SubsystemBase {
     public void drive(double driveX, double driveY, double rotate) {
         if (Constants.driveEnabled) {
             double[] currentAngle = new double[4];
-            currentAngle[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getInternalRotationDegrees();
-            currentAngle[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getInternalRotationDegrees();
-            currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
-            currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
+            for (int i = 0; i < swerveModules.length; i++) {
+                currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
+            }
     
             if (rotate > DriveConstants.maxRotationSpeed) {
                 rotate = DriveConstants.maxRotationSpeed;
@@ -189,10 +164,9 @@ public class Driveunbun extends SubsystemBase {
 
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
             
-            frontRight.setSpeedAndAngle();
-            frontLeft.setSpeedAndAngle();
-            rearLeft.setSpeedAndAngle();
-            rearRight.setSpeedAndAngle();
+            for (TalonFXModule module:swerveModules) {
+                module.setSpeedAndAngle();
+            }
         }
     }
 
@@ -240,34 +214,23 @@ public class Driveunbun extends SubsystemBase {
 
     public void setCoastMode() {
         if (Constants.driveEnabled) {
-            frontRightDrive.setNeutralMode(NeutralMode.Coast);
-            frontLeftDrive.setNeutralMode(NeutralMode.Coast);
-            rearRightDrive.setNeutralMode(NeutralMode.Coast);
-            rearLeftDrive.setNeutralMode(NeutralMode.Coast);
-            frontRightRotation.setNeutralMode(NeutralMode.Coast);
-            frontLeftRotation.setNeutralMode(NeutralMode.Coast);
-            rearRightRotation.setNeutralMode(NeutralMode.Coast);
-            rearLeftRotation.setNeutralMode(NeutralMode.Coast);
+            for (TalonFXModule module:swerveModules) {
+                module.setCoastMode();
+            }
         }
     }
 
     public void setBrakeMode () {
         if (Constants.driveEnabled) {
-            frontRightDrive.setNeutralMode(NeutralMode.Brake); 
-            frontLeftDrive.setNeutralMode(NeutralMode.Brake);
-            rearRightDrive.setNeutralMode(NeutralMode.Brake);
-            rearLeftDrive.setNeutralMode(NeutralMode.Brake);
-            frontRightRotation.setNeutralMode(NeutralMode.Brake);
-            frontLeftRotation.setNeutralMode(NeutralMode.Brake);
-            rearRightRotation.setNeutralMode(NeutralMode.Brake);
-            rearLeftRotation.setNeutralMode(NeutralMode.Brake);
+            for (TalonFXModule module:swerveModules) {
+                module.setBrakeMode();
+            }
         }
     } 
 
     public void stop() {
-        frontRight.stop();
-        frontLeft.stop();
-        rearRight.stop();
-        rearLeft.stop();
+        for (TalonFXModule module:swerveModules) {
+            module.stop();
+        }
     }
 }

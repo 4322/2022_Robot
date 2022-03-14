@@ -28,10 +28,10 @@ public class TalonFXModule extends ControlModule {
 	private CANCoder m_encoder;
 	private WheelPosition m_wheelPosition;
 	
-	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
+	public TalonFXModule(int rotationID, int wheelID, WheelPosition pos, int encoderID) {
 		super(pos);
-		m_rotation = rotation;
-		m_wheel = wheel;
+		m_rotation = new WPI_TalonFX(rotationID);
+		m_wheel = new WPI_TalonFX(wheelID);
 		m_encoder = new CANCoder(encoderID);
 		m_wheelPosition = pos;
 
@@ -200,10 +200,14 @@ public class TalonFXModule extends ControlModule {
 			Constants.DriveConstants.Drive.wheelDiameter / 12;
 	}
 
-	@Override
-	public double getAcceleration() {
-		// feet per second^2
-		return super.getAcceleration();
+	public void setCoastMode() {
+		m_wheel.setNeutralMode(NeutralMode.Coast);
+		m_rotation.setNeutralMode(NeutralMode.Coast);
+	}
+
+	public void setBrakeMode() {
+		m_wheel.setNeutralMode(NeutralMode.Brake);
+		m_rotation.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void stop() {
