@@ -46,6 +46,8 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
 
+    private double[] acceleration = new double[4];
+
     public Driveunbun() {
         if (Constants.driveEnabled) {
             frontRightDrive = new WPI_TalonFX(DriveConstants.frontRightDriveID);
@@ -130,6 +132,12 @@ public class Driveunbun extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // acceleration must be calculated once and only once per periodic interval
+        acceleration[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getAcceleration();
+        acceleration[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getAcceleration();
+        acceleration[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getAcceleration();
+        acceleration[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getAcceleration();
+
         if (Constants.debug) {  // don't combine if statements to avoid dead code warning
             if (Constants.gyroEnabled) {
                 roll.setDouble(gyro.getRoll());
@@ -173,21 +181,19 @@ public class Driveunbun extends SubsystemBase {
             currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
             currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
     
-            if (rotate > DriveConstants.maxAutoRotSpd) {
-                rotate = DriveConstants.maxAutoRotSpd;
-            } else if (rotate < -DriveConstants.maxAutoRotSpd) {
-                rotate = -DriveConstants.maxAutoRotSpd;
+            if (rotate > DriveConstants.maxRotationSpeed) {
+                rotate = DriveConstants.maxRotationSpeed;
+            } else if (rotate < -DriveConstants.maxRotationSpeed) {
+                rotate = -DriveConstants.maxRotationSpeed;
             }
 
-            SwerveHelper.calculate(
-                    driveX, driveY, rotate, currentAngle
-            );
+            SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
             
             frontRight.setSpeedAndAngle();
             frontLeft.setSpeedAndAngle();
             rearLeft.setSpeedAndAngle();
             rearRight.setSpeedAndAngle();
-        }  
+        }
     }
 
     // Uses a PID Controller to rotate the robot to a certain degree
@@ -206,7 +212,12 @@ public class Driveunbun extends SubsystemBase {
             rotPIDSpeed = 0;
         }
 
-        drive(driveX, driveY, rotPIDSpeed);
+        if ((driveX == 0) && (driveY == 0) && (rotPIDSpeed == 0)) {
+            // don't flip wheels around when rotation is complete
+            stop();
+        } else {
+            drive(driveX, driveY, rotPIDSpeed);
+        }
 
         if (Constants.debug) {
             errorDisplay.setDouble(error);
