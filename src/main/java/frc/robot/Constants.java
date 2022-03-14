@@ -59,7 +59,6 @@ public final class Constants {
         public static final int frontLeftEncoderID = 12;
         public static final int rearLeftEncoderID = 13;
 
-        public static final double wheelRadius = 0.0508;
         public static final int encoderResolution = 2048;
 
         public static final double kMaxSpeed = 3.0;
@@ -137,7 +136,7 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double wheelDiameter = 4.0;
-            public static final int ticksPerRev = 4096;
+            public static final double gearRatio = 6.55;
         }
     }
 

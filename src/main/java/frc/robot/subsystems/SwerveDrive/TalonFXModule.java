@@ -187,17 +187,22 @@ public class TalonFXModule extends ControlModule {
 
 	@Override
 	public double getDistance(){
-		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * DriveConstants.Drive.wheelDiameter) / 
-			DriveConstants.Drive.ticksPerRev;
+		return m_wheel.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
+			Constants.DriveConstants.Drive.gearRatio * Math.PI *
+			DriveConstants.Drive.wheelDiameter / 12;
 	}
 
 	@Override
 	public double getVelocity() {
-		return m_wheel.getSelectedSensorVelocity(0) * 600/DriveConstants.Drive.ticksPerRev;
+		// feet per second
+		return m_wheel.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
+			Constants.DriveConstants.Drive.gearRatio * Math.PI * 
+			Constants.DriveConstants.Drive.wheelDiameter / 12;
 	}
 
 	@Override
 	public double getAcceleration() {
+		// feet per second^2
 		return super.getAcceleration();
 	}
 
