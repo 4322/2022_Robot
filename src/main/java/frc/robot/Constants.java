@@ -69,22 +69,19 @@ public final class Constants {
         public static final double distWheelX = 0.339725;
         public static final double distWheelY = 0.244475;
 
-        public static final double wheelBaseLengthFeet = 26.75/12.0;
-        public static final double wheelBaseWidthFeet = 19.25/12.0;
+        public static final double wheelBaseLengthFeet = 26.75 / 12.0;
+        public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
-
-        public static final double drivePolarDeadband = 0.06;
-
+        public static final double autoRotateToleranceDegrees = 3.0;
         public static final double maxAutoRotSpd = 0.7;
 
+        public static final double drivePolarDeadband = 0.06;
+        public static final double rotatePolarDeadband = 0.3;
         public static final double twistDeadband = 0.08;
-        public static final double rotatePolarDeadband = 0.25;
-        public static final double autoRotateToleranceDegrees = 3.0;
-
-        // 33% of normal
-        public static final double camLimiter = 0.33;
+ 
+        public static final double sideCamDriveScaleFactor = 0.33;
 
         public final static class Rotation {
             public static final double kP = 1.2;
