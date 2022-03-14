@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.HoodConstants;
 
 public class Hood extends SubsystemBase {
@@ -28,12 +29,7 @@ public class Hood extends SubsystemBase {
   public Hood() {
     if (Constants.hoodEnabled) {
       hood = new WPI_TalonSRX(HoodConstants.motorID);
-
-      // increase status reporting periods to reduce CAN bus utilization
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-        20, Constants.controllerConfigTimeoutMs);
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-        50, Constants.controllerConfigTimeoutMs);      
+      RobotContainer.staggerTalonStatusFrames(hood);
     }
   }
 
@@ -50,7 +46,12 @@ public class Hood extends SubsystemBase {
       hood.configNominalOutputForward(HoodConstants.minForwardPower);
       hood.configNominalOutputReverse(HoodConstants.minReversePower);
       hood.configPeakOutputForward(HoodConstants.maxForwardPower);
-      hood.configPeakOutputReverse(HoodConstants.maxReversePower);       
+      hood.configPeakOutputReverse(HoodConstants.maxReversePower);   
+          
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+        RobotContainer.nextShuffleboardStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);   
   
       setCoastMode();  // Allow manual movement until enabled
 

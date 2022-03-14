@@ -33,9 +33,15 @@ public final class Constants {
     public static final boolean conveyorEnabled = true;
     public static final boolean ballSensorEnabled = true;
 
+    // configuration values common to all motor controllers
     public static final int controllerConfigTimeoutMs = 50;
+    public static final int fastStatusPeriodBaseMs = 13;
+    public static final int fastStatusPeriodMaxMs = 18;  // less than 20ms periodic code cycle time
+    public static final int shuffleboardStatusPeriodBaseMs = 75;
+    public static final int shuffleboardStatusPeriodMaxMs = 90;  // for interactive response
     public static final int slowStatusPeriodBaseMs = 180;  // for non-essential status
     public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period
+    // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
     public static final class DriveConstants {

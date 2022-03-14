@@ -9,7 +9,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.ConveyorConstants;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,12 +22,7 @@ public class Conveyor extends SubsystemBase {
   public Conveyor() {
     if (Constants.conveyorEnabled) {
       conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
-
-       // increase status reporting periods to reduce CAN bus utilization
-      conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-        RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      conveyor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-        RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      RobotContainer.staggerTalonStatusFrames(conveyor);
     }
  }
 
