@@ -21,9 +21,11 @@ public class DriveManual extends CommandBase {
   private final double rotDeadband = DriveConstants.rotateToDeadband; // Deadband for turning to angle of joystick
   private double driveRawX;
   private double driveRawY;
+  private double driveRawZ;
   private double rotationRawX;
   private double rotationRawY;
   private double rotationRawZ;
+  private boolean autoRotateDriveStick;
   private double driveX;
   private double driveY;
   private double polarDrive;
@@ -44,8 +46,12 @@ public class DriveManual extends CommandBase {
   @Override
   public void execute() {
     if (Constants.joysticksEnabled) {
+      // top left button
+      autoRotateDriveStick = RobotContainer.rotateStick.getRawButtonPressed(5);
+
       driveRawX = RobotContainer.driveStick.getX();
       driveRawY = RobotContainer.driveStick.getY();
+      driveRawZ = RobotContainer.driveStick.getZ();
       rotationRawX = RobotContainer.rotateStick.getX();
       rotationRawY = RobotContainer.rotateStick.getY();
       rotationRawZ = RobotContainer.rotateStick.getZ();
@@ -67,10 +73,15 @@ public class DriveManual extends CommandBase {
         driveY = driveRawY*driveRawY*driveRawY;
       }
 
-      // Uses pythagorean theorem to get deadband in any direction
-      rotTo = Math.sqrt(Math.pow(rotationRawX, 2) + 
-        Math.pow(rotationRawY, 2)) >= rotDeadband;
-      rotate = rotationRawZ;
+      if (!autoRotateDriveStick) {
+        // Uses pythagorean theorem to get deadband in any direction
+        rotTo = Math.sqrt(Math.pow(rotationRawX, 2) + 
+          Math.pow(rotationRawY, 2)) >= rotDeadband;
+        rotate = rotationRawZ;
+      } else {
+        rotTo = true;
+        rotate = driveRawZ;
+      }
 
       if (
           (Math.abs(polarDrive) < DriveConstants.polarManualDeadband) &&
