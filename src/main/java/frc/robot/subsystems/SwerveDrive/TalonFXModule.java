@@ -148,9 +148,13 @@ public class TalonFXModule extends ControlModule {
 	
 	public void setSpeedAndAngle(){
 		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
-		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
-			SwerveHelper.getAngleChange(position) / 
-			DriveConstants.Rotation.countToDegrees);
+		if (getVelocity() > DriveConstants.getVelWheelLock) {
+			m_rotation.set(ControlMode.Position, getInternalRotationCount());
+		} else {
+			m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
+				SwerveHelper.getAngleChange(position) / 
+				DriveConstants.Rotation.countToDegrees);
+		}
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
@@ -193,6 +197,7 @@ public class TalonFXModule extends ControlModule {
 
 	@Override
 	public double getVelocity() {
+		// get rotations per min
 		return m_wheel.getSelectedSensorVelocity(0) * 600/DriveConstants.Drive.ticksPerRev;
 	}
 

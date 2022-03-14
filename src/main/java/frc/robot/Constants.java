@@ -83,6 +83,9 @@ public final class Constants {
         public static final double rotateToDeadband = 0.25;
         public static final double autoRotateToleranceDegrees = 3.0;
 
+        // temp value
+        public static final double getVelWheelLock = 1000;
+
         // 33% of normal
         public static final double camLimiter = 0.33;
 
