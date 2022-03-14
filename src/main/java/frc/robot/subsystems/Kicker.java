@@ -22,9 +22,9 @@ public class Kicker extends SubsystemBase {
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextSlowStatusPeriodMs());
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextSlowStatusPeriodMs()); 
+        RobotContainer.nextVerySlowStatusPeriodSparkMs()); 
     } 
   }
 
