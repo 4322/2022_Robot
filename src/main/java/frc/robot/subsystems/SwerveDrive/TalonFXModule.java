@@ -35,17 +35,8 @@ public class TalonFXModule extends ControlModule {
 		m_encoder = new CANCoder(encoderID);
 		m_wheelPosition = pos;
 
-		// increase status reporting periods to reduce CAN bus utilization
-		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		RobotContainer.staggerTalonStatusFrames(m_wheel);
-
-		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		RobotContainer.staggerTalonStatusFrames(m_rotation);
-
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 	}
@@ -81,6 +72,10 @@ public class TalonFXModule extends ControlModule {
 			DriveConstants.Drive.supplyLimit, 
 			DriveConstants.Drive.supplyThreshold, 
 			DriveConstants.Drive.supplyTime));
+
+		// need rapid velocity feedback for anti-tipping logic
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 
 	private void configRotation(WPI_TalonFX talon) {
@@ -125,7 +120,6 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			10, Constants.controllerConfigTimeoutMs);
 
-		// wait for CANCoder position to stabilize
 		try {
 			Thread.sleep(50); // 5 status frames to be safe
 		}
@@ -146,6 +140,10 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(),
 			Constants.controllerConfigTimeoutMs);
+
+		// need rapid position feedback for steering logic
+		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 	
 	public void setSpeedAndAngle(){

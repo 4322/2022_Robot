@@ -43,6 +43,10 @@ public class Shooter extends SubsystemBase {
       flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
 
       // increase status reporting periods to reduce CAN bus utilization
+      flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextShuffleboardStatusPeriodMs());  
+      flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextFastStatusPeriodMs());  // to detect when we can shoot
       flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
         RobotContainer.nextVerySlowStatusPeriodSparkMs());  
       flywheelRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
