@@ -36,7 +36,7 @@ public class Driveunbun extends SubsystemBase {
 
     private PIDController rotPID;
 
-    private boolean drivingWithCams = false;
+    private boolean drivingWithSideCams = false;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry errorDisplay;
@@ -142,7 +142,7 @@ public class Driveunbun extends SubsystemBase {
     public void setToFieldCentric() {
         if (gyro != null) {
             SwerveHelper.setToFieldCentric();
-            drivingWithCams = false;
+            drivingWithSideCams = false;
         }
     }
 
@@ -158,9 +158,9 @@ public class Driveunbun extends SubsystemBase {
     public void setToRobotCentric(double offsetDeg) {
         // positive offset = counter-clockwise
         if (offsetDeg != 0) {
-            drivingWithCams = true;
+            drivingWithSideCams = true;
         } else {
-            drivingWithCams = false;
+            drivingWithSideCams = false;
         }
         SwerveHelper.setToBotCentric(offsetDeg);
     }
@@ -223,8 +223,8 @@ public class Driveunbun extends SubsystemBase {
         driveAutoRotate(x, y, rotationDeg);
     }
 
-    public boolean getDrivingWithCams() {
-        return drivingWithCams;
+    public boolean getDrivingWithSideCams() {
+        return drivingWithSideCams;
     }
 
     public void setCoastMode() {

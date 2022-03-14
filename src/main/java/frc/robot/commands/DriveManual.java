@@ -19,16 +19,6 @@ public class DriveManual extends CommandBase {
   private final Driveunbun driveunbun;
   private final double twistDeadband = DriveConstants.twistDeadband;
   private final double rotDeadband = DriveConstants.rotateToDeadband; // Deadband for turning to angle of joystick
-  private double driveRawX;
-  private double driveRawY;
-  private double rotationRawX;
-  private double rotationRawY;
-  private double rotationRawZ;
-  private double driveX;
-  private double driveY;
-  private double polarDrive;
-  private boolean rotTo = false;
-  private double rotate;
 
   public DriveManual(Driveunbun drivesubsystem) {
     driveunbun = drivesubsystem;
@@ -43,20 +33,25 @@ public class DriveManual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Constants.joysticksEnabled) {
-      driveRawX = RobotContainer.driveStick.getX();
-      driveRawY = RobotContainer.driveStick.getY();
-      rotationRawX = RobotContainer.rotateStick.getX();
-      rotationRawY = RobotContainer.rotateStick.getY();
-      rotationRawZ = RobotContainer.rotateStick.getZ();
+    double driveX;
+    double driveY;
+    double rotate;
 
-      if (driveunbun.getDrivingWithCams()) {
+    if (Constants.joysticksEnabled) {
+      double driveRawX = RobotContainer.driveStick.getX();
+      double driveRawY = RobotContainer.driveStick.getY();
+      double rotateRawX = RobotContainer.rotateStick.getX();
+      double rotateRawY = RobotContainer.rotateStick.getY();
+      double rotateRawZ = RobotContainer.rotateStick.getZ();
+
+      if (driveunbun.getDrivingWithSideCams()) {
         driveRawX = driveRawX * DriveConstants.camLimiter;
         driveRawY = driveRawY * DriveConstants.camLimiter;
       }
 
-      // get distance from center of joystick
-      polarDrive = Math.sqrt(driveRawX*driveRawX + driveRawY*driveRawY);
+      // get distance from center of joysticks
+      double driveRawR = Math.sqrt(driveRawX * driveRawX + driveRawY * driveRawY);
+      double rotateRawR = Math.sqrt(rotateRawX * rotateRawX + rotateRawY * rotateRawY);
 
       /* 
         cube joystick inputs to increase sensitivity
@@ -65,51 +60,37 @@ public class DriveManual extends CommandBase {
         x = (y^3 / y) * x 
       */
       if (Math.abs(driveRawX) >= Math.abs(driveRawY)) {
-        driveX = -driveRawX*driveRawX*driveRawX; // reverse polarity of drive x axis
-        driveY = driveRawX*driveRawX*driveRawY;
+        driveX = -driveRawX * driveRawX * driveRawX; // reverse polarity of drive x axis
+        driveY = driveRawX * driveRawX * driveRawY;
       } else {
-        driveX = -driveRawY*driveRawY*driveRawX;
-        driveY = driveRawY*driveRawY*driveRawY;
+        driveX = -driveRawY * driveRawY * driveRawX;
+        driveY = driveRawY * driveRawY * driveRawY;
       }
 
-      // Uses pythagorean theorem to get deadband in any direction
-      rotTo = Math.sqrt(Math.pow(rotationRawX, 2) + 
-        Math.pow(rotationRawY, 2)) >= rotDeadband;
-      rotate = rotationRawZ;
+      if ((rotateRawR >= rotDeadband) && !driveunbun.getDrivingWithSideCams()) {
+        // Get angle of joystick as desired rotation target
+        rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
+        driveunbun.driveAutoRotate(driveX, driveY, rotate);
+        return;
+      }
 
-      if (
-          (Math.abs(polarDrive) < DriveConstants.polarManualDeadband) &&
-          (Math.abs(rotate) < twistDeadband) &&
-          (!rotTo)
-          ) {
+      if ((driveRawR < DriveConstants.polarManualDeadband) &&
+          (Math.abs(rotateRawZ) < twistDeadband)) {
         driveunbun.stop();
         return;
       }
 
-
-      if (!rotTo) {
-        if (Math.abs(rotate) < twistDeadband) {
-            rotate = 0;
-        }
-        else if (rotate > 0) {
-            rotate = (rotate - twistDeadband) / (1 - twistDeadband);  // rescale to full positive range
-        }
-        else {
-            rotate = (rotate + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
-        } 
-
-        driveunbun.drive(driveX, driveY, 
-          -rotate*rotate*rotate); // reverse polarity of rotation on joystick
-
-      } else {
-
-        // Get angle of joystick
-        rotate =  90 - Math.toDegrees(Math.atan2(-rotationRawY, rotationRawX));
-
-        driveunbun.driveAutoRotate(driveX, driveY, 
-          rotate);
-
+      if (Math.abs(rotateRawZ) < twistDeadband) {
+          rotate = 0;
       }
+      else if (rotateRawZ > 0) {
+          rotate = (rotateRawZ - twistDeadband) / (1 - twistDeadband);  // rescale to full positive range
+      }
+      else {
+          rotate = (rotateRawZ + twistDeadband) / (1 - twistDeadband);  // rescale to full negative range
+      } 
+
+      driveunbun.drive(driveX, driveY, -rotate * rotate * rotate);
     }
   }
 
