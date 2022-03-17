@@ -122,8 +122,8 @@ public class RobotContainer {
     coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
     coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, outsideTarmac));
     coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, insideTarmac));
-    coPilot.lb.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
-    coPilot.a.whenPressed(stopSpeedAndAngle);
+    coPilot.a.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
+    coPilot.lb.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
     coPilot.rt.whileHeld(intakeOut);
