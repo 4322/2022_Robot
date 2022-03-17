@@ -119,12 +119,12 @@ public class Driveunbun extends SubsystemBase {
                 .getEntry();
 
                 botVelocity = tab.add("Bot Velocity", 0)
-                .withPosition(3,0)
+                .withPosition(4,0)
                 .withSize(1,1)
                 .getEntry();
 
                 botAcceleration = tab.add("Bot Acceleration", 0)
-                .withPosition(3,1)
+                .withPosition(4,1)
                 .withSize(1,1)
                 .getEntry();
             }
@@ -182,18 +182,31 @@ public class Driveunbun extends SubsystemBase {
                 currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
             }
 
+            VectorXY velocityXY = new VectorXY();
+            VectorXY accelerationXY = new VectorXY();
+
             // sum wheel velocity and acceleration vectors
-            Vector2dPlus velocity2d = new Vector2dPlus();
-            Vector2dPlus acceleration2d = new Vector2dPlus();
             for (int i = 0; i < swerveModules.length; i++) {
-                currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
+                double wheelAngleDegrees = 90 - swerveModules[i].getInternalRotationDegrees();
+                velocityXY.add(new VectorPolarDegrees(
+                    swerveModules[i].getVelocity(), 
+                    wheelAngleDegrees));
+                accelerationXY.add(new VectorPolarDegrees(
+                    swerveModules[i].getAcceleration(), 
+                    wheelAngleDegrees));            
             }            
-            double velocity = velocity2d.magnitude();
-            double acceleration = acceleration2d.magnitude();
+            double velocity = velocityXY.magnitude() / 4;
+            double acceleration = accelerationXY.magnitude() / 4;
 
             if (Constants.debug) {
                 botVelocity.setDouble(velocity);
                 botAcceleration.setDouble(acceleration);
+            }
+
+            if (velocity > DriveConstants.tipVelocityFtperSec &&
+                acceleration > DriveConstants.tipAccelerationFtPerSec2 &&
+                ) {
+                rotate = 0;  // don't tip over our own wheels while declerating
             }
 
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
@@ -220,10 +233,10 @@ public class Driveunbun extends SubsystemBase {
             rotPIDSpeed = 0;
         }
             
-        if (rotPIDSpeed > DriveConstants.maxAutoRotationSpeed) {
-            rotPIDSpeed = DriveConstants.maxAutoRotationSpeed;
-        } else if (rotPIDSpeed < -DriveConstants.maxAutoRotationSpeed) {
-            rotPIDSpeed = -DriveConstants.maxAutoRotationSpeed;
+        if (rotPIDSpeed > DriveConstants.autoRotationMaxSpeed) {
+            rotPIDSpeed = DriveConstants.autoRotationMaxSpeed;
+        } else if (rotPIDSpeed < -DriveConstants.autoRotationMaxSpeed) {
+            rotPIDSpeed = -DriveConstants.autoRotationMaxSpeed;
         }
 
         if ((driveX == 0) && (driveY == 0) && (rotPIDSpeed == 0)) {
@@ -274,14 +287,21 @@ public class Driveunbun extends SubsystemBase {
         }
     }
 
-    class Vector2dPlus extends Vector2d {
+    public class VectorXY extends Vector2d {
 
         public void add(Vector2d vec) {
             x += vec.x;
             y += vec.y; 
         }
 
-        public void setPolarDegrees(double r, double theta) {
+        public double thetaDegrees() {
+            return Math.toDegrees(Math.atan2(y, x));
+        }
+    }
+
+    public class VectorPolarDegrees extends VectorXY {
+
+        public VectorPolarDegrees(double r, double theta) {
             x = r * Math.cos(Math.toRadians(theta));
             y = r * Math.sin(Math.toRadians(theta));
         }

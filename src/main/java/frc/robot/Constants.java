@@ -74,7 +74,7 @@ public final class Constants {
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
         public static final double autoRotateToleranceDegrees = 3.0;
-        public static final double maxAutoRotationSpeed = 0.5;
+        public static final double autoRotationMaxSpeed = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
         public static final double rotatePolarDeadband = 0.3;
@@ -83,6 +83,10 @@ public final class Constants {
         public static final double sideCamDriveScaleFactor = 0.25;
         public static final double sideCamRotationScaleFactor = 0.3;
         public static final double normalRotationScaleFactor = 0.3;
+
+        // thresholds at which to engage anti-tipping logic
+        public static final double tipVelocityFtperSec = 3.0; 
+        public static final double tipAccelerationFtPerSec2 = 8.0;
 
         public final static class Rotation {
             public static final double kP = 1.2;
