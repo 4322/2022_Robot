@@ -20,7 +20,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -80,7 +80,9 @@ public final class Constants {
         public static final double rotatePolarDeadband = 0.3;
         public static final double twistDeadband = 0.08;
  
-        public static final double sideCamDriveScaleFactor = 0.33;
+        public static final double sideCamDriveScaleFactor = 0.25;
+        public static final double sideCamRotationScaleFactor = 0.3;
+        public static final double normalRotationScaleFactor = 0.5;
 
         public final static class Rotation {
             public static final double kP = 1.2;

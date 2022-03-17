@@ -93,7 +93,9 @@ public class DriveManual extends CommandBase {
       if (driveunbun.getDrivingWithSideCams()) {
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
-        rotate *= DriveConstants.sideCamDriveScaleFactor;
+        rotate *= DriveConstants.sideCamRotationScaleFactor;
+      } else {
+        rotate *= DriveConstants.normalRotationScaleFactor;        
       }
 
       // determine drive mode

@@ -30,6 +30,8 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotkD;
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
+    private NetworkTableEntry rfVelocity;
+    private NetworkTableEntry rfAcceleration;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -68,6 +70,7 @@ public class Driveunbun extends SubsystemBase {
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
             }
+            SwerveHelper.setReversingToSpeed();
 
             if (Constants.debug) {
                 tab = Shuffleboard.getTab("Drivebase");
@@ -101,9 +104,17 @@ public class Driveunbun extends SubsystemBase {
                 .withPosition(2,1)
                 .withSize(1,1)
                 .getEntry();
-            }
 
-            SwerveHelper.setReversingToSpeed();
+                rfVelocity = tab.add("RF Velocity", 0)
+                .withPosition(3,0)
+                .withSize(1,1)
+                .getEntry();
+
+                rfAcceleration = tab.add("RF Acceleration", 0)
+                .withPosition(3,1)
+                .withSize(1,1)
+                .getEntry();
+            }
         }   
     }
 
@@ -118,6 +129,8 @@ public class Driveunbun extends SubsystemBase {
             if (Constants.gyroEnabled) {
                 roll.setDouble(gyro.getRoll());
                 pitch.setDouble(gyro.getPitch());
+                rfVelocity.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getVelocity());
+                rfAcceleration.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getAcceleration());
             }
         }
     }
