@@ -32,6 +32,7 @@ public final class Constants {
     public static final boolean hoodEnabled = true;
     public static final boolean conveyorEnabled = true;
     public static final boolean ballSensorEnabled = true;
+    public static final boolean limelightEnabled = true;
 
     public static final int controllerConfigTimeoutMs = 50;
     public static final int slowStatusPeriodBaseMs = 180;  // for non-essential status
@@ -201,5 +202,11 @@ public final class Constants {
     public static final class WebCams {
         public static final int fps = 12;
         public static final int darkExposure = 5;
+    }
+
+    public static final class LimelightConstants {
+        public static final double limelightAngle = 0;
+        public static double targetHeight = 0;
+        public static double limelightHeight = 0;
     }
 }

@@ -48,6 +48,7 @@ public class RobotContainer {
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
   private final Webcams webcams = new Webcams();
+  private final Limelight limelight = new Limelight();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun);
