@@ -168,12 +168,6 @@ public class Driveunbun extends SubsystemBase {
             for (int i = 0; i < swerveModules.length; i++) {
                 currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
             }
-    
-            if (rotate > DriveConstants.maxRotationSpeed) {
-                rotate = DriveConstants.maxRotationSpeed;
-            } else if (rotate < -DriveConstants.maxRotationSpeed) {
-                rotate = -DriveConstants.maxRotationSpeed;
-            }
 
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
             
@@ -197,6 +191,12 @@ public class Driveunbun extends SubsystemBase {
 
         if (Math.abs(error) <= DriveConstants.autoRotateToleranceDegrees) {
             rotPIDSpeed = 0;
+        }
+            
+        if (rotPIDSpeed > DriveConstants.maxAutoRotationSpeed) {
+            rotPIDSpeed = DriveConstants.maxAutoRotationSpeed;
+        } else if (rotPIDSpeed < -DriveConstants.maxAutoRotationSpeed) {
+            rotPIDSpeed = -DriveConstants.maxAutoRotationSpeed;
         }
 
         if ((driveX == 0) && (driveY == 0) && (rotPIDSpeed == 0)) {
