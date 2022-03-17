@@ -184,10 +184,11 @@ public class Driveunbun extends SubsystemBase {
 
             VectorXY velocityXY = new VectorXY();
             VectorXY accelerationXY = new VectorXY();
+            VectorXY driveXY = new VectorXY(driveX, driveY);
 
             // sum wheel velocity and acceleration vectors
             for (int i = 0; i < swerveModules.length; i++) {
-                double wheelAngleDegrees = 90 - swerveModules[i].getInternalRotationDegrees();
+                double wheelAngleDegrees = 90 - currentAngle[i];
                 velocityXY.add(new VectorPolarDegrees(
                     swerveModules[i].getVelocity(), 
                     wheelAngleDegrees));
@@ -205,12 +206,18 @@ public class Driveunbun extends SubsystemBase {
 
             if (velocity > DriveConstants.tipVelocityFtperSec &&
                 acceleration > DriveConstants.tipAccelerationFtPerSec2 &&
-                ) {
+                // check if decelerating
+                Math.abs(SwerveHelper.boundDegrees(180 +
+                    velocityXY.degrees() - accelerationXY.degrees())) <=
+                    DriveConstants.tipVelAccDiffMaxDeg) {
                 rotate = 0;  // don't tip over our own wheels while declerating
+            } else if (velocity > DriveConstants.tipVelocityFtperSec &&
+                       driveXY.magnitude() < DriveConstants.tipMinStick) {
+                rotate = 0;  // don't tip when about to start declerating
             }
 
+            // ready to drive!
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
-            
             for (TalonFXModule module:swerveModules) {
                 module.setSpeedAndAngle();
             }
@@ -289,12 +296,20 @@ public class Driveunbun extends SubsystemBase {
 
     public class VectorXY extends Vector2d {
 
+        public VectorXY() {
+            super();
+        }
+
+        public VectorXY(double x, double y) {
+            super(x, y);
+        }
+
         public void add(Vector2d vec) {
             x += vec.x;
             y += vec.y; 
         }
 
-        public double thetaDegrees() {
+        public double degrees() {
             return Math.toDegrees(Math.atan2(y, x));
         }
     }
