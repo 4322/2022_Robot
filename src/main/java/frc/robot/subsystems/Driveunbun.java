@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +33,8 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry pitch;
     private NetworkTableEntry rfVelocity;
     private NetworkTableEntry rfAcceleration;
+    private NetworkTableEntry botVelocity;
+    private NetworkTableEntry botAcceleration;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -114,6 +117,16 @@ public class Driveunbun extends SubsystemBase {
                 .withPosition(3,1)
                 .withSize(1,1)
                 .getEntry();
+
+                botVelocity = tab.add("Bot Velocity", 0)
+                .withPosition(3,0)
+                .withSize(1,1)
+                .getEntry();
+
+                botAcceleration = tab.add("Bot Acceleration", 0)
+                .withPosition(3,1)
+                .withSize(1,1)
+                .getEntry();
             }
         }   
     }
@@ -167,6 +180,20 @@ public class Driveunbun extends SubsystemBase {
             double[] currentAngle = new double[4];
             for (int i = 0; i < swerveModules.length; i++) {
                 currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
+            }
+
+            // sum wheel velocity and acceleration vectors
+            Vector2dPlus velocity2d = new Vector2dPlus();
+            Vector2dPlus acceleration2d = new Vector2dPlus();
+            for (int i = 0; i < swerveModules.length; i++) {
+                currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
+            }            
+            double velocity = velocity2d.magnitude();
+            double acceleration = acceleration2d.magnitude();
+
+            if (Constants.debug) {
+                botVelocity.setDouble(velocity);
+                botAcceleration.setDouble(acceleration);
             }
 
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
@@ -244,6 +271,19 @@ public class Driveunbun extends SubsystemBase {
     public void stop() {
         for (TalonFXModule module:swerveModules) {
             module.stop();
+        }
+    }
+
+    class Vector2dPlus extends Vector2d {
+
+        public void add(Vector2d vec) {
+            x += vec.x;
+            y += vec.y; 
+        }
+
+        public void setPolarDegrees(double r, double theta) {
+            x = r * Math.cos(Math.toRadians(theta));
+            y = r * Math.sin(Math.toRadians(theta));
         }
     }
 }
