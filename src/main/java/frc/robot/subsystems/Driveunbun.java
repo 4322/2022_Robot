@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,8 +34,12 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry pitch;
     private NetworkTableEntry rfVelocity;
     private NetworkTableEntry rfAcceleration;
-    private NetworkTableEntry botVelocity;
-    private NetworkTableEntry botAcceleration;
+    private NetworkTableEntry botVelocityMag;
+    private NetworkTableEntry botAccelerationMag;
+    private NetworkTableEntry botVelocityAngle;
+    private NetworkTableEntry botAccelerationAngle;
+    private NetworkTableEntry tipDecelerationAtiveTab;
+    private NetworkTableEntry tipStickAtiveTab;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -118,14 +123,36 @@ public class Driveunbun extends SubsystemBase {
                 .withSize(1,1)
                 .getEntry();
 
-                botVelocity = tab.add("Bot Velocity", 0)
+                botVelocityMag = tab.add("Bot Vel Mag", 0)
                 .withPosition(4,0)
                 .withSize(1,1)
                 .getEntry();
 
-                botAcceleration = tab.add("Bot Acceleration", 0)
+                botAccelerationMag = tab.add("Bot Acc Mag", 0)
                 .withPosition(4,1)
                 .withSize(1,1)
+                .getEntry();
+
+                botVelocityAngle = tab.add("Bot Vel Angle", 0)
+                .withPosition(5,0)
+                .withSize(1,1)
+                .getEntry();
+
+                botAccelerationAngle = tab.add("Bot Acc Angle", 0)
+                .withPosition(5,1)
+                .withSize(1,1)
+                .getEntry();        
+                
+                tipDecelerationAtiveTab = tab.add("Tip Deceleration", false)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(2, 0)
+                .withSize(1, 1)
+                .getEntry();
+
+                tipStickAtiveTab = tab.add("Tip Stick", false)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(2, 1)
+                .withSize(1, 1)
                 .getEntry();
             }
         }   
@@ -200,10 +227,14 @@ public class Driveunbun extends SubsystemBase {
             double acceleration = accelerationXY.magnitude() / 4;
 
             if (Constants.debug) {
-                botVelocity.setDouble(velocity);
-                botAcceleration.setDouble(acceleration);
+                botVelocityMag.setDouble(velocity);
+                botAccelerationMag.setDouble(acceleration);
+                botVelocityAngle.setDouble(90 - velocityXY.degrees());
+                botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
             }
 
+            boolean tipDecelerateActive = false;
+            boolean tipStickActive = false;
             if (velocity > DriveConstants.tipVelocityFtperSec &&
                 acceleration > DriveConstants.tipAccelerationFtPerSec2 &&
                 // check if decelerating
@@ -211,9 +242,16 @@ public class Driveunbun extends SubsystemBase {
                     velocityXY.degrees() - accelerationXY.degrees())) <=
                     DriveConstants.tipVelAccDiffMaxDeg) {
                 rotate = 0;  // don't tip over our own wheels while declerating
-            } else if (velocity > DriveConstants.tipVelocityFtperSec &&
+                tipDecelerateActive = true;
+            } 
+            if (velocity > DriveConstants.tipVelocityFtperSec &&
                        driveXY.magnitude() < DriveConstants.tipMinStick) {
                 rotate = 0;  // don't tip when about to start declerating
+                tipStickActive = true;
+            }
+            if (Constants.debug) {
+                tipDecelerationAtiveTab.setBoolean(tipDecelerateActive);
+                tipStickAtiveTab.setBoolean(tipStickActive);
             }
 
             // ready to drive!
