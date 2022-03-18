@@ -253,6 +253,14 @@ public class Driveunbun extends SubsystemBase {
                 tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
                 tipStickAtiveTab.setBoolean(!tipStickActive);
             }
+            // don't let the wheels rotate if the drive stick is close to deadband and about to tip
+            if (tipDecelerateActive || tipStickActive) {
+                if (Math.abs(driveX) > Math.abs(driveY) * 5) {  // TODO: needs work
+                    driveY = 0;
+                } else if (Math.abs(driveY) > Math.abs(driveX) * 5) {
+                    driveX = 0;
+                }
+            }
 
             // ready to drive!
             SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
