@@ -99,9 +99,6 @@ public class DriveManual extends CommandBase {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
         driveunbun.driveAutoRotate(-driveX, driveY, rotate);
-      } else if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
-        // don't rotate wheels such that we trip over them when decelerating
-        driveunbun.stop();
       } else {
         // normal drive
         driveunbun.drive(-driveX, driveY, -rotate);

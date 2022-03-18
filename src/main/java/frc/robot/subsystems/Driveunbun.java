@@ -24,6 +24,8 @@ public class Driveunbun extends SubsystemBase {
     private PIDController rotPID;
 
     private boolean drivingWithSideCams = false;
+    private boolean tipDecelerateActive = false;
+    private boolean tipStickActive = false;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry errorDisplay;
@@ -233,8 +235,7 @@ public class Driveunbun extends SubsystemBase {
                 botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
             }
 
-            boolean tipDecelerateActive = false;
-            boolean tipStickActive = false;
+            // anti-tipping logic
             if (velocity > DriveConstants.tipVelocityFtperSec &&
                 acceleration > DriveConstants.tipAccelerationFtPerSec2 &&
                 // check if decelerating
@@ -243,29 +244,33 @@ public class Driveunbun extends SubsystemBase {
                     DriveConstants.tipVelAccDiffMaxDeg) {
                 rotate = 0;  // don't tip over our own wheels while declerating
                 tipDecelerateActive = true;
-            } 
+            } else {
+                tipDecelerateActive = false;
+            }
             if (velocity > DriveConstants.tipVelocityFtperSec &&
                        driveXY.magnitude() < DriveConstants.tipMinStick) {
                 rotate = 0;  // don't tip when about to start declerating
                 tipStickActive = true;
+            } else {
+                tipStickActive = false;
             }
             if (Constants.debug) {
                 tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
                 tipStickAtiveTab.setBoolean(!tipStickActive);
             }
-            // don't let the wheels rotate if the drive stick is close to deadband and about to tip
-            if (tipDecelerateActive || tipStickActive) {
-                if (Math.abs(driveX) > Math.abs(driveY) * 5) {  // TODO: needs work
-                    driveY = 0;
-                } else if (Math.abs(driveY) > Math.abs(driveX) * 5) {
-                    driveX = 0;
-                }
-            }
 
             // ready to drive!
-            SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
-            for (TalonFXModule module:swerveModules) {
-                module.setSpeedAndAngle();
+            if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
+                // don't rotate wheels such that we trip over them when decelerating
+                stop();
+            } else {
+                SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
+                if (tipDecelerateActive || tipStickActive) {
+                    SwerveHelper.noSteering();
+                }
+                for (TalonFXModule module:swerveModules) {
+                    module.setSpeedAndAngle();
+                }
             }
         }
     }
@@ -292,12 +297,7 @@ public class Driveunbun extends SubsystemBase {
             rotPIDSpeed = -DriveConstants.autoRotationMaxSpeed;
         }
 
-        if ((driveX == 0) && (driveY == 0) && (rotPIDSpeed == 0)) {
-            // don't flip wheels around when rotation is complete
-            stop();
-        } else {
-            drive(driveX, driveY, rotPIDSpeed);
-        }
+        drive(driveX, driveY, rotPIDSpeed);
 
         if (Constants.debug) {
             errorDisplay.setDouble(error);
@@ -337,10 +337,6 @@ public class Driveunbun extends SubsystemBase {
     public void stop() {
         for (TalonFXModule module:swerveModules) {
             module.stop();
-        }
-        if (Constants.debug) {
-            tipDecelerationAtiveTab.setBoolean(true);
-            tipStickAtiveTab.setBoolean(true);
         }
     }
 
