@@ -330,6 +330,10 @@ public class Driveunbun extends SubsystemBase {
         for (TalonFXModule module:swerveModules) {
             module.stop();
         }
+        if (Constants.debug) {
+            tipDecelerationAtiveTab.setBoolean(true);
+            tipStickAtiveTab.setBoolean(true);
+        }
     }
 
     public class VectorXY extends Vector2d {

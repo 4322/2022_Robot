@@ -85,7 +85,7 @@ public final class Constants {
         public static final double normalRotationScaleFactor = 0.3;
 
         // thresholds at which to engage anti-tipping logic
-        public static final double tipVelocityFtperSec = 3.0; 
+        public static final double tipVelocityFtperSec = 6.0; 
         public static final double tipAccelerationFtPerSec2 = 8.0;
         public static final double tipVelAccDiffMaxDeg = 30;
         public static final double tipMinStick = 0.3;
