@@ -143,15 +143,15 @@ public class Driveunbun extends SubsystemBase {
                 .withSize(1,1)
                 .getEntry();        
                 
-                tipDecelerationAtiveTab = tab.add("Tip Deceleration", false)
+                tipDecelerationAtiveTab = tab.add("Tip Deceleration", true)
                 .withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(2, 0)
+                .withPosition(6, 0)
                 .withSize(1, 1)
                 .getEntry();
 
-                tipStickAtiveTab = tab.add("Tip Stick", false)
+                tipStickAtiveTab = tab.add("Tip Stick", true)
                 .withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(2, 1)
+                .withPosition(6, 1)
                 .withSize(1, 1)
                 .getEntry();
             }
@@ -250,8 +250,8 @@ public class Driveunbun extends SubsystemBase {
                 tipStickActive = true;
             }
             if (Constants.debug) {
-                tipDecelerationAtiveTab.setBoolean(tipDecelerateActive);
-                tipStickAtiveTab.setBoolean(tipStickActive);
+                tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
+                tipStickAtiveTab.setBoolean(!tipStickActive);
             }
 
             // ready to drive!
