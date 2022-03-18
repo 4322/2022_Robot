@@ -21,8 +21,10 @@ public class Hood extends SubsystemBase {
   //SHUFFLEBOARD
   private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
   private NetworkTableEntry hoodPositionTalon;
+  private NetworkTableEntry hoodTarget;
   private NetworkTableEntry hoodPower;
   private NetworkTableEntry isHomeIndicator;
+  private NetworkTableEntry override;
 
   private boolean initialHome = false;
   
@@ -87,6 +89,11 @@ public class Hood extends SubsystemBase {
         .withPosition(0,1)   
         .withSize(1,1)
         .getEntry();
+
+        hoodPositionTalon = tab.add("Hood Target", 0)
+        .withPosition(1,0)   
+        .withSize(1,1)
+        .getEntry();
         
         hoodPower = tab.add("Hood Power", 0)
         .withPosition(1,1)
@@ -98,6 +105,12 @@ public class Hood extends SubsystemBase {
         .withPosition(0,0)
         .withSize(1,1)
         .getEntry();
+
+        override = tab.add("Override", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .withPosition(0,6)
+        .withSize(1,1)
+        .getEntry();
       }
     }   
   }
@@ -105,12 +118,12 @@ public class Hood extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.hoodEnabled) {
-
       // SHUFFLEBOARD
       if (Constants.debug) {
-        if (initialHome) {
-          setTargetPosition(hoodPositionTalon.getDouble(0));
+        if (initialHome && override.getBoolean(false)) {
+          setTargetPosition(hoodTarget.getDouble(0));
         }
+        hoodPositionTalon.setDouble(getPosition());
         hoodPower.setDouble(hood.getMotorOutputPercent());
         isHomeIndicator.setBoolean(isAtHome());
       }

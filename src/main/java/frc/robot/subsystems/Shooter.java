@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +37,7 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry power;
   private NetworkTableEntry currentRPM;
   private NetworkTableEntry targetRPM;
+  private NetworkTableEntry override;
 
   public Shooter() {
     if (Constants.shooterEnabled) {
@@ -103,6 +105,13 @@ public class Shooter extends SubsystemBase {
           .withPosition(2,0)
           .withSize(1,1)
           .getEntry();
+
+        override = 
+          tab.add("Override", false)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(0,6)
+          .withSize(1,1)
+          .getEntry();
       }
     }
   }
@@ -111,7 +120,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     if (Constants.debug) {  // don't combine if statements to avoid dead code warning
       if (Constants.shooterEnabled) {
-        setSpeed(targetRPM.getDouble(0));
+        if (override.getBoolean(false)) {
+          setSpeed(targetRPM.getDouble(0));
+        }
         power.setDouble(flywheelLeft.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
       }
