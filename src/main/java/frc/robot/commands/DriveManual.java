@@ -38,8 +38,8 @@ public class DriveManual extends CommandBase {
     if (Constants.joysticksEnabled) {
 
       // cache hardware status for consistency in logic
-      final double driveRawX = RobotContainer.driveStick.getX();
-      final double driveRawY = RobotContainer.driveStick.getY();
+      final double driveRawX = driveX = RobotContainer.driveStick.getX();
+      final double driveRawY = driveY = RobotContainer.driveStick.getY();
       final double rotateRawX = RobotContainer.rotateStick.getX();
       final double rotateRawY = RobotContainer.rotateStick.getY();
       final double rotateRawZ = RobotContainer.rotateStick.getZ();
@@ -48,16 +48,12 @@ public class DriveManual extends CommandBase {
       final double driveRawR = Math.sqrt(driveRawX * driveRawX + driveRawY * driveRawY);
       final double rotateRawR = Math.sqrt(rotateRawX * rotateRawX + rotateRawY * rotateRawY);
 
-      // adjust for drive deadband
+      // Check for drive deadband.
+      // Can't renormalize x and y independently because we wouldn't be able to drive diagonally
+      // at low speed.
       if (driveRawR < DriveConstants.drivePolarDeadband) {
         driveX = 0;
         driveY = 0;
-      } else {
-        double driveR = (driveRawR - DriveConstants.drivePolarDeadband) / 
-                        (1 - DriveConstants.drivePolarDeadband);
-        double driveRawThetaRad = Math.atan2(driveRawY, driveRawX);
-        driveX = driveR * Math.cos(driveRawThetaRad);
-        driveY = driveR * Math.sin(driveRawThetaRad);
       }
 
       /* 
