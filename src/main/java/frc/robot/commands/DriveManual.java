@@ -48,14 +48,6 @@ public class DriveManual extends CommandBase {
       final double driveRawR = Math.sqrt(driveRawX * driveRawX + driveRawY * driveRawY);
       final double rotateRawR = Math.sqrt(rotateRawX * rotateRawX + rotateRawY * rotateRawY);
 
-      // Check for drive deadband.
-      // Can't renormalize x and y independently because we wouldn't be able to drive diagonally
-      // at low speed.
-      if (driveRawR < DriveConstants.drivePolarDeadband) {
-        driveX = 0;
-        driveY = 0;
-      }
-
       /* 
         cube drive joystick inputs to increase sensitivity
         x = smaller value
@@ -63,11 +55,19 @@ public class DriveManual extends CommandBase {
         x = (y^3 / y) * x 
       */
       if (Math.abs(driveRawX) >= Math.abs(driveRawY)) {
-        driveX = driveX * driveX * driveX;
-        driveY = driveX * driveX * driveY;
+        driveX = driveRawX * driveRawX * driveRawX;
+        driveY = driveRawX * driveRawX * driveRawY;
       } else {
-        driveX = driveY * driveY * driveX;
-        driveY = driveY * driveY * driveY;
+        driveX = driveRawY * driveRawY * driveRawX;
+        driveY = driveRawY * driveRawY * driveRawY;
+      }
+
+      // Check for drive deadband.
+      // Can't renormalize x and y independently because we wouldn't be able to drive diagonally
+      // at low speed.
+      if (driveRawR < DriveConstants.drivePolarDeadband) {
+        driveX = 0;
+        driveY = 0;
       }
 
       // adjust for twist deadband
