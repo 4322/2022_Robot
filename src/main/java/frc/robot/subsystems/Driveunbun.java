@@ -236,19 +236,30 @@ public class Driveunbun extends SubsystemBase {
             }
 
             // anti-tipping logic
-            if (velocity > DriveConstants.tipVelocityFtperSec &&
-                acceleration > DriveConstants.tipAccelerationFtPerSec2 &&
+            if (velocity >= (tipDecelerateActive? DriveConstants.Tip.lowVelocityFtperSec : 
+                                                  DriveConstants.Tip.highVelocityFtperSec) &&
+                acceleration >= (tipDecelerateActive? DriveConstants.Tip.lowAccFtPerSec2 :
+                                                      DriveConstants.Tip.highAccFtPerSec2) &&
                 // check if decelerating
                 Math.abs(SwerveHelper.boundDegrees(180 +
                     velocityXY.degrees() - accelerationXY.degrees())) <=
-                    DriveConstants.tipVelAccDiffMaxDeg) {
+                    DriveConstants.Tip.velAccDiffMaxDeg) {
                 rotate = 0;  // don't tip over our own wheels while declerating
                 tipDecelerateActive = true;
             } else {
                 tipDecelerateActive = false;
             }
-            if (velocity > DriveConstants.tipVelocityFtperSec &&
-                       driveXY.magnitude() < DriveConstants.tipMinStick) {
+
+            // don't get stuck in anti-tipping mode if driver is applying partial power
+            double powerOffThreshold = DriveConstants.Tip.lowPowerOff + 
+                (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
+                (velocity - DriveConstants.Tip.lowVelocityFtperSec) /
+                (DriveConstants.Tip.highVelocityFtperSec - DriveConstants.Tip.lowVelocityFtperSec);
+            powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff, 
+                                Math.min(DriveConstants.Tip.highPowerOff, velocity));
+
+            if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
+                    driveXY.magnitude() < powerOffThreshold) {
                 rotate = 0;  // don't tip when about to start declerating
                 tipStickActive = true;
             } else {
