@@ -256,7 +256,7 @@ public class Driveunbun extends SubsystemBase {
                 (velocity - DriveConstants.Tip.lowVelocityFtperSec) /
                 (DriveConstants.Tip.highVelocityFtperSec - DriveConstants.Tip.lowVelocityFtperSec);
             powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff, 
-                                Math.min(DriveConstants.Tip.highPowerOff, velocity));
+                                Math.min(DriveConstants.Tip.highPowerOff, powerOffThreshold));
 
             if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
                     driveXY.magnitude() < powerOffThreshold) {
