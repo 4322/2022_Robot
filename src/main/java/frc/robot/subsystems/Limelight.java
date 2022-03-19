@@ -67,12 +67,12 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public double getX_Offset()
+  public double getHorizontalDegToTarget()
   {
     return tx.getDouble(0);
   }
 
-  public double getY_Offset()
+  public double getVerticalDegToTarget()
   {
     return ty.getDouble(0);
   }
@@ -126,7 +126,7 @@ public class Limelight extends SubsystemBase {
     double distance = 0;
 
     if (getTargetVisible()) {
-      double angleToTarget = LimelightConstants.limelightAngle + getY_Offset();
+      double angleToTarget = LimelightConstants.limelightAngle + getVerticalDegToTarget();
       distance = (LimelightConstants.targetHeight - LimelightConstants.limelightHeight) /
       Math.tan(Math.toRadians(angleToTarget));
     }
