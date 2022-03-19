@@ -22,9 +22,9 @@ public class Intake extends SubsystemBase{
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextSlowStatusPeriodMs());
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextSlowStatusPeriodMs());  
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
     }
   }
 

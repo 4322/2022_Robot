@@ -129,6 +129,13 @@ public class SwerveHelper {
 		}
 	}
 
+	// used by anti-tipping logic to avoid falling over our wheels
+	public static void noSteering() {
+		for (int i = 0; i < wheelAngleChange.length; i++) {
+			wheelAngleChange[i] = 0;
+		}
+	}
+
 	public static void setToFieldCentric(){
 		fieldCentric = true;
 		robotCentricOffsetRadians = 0;

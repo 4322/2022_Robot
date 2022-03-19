@@ -28,24 +28,15 @@ public class TalonFXModule extends ControlModule {
 	private CANCoder m_encoder;
 	private WheelPosition m_wheelPosition;
 	
-	public TalonFXModule(WPI_TalonFX rotation, WPI_TalonFX wheel, WheelPosition pos, int encoderID) {
+	public TalonFXModule(int rotationID, int wheelID, WheelPosition pos, int encoderID) {
 		super(pos);
-		m_rotation = rotation;
-		m_wheel = wheel;
+		m_rotation = new WPI_TalonFX(rotationID);
+		m_wheel = new WPI_TalonFX(wheelID);
 		m_encoder = new CANCoder(encoderID);
 		m_wheelPosition = pos;
 
-		// increase status reporting periods to reduce CAN bus utilization
-		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-		m_wheel.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		RobotContainer.staggerTalonStatusFrames(m_wheel);
-
-		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 		RobotContainer.staggerTalonStatusFrames(m_rotation);
-
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 	}
@@ -81,6 +72,10 @@ public class TalonFXModule extends ControlModule {
 			DriveConstants.Drive.supplyLimit, 
 			DriveConstants.Drive.supplyThreshold, 
 			DriveConstants.Drive.supplyTime));
+
+		// need rapid velocity feedback for anti-tipping logic
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 
 	private void configRotation(WPI_TalonFX talon) {
@@ -125,7 +120,6 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			10, Constants.controllerConfigTimeoutMs);
 
-		// wait for CANCoder position to stabilize
 		try {
 			Thread.sleep(50); // 5 status frames to be safe
 		}
@@ -146,6 +140,10 @@ public class TalonFXModule extends ControlModule {
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(),
 			Constants.controllerConfigTimeoutMs);
+
+		// need rapid position feedback for steering logic
+		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 	
 	public void setSpeedAndAngle(){
@@ -189,18 +187,27 @@ public class TalonFXModule extends ControlModule {
 
 	@Override
 	public double getDistance(){
-		return (m_wheel.getSelectedSensorPosition(0) *  Math.PI * DriveConstants.Drive.wheelDiameter) / 
-			DriveConstants.Drive.ticksPerRev;
+		return m_wheel.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
+			Constants.DriveConstants.Drive.gearRatio * Math.PI *
+			DriveConstants.Drive.wheelDiameter / 12;
 	}
 
 	@Override
 	public double getVelocity() {
-		return m_wheel.getSelectedSensorVelocity(0) * 600/DriveConstants.Drive.ticksPerRev;
+		// feet per second
+		return m_wheel.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
+			Constants.DriveConstants.Drive.gearRatio * Math.PI * 
+			Constants.DriveConstants.Drive.wheelDiameter / 12;
 	}
 
-	@Override
-	public double getAcceleration() {
-		return super.getAcceleration();
+	public void setCoastMode() {
+		m_wheel.setNeutralMode(NeutralMode.Coast);
+		m_rotation.setNeutralMode(NeutralMode.Coast);
+	}
+
+	public void setBrakeMode() {
+		m_wheel.setNeutralMode(NeutralMode.Brake);
+		m_rotation.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void stop() {

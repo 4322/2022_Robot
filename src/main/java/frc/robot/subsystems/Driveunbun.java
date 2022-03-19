@@ -1,12 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,24 +16,16 @@ import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 public class Driveunbun extends SubsystemBase {
-    private WPI_TalonFX frontRightDrive;
-    private WPI_TalonFX frontLeftDrive;
-    private WPI_TalonFX rearRightDrive;
-    private WPI_TalonFX rearLeftDrive;
-    
-    private WPI_TalonFX frontRightRotation;
-    private WPI_TalonFX frontLeftRotation;
-    private WPI_TalonFX rearRightRotation;
-    private WPI_TalonFX rearLeftRotation;
 
-    private TalonFXModule frontRight;
-    private TalonFXModule frontLeft;
-    private TalonFXModule rearLeft;
-    private TalonFXModule rearRight;
+    private TalonFXModule[] swerveModules = new TalonFXModule[4];
 
     private AHRS gyro;
 
     private PIDController rotPID;
+
+    private boolean drivingWithSideCams = false;
+    private boolean tipDecelerateActive = false;
+    private boolean tipStickActive = false;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry errorDisplay;
@@ -43,35 +34,37 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotkD;
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
+    private NetworkTableEntry rfVelocity;
+    private NetworkTableEntry rfAcceleration;
+    private NetworkTableEntry botVelocityMag;
+    private NetworkTableEntry botAccelerationMag;
+    private NetworkTableEntry botVelocityAngle;
+    private NetworkTableEntry botAccelerationAngle;
+    private NetworkTableEntry tipDecelerationAtiveTab;
+    private NetworkTableEntry tipStickAtiveTab;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
-            frontRightDrive = new WPI_TalonFX(DriveConstants.frontRightDriveID);
-            frontLeftDrive = new WPI_TalonFX(DriveConstants.frontLeftDriveID);
-            rearRightDrive = new WPI_TalonFX(DriveConstants.rearRightDriveID);
-            rearLeftDrive = new WPI_TalonFX(DriveConstants.rearLeftDriveID);
-            frontRightRotation = new WPI_TalonFX(DriveConstants.frontRightRotationID);
-            frontLeftRotation = new WPI_TalonFX(DriveConstants.frontLeftRotationID);
-            rearRightRotation = new WPI_TalonFX(DriveConstants.rearRightRotationID);
-            rearLeftRotation = new WPI_TalonFX(DriveConstants.rearLeftRotationID);
-
-            frontRight = new TalonFXModule(frontRightRotation, frontRightDrive, 
+            swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID, 
                 WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
-            frontLeft = new TalonFXModule(frontLeftRotation, frontLeftDrive, 
+            swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.frontLeftRotationID, DriveConstants.frontLeftDriveID, 
                 WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
-            rearRight = new TalonFXModule(rearRightRotation, rearRightDrive, 
-                WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID); 
-            rearLeft = new TalonFXModule(rearLeftRotation, rearLeftDrive, 
-                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);   
+            swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.rearRightRotationID, DriveConstants.rearRightDriveID, 
+                WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID);
+            swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = 
+                new TalonFXModule(DriveConstants.rearLeftRotationID, DriveConstants.rearLeftDriveID, 
+                WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
          }
     }
 
     public void init() {
         if (Constants.driveEnabled) {
-            frontRight.init();
-            frontLeft.init();
-            rearRight.init();
-            rearLeft.init();
+            for (TalonFXModule module:swerveModules) {
+                module.init();
+            }
 
             rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
 
@@ -87,6 +80,7 @@ public class Driveunbun extends SubsystemBase {
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
             }
+            SwerveHelper.setReversingToSpeed();
 
             if (Constants.debug) {
                 tab = Shuffleboard.getTab("Drivebase");
@@ -120,18 +114,65 @@ public class Driveunbun extends SubsystemBase {
                 .withPosition(2,1)
                 .withSize(1,1)
                 .getEntry();
-            }
 
-            SwerveHelper.setReversingToSpeed();
+                rfVelocity = tab.add("RF Velocity", 0)
+                .withPosition(3,0)
+                .withSize(1,1)
+                .getEntry();
+
+                rfAcceleration = tab.add("RF Acceleration", 0)
+                .withPosition(3,1)
+                .withSize(1,1)
+                .getEntry();
+
+                botVelocityMag = tab.add("Bot Vel Mag", 0)
+                .withPosition(4,0)
+                .withSize(1,1)
+                .getEntry();
+
+                botAccelerationMag = tab.add("Bot Acc Mag", 0)
+                .withPosition(4,1)
+                .withSize(1,1)
+                .getEntry();
+
+                botVelocityAngle = tab.add("Bot Vel Angle", 0)
+                .withPosition(5,0)
+                .withSize(1,1)
+                .getEntry();
+
+                botAccelerationAngle = tab.add("Bot Acc Angle", 0)
+                .withPosition(5,1)
+                .withSize(1,1)
+                .getEntry();        
+                
+                tipDecelerationAtiveTab = tab.add("Tip Deceleration", true)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(6, 0)
+                .withSize(1, 1)
+                .getEntry();
+
+                tipStickAtiveTab = tab.add("Tip Stick", true)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(6, 1)
+                .withSize(1, 1)
+                .getEntry();
+            }
         }   
     }
 
     @Override
     public void periodic() {
+        // acceleration must be calculated once and only once per periodic interval
+        for (TalonFXModule module:swerveModules) {
+            module.snapshotAcceleration();
+        }
+
         if (Constants.debug) {  // don't combine if statements to avoid dead code warning
             if (Constants.gyroEnabled) {
                 roll.setDouble(gyro.getRoll());
                 pitch.setDouble(gyro.getPitch());
+                rfVelocity.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getVelocity());
+                rfAcceleration.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getAcceleration());
             }
         }
     }
@@ -140,6 +181,7 @@ public class Driveunbun extends SubsystemBase {
     public void setToFieldCentric() {
         if (gyro != null) {
             SwerveHelper.setToFieldCentric();
+            drivingWithSideCams = false;
         }
     }
 
@@ -154,32 +196,94 @@ public class Driveunbun extends SubsystemBase {
 
     public void setToRobotCentric(double offsetDeg) {
         // positive offset = counter-clockwise
+        if (offsetDeg != 0) {
+            drivingWithSideCams = true;
+        } else {
+            drivingWithSideCams = false;
+        }
         SwerveHelper.setToBotCentric(offsetDeg);
     }
 
     public void drive(double driveX, double driveY, double rotate) {
         if (Constants.driveEnabled) {
             double[] currentAngle = new double[4];
-            currentAngle[WheelPosition.FRONT_RIGHT.wheelNumber] = frontRight.getInternalRotationDegrees();
-            currentAngle[WheelPosition.FRONT_LEFT.wheelNumber] = frontLeft.getInternalRotationDegrees();
-            currentAngle[WheelPosition.BACK_RIGHT.wheelNumber] = rearRight.getInternalRotationDegrees();
-            currentAngle[WheelPosition.BACK_LEFT.wheelNumber] = rearLeft.getInternalRotationDegrees();
-    
-            if (rotate > DriveConstants.maxAutoRotSpd) {
-                rotate = DriveConstants.maxAutoRotSpd;
-            } else if (rotate < -DriveConstants.maxAutoRotSpd) {
-                rotate = -DriveConstants.maxAutoRotSpd;
+            for (int i = 0; i < swerveModules.length; i++) {
+                currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
             }
 
-            SwerveHelper.calculate(
-                    driveX, driveY, rotate, currentAngle
-            );
-            
-            frontRight.setSpeedAndAngle();
-            frontLeft.setSpeedAndAngle();
-            rearLeft.setSpeedAndAngle();
-            rearRight.setSpeedAndAngle();
-        }  
+            VectorXY velocityXY = new VectorXY();
+            VectorXY accelerationXY = new VectorXY();
+            VectorXY driveXY = new VectorXY(driveX, driveY);
+
+            // sum wheel velocity and acceleration vectors
+            for (int i = 0; i < swerveModules.length; i++) {
+                double wheelAngleDegrees = 90 - currentAngle[i];
+                velocityXY.add(new VectorPolarDegrees(
+                    swerveModules[i].getVelocity(), 
+                    wheelAngleDegrees));
+                accelerationXY.add(new VectorPolarDegrees(
+                    swerveModules[i].getAcceleration(), 
+                    wheelAngleDegrees));            
+            }            
+            double velocity = velocityXY.magnitude() / 4;
+            double acceleration = accelerationXY.magnitude() / 4;
+
+            if (Constants.debug) {
+                botVelocityMag.setDouble(velocity);
+                botAccelerationMag.setDouble(acceleration);
+                botVelocityAngle.setDouble(90 - velocityXY.degrees());
+                botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
+            }
+
+            // anti-tipping logic
+            if (velocity >= (tipDecelerateActive? DriveConstants.Tip.lowVelocityFtperSec : 
+                                                  DriveConstants.Tip.highVelocityFtperSec) &&
+                acceleration >= (tipDecelerateActive? DriveConstants.Tip.lowAccFtPerSec2 :
+                                                      DriveConstants.Tip.highAccFtPerSec2) &&
+                // check if decelerating
+                Math.abs(SwerveHelper.boundDegrees(180 +
+                    velocityXY.degrees() - accelerationXY.degrees())) <=
+                    DriveConstants.Tip.velAccDiffMaxDeg) {
+                rotate = 0;  // don't tip over our own wheels while declerating
+                tipDecelerateActive = true;
+            } else {
+                tipDecelerateActive = false;
+            }
+
+            // don't get stuck in anti-tipping mode if driver is applying partial power
+            double powerOffThreshold = DriveConstants.Tip.lowPowerOff + 
+                (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
+                (velocity - DriveConstants.Tip.lowVelocityFtperSec) /
+                (DriveConstants.Tip.highVelocityFtperSec - DriveConstants.Tip.lowVelocityFtperSec);
+            powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff, 
+                                Math.min(DriveConstants.Tip.highPowerOff, powerOffThreshold));
+
+            if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
+                    driveXY.magnitude() < powerOffThreshold) {
+                rotate = 0;  // don't tip when about to start declerating
+                tipStickActive = true;
+            } else {
+                tipStickActive = false;
+            }
+            if (Constants.debug) {
+                tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
+                tipStickAtiveTab.setBoolean(!tipStickActive);
+            }
+
+            // ready to drive!
+            if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
+                // don't rotate wheels such that we trip over them when decelerating
+                stop();
+            } else {
+                SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
+                if (tipDecelerateActive || tipStickActive) {
+                    SwerveHelper.noSteering();
+                }
+                for (TalonFXModule module:swerveModules) {
+                    module.setSpeedAndAngle();
+                }
+            }
+        }
     }
 
     // Uses a PID Controller to rotate the robot to a certain degree
@@ -196,6 +300,12 @@ public class Driveunbun extends SubsystemBase {
 
         if (Math.abs(error) <= DriveConstants.autoRotateToleranceDegrees) {
             rotPIDSpeed = 0;
+        }
+            
+        if (rotPIDSpeed > DriveConstants.autoRotationMaxSpeed) {
+            rotPIDSpeed = DriveConstants.autoRotationMaxSpeed;
+        } else if (rotPIDSpeed < -DriveConstants.autoRotationMaxSpeed) {
+            rotPIDSpeed = -DriveConstants.autoRotationMaxSpeed;
         }
 
         drive(driveX, driveY, rotPIDSpeed);
@@ -215,36 +325,57 @@ public class Driveunbun extends SubsystemBase {
         driveAutoRotate(x, y, rotationDeg);
     }
 
+    public boolean getDrivingWithSideCams() {
+        return drivingWithSideCams;
+    }
+
     public void setCoastMode() {
         if (Constants.driveEnabled) {
-            frontRightDrive.setNeutralMode(NeutralMode.Coast);
-            frontLeftDrive.setNeutralMode(NeutralMode.Coast);
-            rearRightDrive.setNeutralMode(NeutralMode.Coast);
-            rearLeftDrive.setNeutralMode(NeutralMode.Coast);
-            frontRightRotation.setNeutralMode(NeutralMode.Coast);
-            frontLeftRotation.setNeutralMode(NeutralMode.Coast);
-            rearRightRotation.setNeutralMode(NeutralMode.Coast);
-            rearLeftRotation.setNeutralMode(NeutralMode.Coast);
+            for (TalonFXModule module:swerveModules) {
+                module.setCoastMode();
+            }
         }
     }
 
     public void setBrakeMode () {
         if (Constants.driveEnabled) {
-            frontRightDrive.setNeutralMode(NeutralMode.Brake); 
-            frontLeftDrive.setNeutralMode(NeutralMode.Brake);
-            rearRightDrive.setNeutralMode(NeutralMode.Brake);
-            rearLeftDrive.setNeutralMode(NeutralMode.Brake);
-            frontRightRotation.setNeutralMode(NeutralMode.Brake);
-            frontLeftRotation.setNeutralMode(NeutralMode.Brake);
-            rearRightRotation.setNeutralMode(NeutralMode.Brake);
-            rearLeftRotation.setNeutralMode(NeutralMode.Brake);
+            for (TalonFXModule module:swerveModules) {
+                module.setBrakeMode();
+            }
         }
     } 
 
     public void stop() {
-        frontRight.stop();
-        frontLeft.stop();
-        rearRight.stop();
-        rearLeft.stop();
+        for (TalonFXModule module:swerveModules) {
+            module.stop();
+        }
+    }
+
+    public class VectorXY extends Vector2d {
+
+        public VectorXY() {
+            super();
+        }
+
+        public VectorXY(double x, double y) {
+            super(x, y);
+        }
+
+        public void add(Vector2d vec) {
+            x += vec.x;
+            y += vec.y; 
+        }
+
+        public double degrees() {
+            return Math.toDegrees(Math.atan2(y, x));
+        }
+    }
+
+    public class VectorPolarDegrees extends VectorXY {
+
+        public VectorPolarDegrees(double r, double theta) {
+            x = r * Math.cos(Math.toRadians(theta));
+            y = r * Math.sin(Math.toRadians(theta));
+        }
     }
 }

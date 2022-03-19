@@ -20,7 +20,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -34,9 +34,15 @@ public final class Constants {
     public static final boolean ballSensorEnabled = true;
     public static final boolean limelightEnabled = true;
 
+    // configuration values common to all motor controllers
     public static final int controllerConfigTimeoutMs = 50;
+    public static final int fastStatusPeriodBaseMs = 13;
+    public static final int fastStatusPeriodMaxMs = 18;  // less than 20ms periodic code cycle time
+    public static final int shuffleboardStatusPeriodBaseMs = 75;
+    public static final int shuffleboardStatusPeriodMaxMs = 90;  // for interactive response
     public static final int slowStatusPeriodBaseMs = 180;  // for non-essential status
     public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period
+    // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
     public static final class DriveConstants {
@@ -54,7 +60,6 @@ public final class Constants {
         public static final int frontLeftEncoderID = 12;
         public static final int rearLeftEncoderID = 13;
 
-        public static final double wheelRadius = 0.0508;
         public static final int encoderResolution = 2048;
 
         public static final double kMaxSpeed = 3.0;
@@ -64,19 +69,32 @@ public final class Constants {
         public static final double distWheelX = 0.339725;
         public static final double distWheelY = 0.244475;
 
-        public static final double wheelBaseLengthFeet = 26.75/12.0;
-        public static final double wheelBaseWidthFeet = 19.25/12.0;
+        public static final double wheelBaseLengthFeet = 26.75 / 12.0;
+        public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
-
-        public static final double polarManualDeadband = 0.06;
-
-        public static final double maxAutoRotSpd = 0.7;
-
-        public static final double twistDeadband = 0.08;
-        public static final double rotateToDeadband = 0.25;
         public static final double autoRotateToleranceDegrees = 3.0;
+        public static final double autoRotationMaxSpeed = 0.5;
+
+        public static final double drivePolarDeadband = 0.06;
+        public static final double rotatePolarDeadband = 0.3;
+        public static final double twistDeadband = 0.08;
+ 
+        public static final double sideCamDriveScaleFactor = 0.25;
+        public static final double sideCamRotationScaleFactor = 0.3;
+        public static final double normalRotationScaleFactor = 0.3;
+
+        // thresholds at which to engage anti-tipping logic
+        public final static class Tip {
+            public static final double highVelocityFtperSec = 6.0; 
+            public static final double lowVelocityFtperSec = 3.0; 
+            public static final double highAccFtPerSec2 = 8.0;
+            public static final double lowAccFtPerSec2 = 4.0;
+            public static final double velAccDiffMaxDeg = 30;
+            public static final double highPowerOff = 0.3;
+            public static final double lowPowerOff = 0.15;
+        }
 
         public final static class Rotation {
             public static final double kP = 1.2;
@@ -132,7 +150,7 @@ public final class Constants {
             public static final double supplyTime = 0.5;
 
             public static final double wheelDiameter = 4.0;
-            public static final int ticksPerRev = 4096;
+            public static final double gearRatio = 6.55;
         }
     }
 

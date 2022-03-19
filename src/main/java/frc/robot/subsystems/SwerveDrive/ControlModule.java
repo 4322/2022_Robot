@@ -57,7 +57,7 @@ public class ControlModule{
 
 	}
 
-	public double getAcceleration() {
+	public double snapshotAcceleration() {
 
 		double currentRate = this.getVelocity();
 		double currentTime = Timer.getFPGATimestamp();
@@ -71,6 +71,10 @@ public class ControlModule{
 
 		return filteredAccel;
 	}	
+
+	public double getAcceleration() {
+		return filteredAccel;  // feet per sec per sec
+	}
 
 	public Encoder getSpeedEncoder(){
 		if(speedEncoder != null) 

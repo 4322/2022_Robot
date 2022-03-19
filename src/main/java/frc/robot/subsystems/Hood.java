@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.HoodConstants;
 
 public class Hood extends SubsystemBase {
@@ -20,20 +21,17 @@ public class Hood extends SubsystemBase {
   //SHUFFLEBOARD
   private ShuffleboardTab tab = Shuffleboard.getTab("Hood");
   private NetworkTableEntry hoodPositionTalon;
+  private NetworkTableEntry hoodTarget;
   private NetworkTableEntry hoodPower;
   private NetworkTableEntry isHomeIndicator;
+  private NetworkTableEntry override;
 
   private boolean initialHome = false;
   
   public Hood() {
     if (Constants.hoodEnabled) {
       hood = new WPI_TalonSRX(HoodConstants.motorID);
-
-      // increase status reporting periods to reduce CAN bus utilization
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
-        20, Constants.controllerConfigTimeoutMs);
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-        50, Constants.controllerConfigTimeoutMs);      
+      RobotContainer.staggerTalonStatusFrames(hood);
     }
   }
 
@@ -50,7 +48,12 @@ public class Hood extends SubsystemBase {
       hood.configNominalOutputForward(HoodConstants.minForwardPower);
       hood.configNominalOutputReverse(HoodConstants.minReversePower);
       hood.configPeakOutputForward(HoodConstants.maxForwardPower);
-      hood.configPeakOutputReverse(HoodConstants.maxReversePower);       
+      hood.configPeakOutputReverse(HoodConstants.maxReversePower);   
+          
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+        RobotContainer.nextShuffleboardStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);   
   
       setCoastMode();  // Allow manual movement until enabled
 
@@ -86,6 +89,11 @@ public class Hood extends SubsystemBase {
         .withPosition(0,1)   
         .withSize(1,1)
         .getEntry();
+
+        hoodPositionTalon = tab.add("Hood Target", 0)
+        .withPosition(1,0)   
+        .withSize(1,1)
+        .getEntry();
         
         hoodPower = tab.add("Hood Power", 0)
         .withPosition(1,1)
@@ -97,6 +105,12 @@ public class Hood extends SubsystemBase {
         .withPosition(0,0)
         .withSize(1,1)
         .getEntry();
+
+        override = tab.add("Override", false)
+        .withWidget(BuiltInWidgets.kToggleButton)
+        .withPosition(0,6)
+        .withSize(1,1)
+        .getEntry();
       }
     }   
   }
@@ -104,12 +118,12 @@ public class Hood extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.hoodEnabled) {
-
       // SHUFFLEBOARD
       if (Constants.debug) {
-        if (initialHome) {
-          setTargetPosition(hoodPositionTalon.getDouble(0));
+        if (initialHome && override.getBoolean(false)) {
+          setTargetPosition(hoodTarget.getDouble(0));
         }
+        hoodPositionTalon.setDouble(getPosition());
         hoodPower.setDouble(hood.getMotorOutputPercent());
         isHomeIndicator.setBoolean(isAtHome());
       }
