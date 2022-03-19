@@ -39,7 +39,7 @@ public class RobotContainer {
   private static JoystickButton driveBottomLeftButton;
   private static JoystickButton driveTopRightButton;
   private static JoystickButton driveBottomRightButton;
-  private static JoystickButton rotateButtonEleven;
+  private static JoystickButton driveButtonSeven;
   private static JoystickButton rotateTopLeftButton;
   private static JoystickButton rotateBottomLeftButton;
 
@@ -162,7 +162,7 @@ public class RobotContainer {
       driveBottomLeftButton = new JoystickButton(driveStick, 3);
       driveBottomRightButton = new JoystickButton(driveStick, 4);
       driveTopRightButton = new JoystickButton(driveStick, 6);
-      rotateButtonEleven = new JoystickButton(rotateStick, 11);
+      driveButtonSeven = new JoystickButton(driveStick, 7);
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
       driveTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.fieldCentric));
@@ -171,6 +171,7 @@ public class RobotContainer {
       driveTopRightButton.whenPressed(() -> setDriveMode(DriveMode.frontCamCentric));
       rotateTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.killFieldCentric));
       rotateBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.limelightFieldCentric));
+      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
     }
   }
 

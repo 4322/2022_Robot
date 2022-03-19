@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.RobotContainer.DriveMode;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
@@ -101,14 +102,16 @@ public class DriveManual extends CommandBase {
 
       // determine drive mode
       //Kill, Limelight, Polar, Normal
-      if(killDrive) {
+      if (DriveMode.killFieldCentric != null) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           driveunbun.driveAutoRotate(-driveX, driveY, error);
       }
-      else if (limelight.getTargetVisible()){
-        double error = limelight.getHorizontalDegToTarget();
-        driveunbun.driveAutoRotate(-driveX, driveY, error);
+      else if (DriveMode.limelightFieldCentric != null){
+        if (limelight.getTargetVisible()){
+          double error = limelight.getHorizontalDegToTarget();
+          driveunbun.driveAutoRotate(-driveX, driveY, error);
+        }
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
