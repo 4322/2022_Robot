@@ -60,43 +60,65 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateLimelightValues();
-    if (Constants.debug) {
-      distanceToTarget.getDouble(getDistance());
-      targetVisible.setBoolean(getTargetVisible());
+    if (Constants.limelightEnabled) {
+      updateLimelightValues();
+      if (Constants.debug) {
+        distanceToTarget.getDouble(getDistance());
+        targetVisible.setBoolean(getTargetVisible());
+      }
     }
   }
 
   public double getHorizontalDegToTarget()
   {
-    return tx.getDouble(0);
+    if (Constants.limelightEnabled) {
+      return tx.getDouble(0);
+    } else {
+      return 0;
+    }
   }
 
   public double getVerticalDegToTarget()
   {
-    return ty.getDouble(0);
+    if (Constants.limelightEnabled) {
+      return ty.getDouble(0);
+    } else {
+      return 0;
+    }
   }
 
   public double getTargetArea()
   {
-    return ta.getDouble(0);
+    if (Constants.limelightEnabled) {
+      return ta.getDouble(0);
+    } else {
+      return 0;
+    }
   }
 
   public boolean getTargetVisible()
   {
-    return tv.getDouble(0.0) == 1.0;
+    if (Constants.limelightEnabled) {
+      return tv.getDouble(0.0) == 1.0;
+    } else {
+      return false;
+    }
   }
 
   public void setLed(LedMode mode) {
-    ledMode.setNumber(mode.value);
+    if (Constants.limelightEnabled) {
+      ledMode.setNumber(mode.value);
+    }
   }
 
   public void setCamMode(CamMode mode) {
+    if (Constants.limelightEnabled) {
       if (mode == CamMode.VisionProcessor) {
           camMode.setNumber(0);
       } else if (mode == CamMode.DriverCamera) {
           camMode.setNumber(1);
       }
+    }
   }
 
   public enum LedMode {

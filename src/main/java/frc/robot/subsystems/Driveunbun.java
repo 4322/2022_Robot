@@ -160,6 +160,9 @@ public class Driveunbun extends SubsystemBase {
         }   
     }
 
+    public double getAngle(){
+        return gyro.getAngle();
+    }
     @Override
     public void periodic() {
         // acceleration must be calculated once and only once per periodic interval
@@ -288,14 +291,14 @@ public class Driveunbun extends SubsystemBase {
 
     // Uses a PID Controller to rotate the robot to a certain degree
     // Must be periodically updated to work
-    public void driveAutoRotate(double driveX, double driveY, double autoRotateDeg) {
+    public void driveAutoRotate(double driveX, double driveY, double error) {
 
         if (Constants.debug) {
             rotPID.setP(rotkP.getDouble(DriveConstants.autoRotkP));
             rotPID.setD(rotkD.getDouble(DriveConstants.autoRotkD));
         }
 
-        double error = SwerveHelper.boundDegrees(autoRotateDeg - gyro.getAngle());
+        
         double rotPIDSpeed = rotPID.calculate(error, 0);
 
         if (Math.abs(error) <= DriveConstants.autoRotateToleranceDegrees) {

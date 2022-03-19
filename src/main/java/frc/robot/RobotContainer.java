@@ -40,6 +40,7 @@ public class RobotContainer {
   private static JoystickButton driveTopRightButton;
   private static JoystickButton driveBottomRightButton;
   private static JoystickButton rotateButtonEleven;
+  private static JoystickButton rotateButtonFive;
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -52,7 +53,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight();
 
   // Drive Commands
-  private final DriveManual driveManual = new DriveManual(driveunbun);
+  private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
   private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
@@ -141,6 +142,7 @@ public class RobotContainer {
       driveBottomRightButton = new JoystickButton(driveStick, 4);
       driveTopRightButton = new JoystickButton(driveStick, 6);
       rotateButtonEleven = new JoystickButton(rotateStick, 11);
+      rotateButtonFive = new JoystickButton(rotateStick, 5); 
       driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
       driveBottomLeftButton.whenPressed(new SetToRobotCentric(driveunbun, 90));
       driveBottomRightButton.whenPressed(new SetToRobotCentric(driveunbun, -90));
@@ -150,6 +152,7 @@ public class RobotContainer {
       driveBottomRightButton.whenPressed(webcams::setRight);
       driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
       rotateButtonEleven.whenPressed(new ResetFieldCentric(driveunbun));
+      
     }
    }
   

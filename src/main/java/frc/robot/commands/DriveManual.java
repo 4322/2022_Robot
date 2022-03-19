@@ -4,6 +4,8 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -17,11 +19,13 @@ public class DriveManual extends CommandBase {
    */
 
   private final Driveunbun driveunbun;
+  private final Limelight limelight;
 
-  public DriveManual(Driveunbun drivesubsystem) {
+  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem) {
     driveunbun = drivesubsystem;
+    limelight = limelightsubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveunbun);
+    addRequirements(driveunbun, limelight);
   }
 
   // Called when the command is initially scheduled.
@@ -36,7 +40,8 @@ public class DriveManual extends CommandBase {
     double rotate;
 
     if (Constants.joysticksEnabled) {
-
+      //
+      
       // cache hardware status for consistency in logic
       final double driveRawX = driveX = RobotContainer.driveStick.getX();
       final double driveRawY = driveY = RobotContainer.driveStick.getY();
@@ -95,10 +100,21 @@ public class DriveManual extends CommandBase {
       }
 
       // determine drive mode
-      if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
+      //Kill, Limelight, Polar, Normal
+      if(killDrive) {
+          rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
+          driveunbun.driveAutoRotate(-driveX, driveY, error);
+      }
+      else if (limelight.getTargetVisible()){
+        double error = limelight.getHorizontalDegToTarget();
+        driveunbun.driveAutoRotate(-driveX, driveY, error);
+      }
+      else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        driveunbun.driveAutoRotate(-driveX, driveY, rotate);
+        double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
+        driveunbun.driveAutoRotate(-driveX, driveY, error);
       } else {
         // normal drive
         driveunbun.drive(-driveX, driveY, -rotate);
