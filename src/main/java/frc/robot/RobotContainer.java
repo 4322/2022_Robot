@@ -39,7 +39,9 @@ public class RobotContainer {
   private static JoystickButton driveBottomLeftButton;
   private static JoystickButton driveTopRightButton;
   private static JoystickButton driveBottomRightButton;
-  private static JoystickButton rotateButtonEleven;
+  private static JoystickButton driveButtonSeven;
+  private static JoystickButton rotateTopLeftButton;
+  private static JoystickButton rotateBottomLeftButton;
 
   // The robot's subsystems and commands are defined here...
   private final Driveunbun driveunbun = new Driveunbun();
@@ -49,9 +51,10 @@ public class RobotContainer {
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
   private final Webcams webcams = new Webcams();
+  private final Limelight limelight = new Limelight();
 
   // Drive Commands
-  private final DriveManual driveManual = new DriveManual(driveunbun);
+  private final DriveManual driveManual = new DriveManual(driveunbun, limelight, this);
 
   // Shooter Commands
   private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
@@ -74,11 +77,31 @@ public class RobotContainer {
   private final FiringSolution insideTarmac = new FiringSolution(3100, 4000, 84.75); // used to be 3100
   private final FiringSolution outsideTarmac = new FiringSolution(3500, 4000, 120);
 
+  public enum DriveMode {
+    fieldCentric(0),
+    frontCamCentric(1),
+    leftCamCentric(2),
+    rightCamCentric(3),
+    limelightFieldCentric(4),
+    killFieldCentric(5);
+
+    private int value;
+
+    DriveMode(int value) {
+        this.value = value;
+    }
+
+    public int get() {
+        return value;
+    }
+  }
+
+  public DriveMode driveMode = DriveMode.fieldCentric;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // Initialize subsystems after all of them have been constructed because the 
+    // Initialize subsystems that use CAN after all of them have been constructed because the 
     // constructors lower CAN bus utilization to make configuration reliable.
     driveunbun.init();
     shooter.init();
@@ -139,18 +162,42 @@ public class RobotContainer {
       driveBottomLeftButton = new JoystickButton(driveStick, 3);
       driveBottomRightButton = new JoystickButton(driveStick, 4);
       driveTopRightButton = new JoystickButton(driveStick, 6);
-      rotateButtonEleven = new JoystickButton(rotateStick, 11);
-      driveTopLeftButton.whenPressed(new SetToFieldCentric(driveunbun));
-      driveBottomLeftButton.whenPressed(new SetToRobotCentric(driveunbun, 90));
-      driveBottomRightButton.whenPressed(new SetToRobotCentric(driveunbun, -90));
-      driveTopLeftButton.whenPressed(webcams::resetCameras);
-      driveTopRightButton.whenPressed(webcams::resetCameras);
-      driveBottomLeftButton.whenPressed(webcams::setLeft);
-      driveBottomRightButton.whenPressed(webcams::setRight);
-      driveTopRightButton.whenPressed(new SetToRobotCentric(driveunbun));
-      rotateButtonEleven.whenPressed(new ResetFieldCentric(driveunbun));
+      driveButtonSeven = new JoystickButton(driveStick, 7);
+      rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
+      rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
+      driveTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.fieldCentric));
+      driveBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.leftCamCentric));
+      driveBottomRightButton.whenPressed(() -> setDriveMode(DriveMode.rightCamCentric));
+      driveTopRightButton.whenPressed(() -> setDriveMode(DriveMode.frontCamCentric));
+      rotateTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.killFieldCentric));
+      rotateBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.limelightFieldCentric));
+      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
     }
-   }
+  }
+
+  public void setDriveMode(DriveMode mode) {
+    driveMode = mode;
+    switch (mode) {
+      case fieldCentric:
+      case limelightFieldCentric:
+      case killFieldCentric:
+        driveunbun.setToFieldCentric();
+        webcams.resetCameras();
+        break;
+      case leftCamCentric:
+        driveunbun.setToRobotCentric(90);
+        webcams.setLeft();
+        break;
+      case rightCamCentric:
+        driveunbun.setToRobotCentric(-90);
+        webcams.setRight();
+        break;
+      case frontCamCentric:
+        driveunbun.setToRobotCentric(0);
+        webcams.setFront();
+        break;
+    }
+  }
   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -32,6 +32,7 @@ public final class Constants {
     public static final boolean hoodEnabled = true;
     public static final boolean conveyorEnabled = true;
     public static final boolean ballSensorEnabled = true;
+    public static final boolean limelightEnabled = true;
 
     // configuration values common to all motor controllers
     public static final int controllerConfigTimeoutMs = 50;
@@ -163,9 +164,9 @@ public final class Constants {
 
         public static final double kP = .00025;
         public static final double kI = 0.000001;
-        public static final double kD = 0.004;
-        public static final double kIz = 300;
-        public static final double kFF = 0.00015;
+        public static final double kD = 0.008;
+        public static final double kIz = 200;
+        public static final double kFF = 0.00019;
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
@@ -218,7 +219,14 @@ public final class Constants {
     }
 
     public static final class WebCams {
-        public static final int fps = 12;
+        public static final int fps = 10;
         public static final int darkExposure = 5;
+    }
+
+    public static final class LimelightConstants {
+        // All distance values in inches
+        public static final double limelightAngle = 25;
+        public static double targetHeight = 101.625;
+        public static double limelightHeight = 38.5;
     }
 }

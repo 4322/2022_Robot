@@ -3,7 +3,10 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.RobotContainer.DriveMode;
 import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -17,9 +20,14 @@ public class DriveManual extends CommandBase {
    */
 
   private final Driveunbun driveunbun;
+  private final Limelight limelight;
+  private final RobotContainer robotContainer;
 
-  public DriveManual(Driveunbun drivesubsystem) {
+  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem, RobotContainer robotContainer) {
     driveunbun = drivesubsystem;
+    limelight = limelightsubsystem;
+    this.robotContainer = robotContainer;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveunbun);
   }
@@ -36,7 +44,8 @@ public class DriveManual extends CommandBase {
     double rotate;
 
     if (Constants.joysticksEnabled) {
-
+      //
+      
       // cache hardware status for consistency in logic
       final double driveRawX = driveX = RobotContainer.driveStick.getX();
       final double driveRawY = driveY = RobotContainer.driveStick.getY();
@@ -95,10 +104,30 @@ public class DriveManual extends CommandBase {
       }
 
       // determine drive mode
-      if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
+      //Kill, Limelight, Polar, Normal
+      if (robotContainer.driveMode == DriveMode.killFieldCentric) {
+          rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
+          if (Math.abs(error) > 90) {
+            //Drive other way to minimize rotation
+            error = SwerveHelper.boundDegrees(error + 180);
+          }
+          if (driveRawR < DriveConstants.drivePolarDeadband) {
+            driveunbun.stop();
+          } else {
+            driveunbun.driveAutoRotate(-driveX, driveY, error);
+          }
+      }
+      else if ((robotContainer.driveMode == DriveMode.limelightFieldCentric) &&
+                limelight.getTargetVisible()){
+        double error = limelight.getHorizontalDegToTarget();
+        driveunbun.driveAutoRotate(-driveX, driveY, error);
+      }
+      else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        driveunbun.driveAutoRotate(-driveX, driveY, rotate);
+        double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
+        driveunbun.driveAutoRotate(-driveX, driveY, error);
       } else {
         // normal drive
         driveunbun.drive(-driveX, driveY, -rotate);
