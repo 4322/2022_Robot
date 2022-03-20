@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.Drive;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -25,7 +26,8 @@ public class Driveunbun extends SubsystemBase {
 
     private boolean drivingWithSideCams = false;
     private boolean tipDecelerateActive = false;
-    private boolean tipStickActive = false;
+    private boolean tipSmallStickActive = false;
+    private boolean tipBigStickActive = false;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry errorDisplay;
@@ -34,14 +36,13 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry rotkD;
     private NetworkTableEntry roll;
     private NetworkTableEntry pitch;
-    private NetworkTableEntry rfVelocity;
-    private NetworkTableEntry rfAcceleration;
     private NetworkTableEntry botVelocityMag;
     private NetworkTableEntry botAccelerationMag;
     private NetworkTableEntry botVelocityAngle;
     private NetworkTableEntry botAccelerationAngle;
     private NetworkTableEntry tipDecelerationAtiveTab;
-    private NetworkTableEntry tipStickAtiveTab;
+    private NetworkTableEntry tipSmallStickAtiveTab;
+    private NetworkTableEntry tipBigStickAtiveTab;
 
     public Driveunbun() {
         if (Constants.driveEnabled) {
@@ -115,48 +116,43 @@ public class Driveunbun extends SubsystemBase {
                 .withSize(1,1)
                 .getEntry();
 
-                rfVelocity = tab.add("RF Velocity", 0)
+                botVelocityMag = tab.add("Bot Vel Mag", 0)
                 .withPosition(3,0)
                 .withSize(1,1)
                 .getEntry();
 
-                rfAcceleration = tab.add("RF Acceleration", 0)
+                botAccelerationMag = tab.add("Bot Acc Mag", 0)
                 .withPosition(3,1)
                 .withSize(1,1)
                 .getEntry();
 
-                botVelocityMag = tab.add("Bot Vel Mag", 0)
+                botVelocityAngle = tab.add("Bot Vel Angle", 0)
                 .withPosition(4,0)
                 .withSize(1,1)
                 .getEntry();
 
-                botAccelerationMag = tab.add("Bot Acc Mag", 0)
-                .withPosition(4,1)
-                .withSize(1,1)
-                .getEntry();
-
-                botVelocityAngle = tab.add("Bot Vel Angle", 0)
-                .withPosition(5,0)
-                .withSize(1,1)
-                .getEntry();
-
                 botAccelerationAngle = tab.add("Bot Acc Angle", 0)
-                .withPosition(5,1)
+                .withPosition(4,1)
                 .withSize(1,1)
                 .getEntry();        
                 
                 tipDecelerationAtiveTab = tab.add("Tip Deceleration", true)
                 .withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(6, 0)
+                .withPosition(5, 0)
                 .withSize(1, 1)
                 .getEntry();
 
-                tipStickAtiveTab = tab.add("Tip Stick", true)
+                tipSmallStickAtiveTab = tab.add("Tip Small Stick", true)
                 .withWidget(BuiltInWidgets.kBooleanBox)
-                .withPosition(6, 1)
+                .withPosition(5, 1)
                 .withSize(1, 1)
                 .getEntry();
-            }
+
+                tipBigStickAtiveTab = tab.add("Tip Big Stick", true)
+                .withWidget(BuiltInWidgets.kBooleanBox)
+                .withPosition(5, 2)
+                .withSize(1, 1)
+                .getEntry();            }
         }   
     }
 
@@ -171,8 +167,6 @@ public class Driveunbun extends SubsystemBase {
             if (Constants.gyroEnabled) {
                 roll.setDouble(gyro.getRoll());
                 pitch.setDouble(gyro.getPitch());
-                rfVelocity.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getVelocity());
-                rfAcceleration.setDouble(swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getAcceleration());
             }
         }
     }
@@ -250,7 +244,9 @@ public class Driveunbun extends SubsystemBase {
                 tipDecelerateActive = false;
             }
 
-            // don't get stuck in anti-tipping mode if driver is applying partial power
+            // Don't get stuck in anti-tipping mode if driver is applying partial power.
+            // Scale power threshold based on the robot velocity to allow steering
+            // at low power and low velocity.
             double powerOffThreshold = DriveConstants.Tip.lowPowerOff + 
                 (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
                 (velocity - DriveConstants.Tip.lowVelocityFtperSec) /
@@ -261,13 +257,32 @@ public class Driveunbun extends SubsystemBase {
             if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
                     driveXY.magnitude() < powerOffThreshold) {
                 rotate = 0;  // don't tip when about to start declerating
-                tipStickActive = true;
+                tipSmallStickActive = true;
             } else {
-                tipStickActive = false;
+                tipSmallStickActive = false;
             }
+
+            // detect large changes in drive stick that would tip due to excessive wheel rotation
+            double steeringChangeDegrees = Math.abs(SwerveHelper.boundDegrees(
+                velocityXY.degrees() - driveXY.degrees()));
+
+            if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
+                    steeringChangeDegrees > DriveConstants.Tip.highSpeedSteeringChangeMaxDegrees &&
+                    driveXY.magnitude() >= DriveConstants.Tip.highPowerOff) {
+                // kill power until velocity is low enough to allow turning to the new
+                // direction without risking a tipover
+                driveX = 0;
+                driveY = 0;
+                rotate = 0;
+                tipBigStickActive = true;
+            } else {
+                tipBigStickActive = false;
+            }            
+
             if (Constants.debug) {
                 tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
-                tipStickAtiveTab.setBoolean(!tipStickActive);
+                tipSmallStickAtiveTab.setBoolean(!tipSmallStickActive);
+                tipBigStickAtiveTab.setBoolean(!tipBigStickActive);
             }
 
             // ready to drive!
@@ -276,7 +291,7 @@ public class Driveunbun extends SubsystemBase {
                 stop();
             } else {
                 SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
-                if (tipDecelerateActive || tipStickActive) {
+                if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
                     SwerveHelper.noSteering();
                 }
                 for (TalonFXModule module:swerveModules) {
