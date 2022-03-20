@@ -21,12 +21,15 @@ public class DriveManual extends CommandBase {
 
   private final Driveunbun driveunbun;
   private final Limelight limelight;
+  private final RobotContainer robotContainer;
 
-  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem) {
+  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem, RobotContainer robotContainer) {
     driveunbun = drivesubsystem;
     limelight = limelightsubsystem;
+    this.robotContainer = robotContainer;
+
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveunbun, limelight);
+    addRequirements(driveunbun);
   }
 
   // Called when the command is initially scheduled.
@@ -102,12 +105,12 @@ public class DriveManual extends CommandBase {
 
       // determine drive mode
       //Kill, Limelight, Polar, Normal
-      if (DriveMode.killFieldCentric != null) {
+      if (robotContainer.driveMode == DriveMode.killFieldCentric) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           driveunbun.driveAutoRotate(-driveX, driveY, error);
       }
-      else if (DriveMode.limelightFieldCentric != null){
+      else if (robotContainer.driveMode == DriveMode.limelightFieldCentric){
         if (limelight.getTargetVisible()){
           double error = limelight.getHorizontalDegToTarget();
           driveunbun.driveAutoRotate(-driveX, driveY, error);

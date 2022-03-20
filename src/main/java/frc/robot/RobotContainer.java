@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight();
 
   // Drive Commands
-  private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
+  private final DriveManual driveManual = new DriveManual(driveunbun, limelight, this);
 
   // Shooter Commands
   private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
