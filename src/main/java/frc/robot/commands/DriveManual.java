@@ -108,7 +108,17 @@ public class DriveManual extends CommandBase {
       if (robotContainer.driveMode == DriveMode.killFieldCentric) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
-          driveunbun.driveAutoRotate(-driveX, driveY, error);
+          if (Math.abs(error) > 90) {
+            //Drive other way to minimize rotation
+            error = SwerveHelper.boundDegrees(error + 180);
+            driveX *= -1;
+            driveY *= -1;
+          }
+          if (driveRawR < DriveConstants.drivePolarDeadband) {
+            driveunbun.stop();
+          } else {
+            driveunbun.driveAutoRotate(-driveX, driveY, error);
+          }
       }
       else if ((robotContainer.driveMode == DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()){
