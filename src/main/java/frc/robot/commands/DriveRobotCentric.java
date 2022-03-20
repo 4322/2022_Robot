@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -41,6 +42,7 @@ public class DriveRobotCentric extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SwerveHelper.setToBotCentric(offset);
     timer.reset();
     timer.start();
   }
@@ -48,7 +50,6 @@ public class DriveRobotCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveunbun.setToRobotCentric(offset);
     driveunbun.drive(x, y, rotate);
   }
 
@@ -56,7 +57,7 @@ public class DriveRobotCentric extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveunbun.stop();
-    driveunbun.setToFieldCentric();
+    SwerveHelper.setToFieldCentric();
   }
 
   // Returns true when the command should end.

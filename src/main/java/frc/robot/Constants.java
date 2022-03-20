@@ -94,7 +94,7 @@ public final class Constants {
             public static final double velAccDiffMaxDeg = 30;
             public static final double highPowerOff = 0.3;
             public static final double lowPowerOff = 0.15;
-            public static final double highSpeedSteeringChangeMaxDegrees = 35;
+            public static final double highSpeedSteeringChangeMaxDegrees = 20;
         }
 
         public final static class Rotation {
