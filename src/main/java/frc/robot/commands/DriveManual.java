@@ -110,11 +110,10 @@ public class DriveManual extends CommandBase {
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           driveunbun.driveAutoRotate(-driveX, driveY, error);
       }
-      else if (robotContainer.driveMode == DriveMode.limelightFieldCentric){
-        if (limelight.getTargetVisible()){
-          double error = limelight.getHorizontalDegToTarget();
-          driveunbun.driveAutoRotate(-driveX, driveY, error);
-        }
+      else if ((robotContainer.driveMode == DriveMode.limelightFieldCentric) &&
+                limelight.getTargetVisible()){
+        double error = limelight.getHorizontalDegToTarget();
+        driveunbun.driveAutoRotate(-driveX, driveY, error);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
