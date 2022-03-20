@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.Drive;
+import frc.robot.cameras.Webcams;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -23,8 +24,8 @@ public class Driveunbun extends SubsystemBase {
     private AHRS gyro;
 
     private PIDController rotPID;
+    private Webcams webcams;
 
-    private boolean drivingWithSideCams = false;
     private boolean tipDecelerateActive = false;
     private boolean tipSmallStickActive = false;
     private boolean tipBigStickActive = false;
@@ -44,7 +45,8 @@ public class Driveunbun extends SubsystemBase {
     private NetworkTableEntry tipSmallStickAtiveTab;
     private NetworkTableEntry tipBigStickAtiveTab;
 
-    public Driveunbun() {
+    public Driveunbun(Webcams webcams) {
+        this.webcams = webcams;
         if (Constants.driveEnabled) {
             swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = 
                 new TalonFXModule(DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID, 
@@ -68,6 +70,7 @@ public class Driveunbun extends SubsystemBase {
             }
 
             rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
+            SwerveHelper.setReversingToSpeed();
 
             if (Constants.gyroEnabled) {
                 gyro = new AHRS(SPI.Port.kMXP);
@@ -80,8 +83,9 @@ public class Driveunbun extends SubsystemBase {
 
                 resetFieldCentric();
                 SwerveHelper.setGyro(gyro);
+            } else {
+                setDriveMode(DriveMode.frontCamCentric);
             }
-            SwerveHelper.setReversingToSpeed();
 
             if (Constants.debug) {
                 tab = Shuffleboard.getTab("Drivebase");
@@ -152,8 +156,58 @@ public class Driveunbun extends SubsystemBase {
                 .withWidget(BuiltInWidgets.kBooleanBox)
                 .withPosition(5, 2)
                 .withSize(1, 1)
-                .getEntry();            }
+                .getEntry();            
+            }
         }   
+    }
+    
+    public enum DriveMode {
+        fieldCentric(0),
+        frontCamCentric(1),
+        leftCamCentric(2),
+        rightCamCentric(3),
+        limelightFieldCentric(4),
+        killFieldCentric(5);
+    
+        private int value;
+    
+        DriveMode(int value) {
+            this.value = value;
+        }
+    
+        public int get() {
+            return value;
+        }
+      }
+    
+    private DriveMode driveMode;
+
+    public DriveMode getDriveMode() {
+        return driveMode;
+    }
+
+    public void setDriveMode(DriveMode mode) {
+        driveMode = mode;
+        switch (mode) {
+        case fieldCentric:
+        case limelightFieldCentric:
+        case killFieldCentric:
+            SwerveHelper.setToFieldCentric();
+            webcams.resetCameras();
+            break;
+        case leftCamCentric:
+            SwerveHelper.setToBotCentric(90);
+            webcams.setLeft();
+            break;
+        case rightCamCentric:
+            SwerveHelper.setToBotCentric(-90);
+            webcams.setRight();
+            break;
+        case frontCamCentric:
+            SwerveHelper.setToBotCentric(0);
+            webcams.setFront();
+            break;
+        }
     }
 
     public double getAngle(){
@@ -174,31 +228,13 @@ public class Driveunbun extends SubsystemBase {
         }
     }
 
-    // activate field centric driving using the previously set forward orientation
-    public void setToFieldCentric() {
-        if (gyro != null) {
-            SwerveHelper.setToFieldCentric();
-            drivingWithSideCams = false;
-        }
-    }
-
     // make the current robot direction be forward
     public void resetFieldCentric() {
         if (gyro != null) {
             gyro.setAngleAdjustment(0);
-            gyro.setAngleAdjustment(-gyro.getAngle()); 
-            setToFieldCentric(); 
+            gyro.setAngleAdjustment(-gyro.getAngle());
         }
-    }
-
-    public void setToRobotCentric(double offsetDeg) {
-        // positive offset = counter-clockwise
-        if (offsetDeg != 0) {
-            drivingWithSideCams = true;
-        } else {
-            drivingWithSideCams = false;
-        }
-        SwerveHelper.setToBotCentric(offsetDeg);
+        setDriveMode(DriveMode.fieldCentric);
     }
 
     public void drive(double driveX, double driveY, double rotate) {
@@ -266,10 +302,15 @@ public class Driveunbun extends SubsystemBase {
             }
 
             // detect large changes in drive stick that would tip due to excessive wheel rotation
-            double steeringChangeDegrees = Math.abs(SwerveHelper.boundDegrees(
-                velocityXY.degrees() - driveXY.degrees()));
+            double steeringChangeDegrees = driveXY.degrees() - velocityXY.degrees();
+            if (SwerveHelper.isFieldCentric()) {
+                steeringChangeDegrees += SwerveHelper.getGyroYawDeg();
+            }
+            steeringChangeDegrees = Math.abs(SwerveHelper.boundDegrees(steeringChangeDegrees));
 
-            if (velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
+            if (driveMode != DriveMode.rightCamCentric &&
+                driveMode != DriveMode.leftCamCentric &&
+                velocity >= DriveConstants.Tip.lowVelocityFtperSec &&
                     steeringChangeDegrees > DriveConstants.Tip.highSpeedSteeringChangeMaxDegrees &&
                     driveXY.magnitude() >= DriveConstants.Tip.highPowerOff) {
                 // kill power until velocity is low enough to allow turning to the new
@@ -344,7 +385,7 @@ public class Driveunbun extends SubsystemBase {
     }
 
     public boolean getDrivingWithSideCams() {
-        return drivingWithSideCams;
+        return driveMode == DriveMode.leftCamCentric || driveMode == DriveMode.rightCamCentric;
     }
 
     public void setCoastMode() {

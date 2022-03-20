@@ -44,17 +44,17 @@ public class RobotContainer {
   private static JoystickButton rotateBottomLeftButton;
 
   // The robot's subsystems and commands are defined here...
-  private final Driveunbun driveunbun = new Driveunbun();
+  private final Webcams webcams = new Webcams();
+  private final Driveunbun driveunbun = new Driveunbun(webcams);
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
-  private final Webcams webcams = new Webcams();
   private final Limelight limelight = new Limelight();
 
   // Drive Commands
-  private final DriveManual driveManual = new DriveManual(driveunbun, limelight, this);
+  private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
   private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
@@ -76,27 +76,6 @@ public class RobotContainer {
   private final FiringSolution fenderLow = new FiringSolution(1200, 6000, 7.3);
   private final FiringSolution insideTarmac = new FiringSolution(3100, 4000, 84.75); // used to be 3100
   private final FiringSolution outsideTarmac = new FiringSolution(3500, 4000, 120);
-
-  public enum DriveMode {
-    fieldCentric(0),
-    frontCamCentric(1),
-    leftCamCentric(2),
-    rightCamCentric(3),
-    limelightFieldCentric(4),
-    killFieldCentric(5);
-
-    private int value;
-
-    DriveMode(int value) {
-        this.value = value;
-    }
-
-    public int get() {
-        return value;
-    }
-  }
-
-  public DriveMode driveMode = DriveMode.fieldCentric;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -165,37 +144,13 @@ public class RobotContainer {
       driveButtonSeven = new JoystickButton(driveStick, 7);
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
-      driveTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.fieldCentric));
-      driveBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.leftCamCentric));
-      driveBottomRightButton.whenPressed(() -> setDriveMode(DriveMode.rightCamCentric));
-      driveTopRightButton.whenPressed(() -> setDriveMode(DriveMode.frontCamCentric));
-      rotateTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.killFieldCentric));
-      rotateBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.limelightFieldCentric));
+      driveTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric));
+      driveBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.leftCamCentric));
+      driveBottomRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.rightCamCentric));
+      driveTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.frontCamCentric));
+      rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
+      rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
-    }
-  }
-
-  public void setDriveMode(DriveMode mode) {
-    driveMode = mode;
-    switch (mode) {
-      case fieldCentric:
-      case limelightFieldCentric:
-      case killFieldCentric:
-        driveunbun.setToFieldCentric();
-        webcams.resetCameras();
-        break;
-      case leftCamCentric:
-        driveunbun.setToRobotCentric(90);
-        webcams.setLeft();
-        break;
-      case rightCamCentric:
-        driveunbun.setToRobotCentric(-90);
-        webcams.setRight();
-        break;
-      case frontCamCentric:
-        driveunbun.setToRobotCentric(0);
-        webcams.setFront();
-        break;
     }
   }
   

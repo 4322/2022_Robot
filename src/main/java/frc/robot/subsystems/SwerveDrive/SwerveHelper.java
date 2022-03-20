@@ -34,10 +34,10 @@ public class SwerveHelper {
 
 	protected static AHRS m_gyro = null;
 
-	public static boolean fieldCentric = true;
-	public static double robotCentricOffsetRadians = 0;
+	private static boolean fieldCentric = true;
+	private static double robotCentricOffsetRadians = 0;
 
-	public static boolean useAngleToReverse = true;
+	private static boolean useAngleToReverse = true;
 	
 	public static double getSpeed(WheelPosition position) {
 		return wheelSpeed[position.wheelNumber];
@@ -51,13 +51,15 @@ public class SwerveHelper {
 		return wheelAngleChange[position.wheelNumber];
 	}	
 
+	public static boolean isFieldCentric() {
+		return fieldCentric;
+	}
+
 	public static void calculate(double strafe, double forward, double rotate, double[] currentAngle){
-
-		if (fieldCentric && getGyro() != null && getGyro().isConnected() && !getGyro().isCalibrating()) {
-			double gyroAngle =Math.toRadians(getGyro().getAngle());
-
-			double temp = forward * Math.cos(gyroAngle) + strafe*Math.sin(gyroAngle);
-			strafe = -forward*Math.sin(gyroAngle) + strafe*Math.cos(gyroAngle);
+		if (fieldCentric) {
+			double gyroYawRad = Math.toRadians(getGyroYawDeg());
+			double temp = forward * Math.cos(gyroYawRad) + strafe * Math.sin(gyroYawRad);
+			strafe = -forward * Math.sin(gyroYawRad) + strafe * Math.cos(gyroYawRad);
 			forward = temp;
 		} else if (robotCentricOffsetRadians != 0) {
 			double temp = forward * Math.cos(robotCentricOffsetRadians) + strafe*Math.sin(robotCentricOffsetRadians);
@@ -172,8 +174,13 @@ public class SwerveHelper {
 		fieldCentric = true;
 	}
 
-	public static AHRS getGyro(){
-		return m_gyro;
+	public static double getGyroYawDeg(){
+		if (m_gyro != null && m_gyro.isConnected() && !m_gyro.isCalibrating()) {
+			return m_gyro.getAngle();
+		}
+		else {
+			return 0;
+		}
 	}
 
 	// convert angle to range of +/- 180 degrees
