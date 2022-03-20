@@ -53,7 +53,7 @@ public class Limelight extends SubsystemBase {
         .getEntry();
 
         targetVisible = tab.add("Target Visible", false)
-        .withPosition(1,0)
+        .withPosition(0,0)
         .withSize(1,1)
         .getEntry();
       }
