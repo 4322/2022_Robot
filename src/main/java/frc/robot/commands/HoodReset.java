@@ -13,10 +13,13 @@ public class HoodReset extends CommandBase {
    */
 
   private Hood hood;
-  private Timer timer = new Timer();
+  private Timer overrideTimer = new Timer();
+  private Timer currentPosTimer = new Timer();
+
   private enum resetStates {
     firstDown,
     goingUp,
+    settingTarget,
     secondDown,
     secondAtHome
   }
@@ -33,8 +36,9 @@ public class HoodReset extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
+    overrideTimer.reset();
+    overrideTimer.start();
+    currentPosTimer.reset();
     hood.clearInitialHome();
     hood.moveHome();
   }
@@ -42,26 +46,18 @@ public class HoodReset extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (!firstReset && !hood.isAtHome()) {
-    //   hood.setHoodPower(HoodConstants.homingPower);
-    // } else if (!firstReset && hood.isAtHome()) {
-    //   firstReset = true;
-    //   hood.setCurrentPosition(0);
-    // } else if (!secondResetStarted && hood.isAtHome() && !targetSet) {
-    //   hood.setTargetPosition(1000, true);
-    //   targetSet = true;
-    // } else if (!secondResetStarted && hood.isAtTarget() && targetSet) {
-    //   hood.setHoodPower(HoodConstants.secondHomingPower);
-    //   secondResetStarted = true;
-    // } else if (secondResetStarted && hood.isAtHome()) {
-    //   secondReset = true;
-    // }
-
     switch(currentState) {
       case firstDown:
         if (hood.isAtHome()) {
           hood.setCurrentPosition(0);
-          hood.setTargetPosition(5000, true);  // override lack of initial home
+          currentPosTimer.start();
+          currentState = resetStates.settingTarget;
+        }
+        break;
+      case settingTarget:
+        if (currentPosTimer.hasElapsed(0.025)) {
+          hood.setTargetPosition(1000, true);
+          currentPosTimer.stop();
           currentState = resetStates.goingUp;
         }
         break;
@@ -95,7 +91,7 @@ public class HoodReset extends CommandBase {
       hood.setInitiallyHomed();
       return true;
     }
-    else if (timer.hasElapsed(Constants.HoodConstants.homingTimeout)) {
+    else if (overrideTimer.hasElapsed(Constants.HoodConstants.homingTimeout)) {
       hood.stop();
       return true;
     }
