@@ -65,7 +65,7 @@ public class Limelight extends SubsystemBase {
     if (Constants.limelightEnabled) {
       updateLimelightValues();
       if (Constants.debug) {
-        distanceToTarget.getDouble(getDistance());
+        distanceToTarget.setDouble(getDistance());
         targetVisible.setBoolean(getTargetVisible());
       }
     }
