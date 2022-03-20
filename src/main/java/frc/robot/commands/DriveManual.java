@@ -111,8 +111,6 @@ public class DriveManual extends CommandBase {
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation
             error = SwerveHelper.boundDegrees(error + 180);
-            driveX *= -1;
-            driveY *= -1;
           }
           if (driveRawR < DriveConstants.drivePolarDeadband) {
             driveunbun.stop();
