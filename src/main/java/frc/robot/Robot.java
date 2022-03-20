@@ -50,7 +50,8 @@ public class Robot extends TimedRobot {
 
     subsystemEnabled("Joysticks", 0, 1, Constants.joysticksEnabled);
     subsystemEnabled("Gyro", 1, 1, Constants.gyroEnabled);
-    subsystemEnabled("Ball Sensor", 2, 1, Constants.ballSensorEnabled);
+    subsystemEnabled("Limelight", 2, 1, Constants.limelightEnabled);
+    subsystemEnabled("Ball Sensor", 3, 1, Constants.ballSensorEnabled);
 
     m_robotContainer = new RobotContainer();
   }
