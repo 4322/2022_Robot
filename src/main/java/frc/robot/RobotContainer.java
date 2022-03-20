@@ -179,6 +179,8 @@ public class RobotContainer {
     driveMode = mode;
     switch (mode) {
       case fieldCentric:
+      case limelightFieldCentric:
+      case killFieldCentric:
         driveunbun.setToFieldCentric();
         webcams.resetCameras();
         break;
@@ -193,14 +195,6 @@ public class RobotContainer {
       case frontCamCentric:
         driveunbun.setToRobotCentric(0);
         webcams.setFront();
-        break;
-      case limelightFieldCentric:
-        driveunbun.setToFieldCentric();
-        webcams.resetCameras();
-        break;
-      case killFieldCentric:
-        driveunbun.setToFieldCentric();
-        webcams.resetCameras();
         break;
     }
   }
