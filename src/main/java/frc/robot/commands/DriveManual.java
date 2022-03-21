@@ -6,6 +6,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer.DriveMode;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Limelight.LedMode;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -106,6 +107,7 @@ public class DriveManual extends CommandBase {
       // determine drive mode
       //Kill, Limelight, Polar, Normal
       if (robotContainer.driveMode == DriveMode.killFieldCentric) {
+          limelight.setLed(LedMode.Off);
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           if (Math.abs(error) > 90) {
@@ -120,16 +122,19 @@ public class DriveManual extends CommandBase {
       }
       else if ((robotContainer.driveMode == DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()){
+        limelight.setLed(LedMode.On);
         double error = limelight.getHorizontalDegToTarget();
         driveunbun.driveAutoRotate(-driveX, driveY, error);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
+        limelight.setLed(LedMode.Off);
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
         double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
         driveunbun.driveAutoRotate(-driveX, driveY, error);
       } else {
         // normal drive
+        limelight.setLed(LedMode.Off);
         driveunbun.drive(-driveX, driveY, -rotate);
       }
     }
