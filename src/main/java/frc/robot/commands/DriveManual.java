@@ -92,7 +92,7 @@ public class DriveManual extends CommandBase {
       rotate = rotate * rotate * rotate;  // increase sensitivity
 
       // move slowly in side cam driving mode for percise cargo alignment
-      if (driveunbun.getDrivingWithSideCams()) {
+      if (driveunbun.isDrivingWithSideCams()) {
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
         rotate *= DriveConstants.sideCamRotationScaleFactor;

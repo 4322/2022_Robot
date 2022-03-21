@@ -87,14 +87,15 @@ public final class Constants {
 
         // thresholds at which to engage anti-tipping logic
         public final static class Tip {
-            public static final double highVelocityFtperSec = 6.0; 
-            public static final double lowVelocityFtperSec = 3.0; 
+            public static final double highVelocityFtPerSec = 6.0; 
+            public static final double lowVelocityFtPerSec = 3.0; 
             public static final double highAccFtPerSec2 = 8.0;
             public static final double lowAccFtPerSec2 = 4.0;
             public static final double velAccDiffMaxDeg = 30;
             public static final double highPowerOff = 0.3;
             public static final double lowPowerOff = 0.15;
             public static final double highSpeedSteeringChangeMaxDegrees = 20;
+            public static final double velocityHistorySeconds = 0.1;
         }
 
         public final static class Rotation {
