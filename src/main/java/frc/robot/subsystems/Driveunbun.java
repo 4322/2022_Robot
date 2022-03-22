@@ -35,6 +35,7 @@ public class Driveunbun extends SubsystemBase {
   private boolean tipSmallStickActive = false;
   private boolean tipBigStickActive = false;
   private Timer runTime = new Timer();
+  private boolean ledsOff = false;
 
   private ArrayList<SnapshotVectorXY> velocityHistory = new ArrayList<SnapshotVectorXY>();
 
@@ -240,6 +241,13 @@ public class Driveunbun extends SubsystemBase {
     // acceleration must be calculated once and only once per periodic interval
     for (TalonFXModule module : swerveModules) {
       module.snapshotAcceleration();
+    }
+
+    // turn off limelight LEDs following power-up because the limelight takes longer
+    // to boot than the roboRio
+    if (!ledsOff && runTime.hasElapsed(30)) {
+      setDriveMode(driveMode);
+      ledsOff = true;
     }
 
     if (Constants.debug) { // don't combine if statements to avoid dead code warning
