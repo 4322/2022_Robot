@@ -49,6 +49,12 @@ public class Webcams {
         frontCamera.setExposureManual(Constants.WebCams.darkExposure);
     }
 
+    public void setLeftAndRight() {
+        rightCamera.setExposureAuto();
+        leftCamera.setExposureAuto();
+        frontCamera.setExposureManual(Constants.WebCams.darkExposure);
+    }
+
     public void resetCameras() {
         rightCamera.setExposureAuto();
         leftCamera.setExposureAuto();

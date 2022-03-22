@@ -101,9 +101,13 @@ public class DriveManual extends CommandBase {
       }
 
       // determine drive mode
-      //Kill, Limelight, Polar, Normal
-      if (driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) {
+      // Kill, Limelight, Polar, Normal
+      if ((driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) ||
+          (driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric)) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          if (driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric) {
+            rotate += 90;
+          }
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation

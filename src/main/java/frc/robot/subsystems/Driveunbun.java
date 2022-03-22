@@ -175,7 +175,8 @@ public class Driveunbun extends SubsystemBase {
     leftCamCentric(2),
     rightCamCentric(3),
     limelightFieldCentric(4),
-    killFieldCentric(5);
+    killFieldCentric(5),
+    sideKillFieldCentric(6);
 
     private int value;
 
@@ -215,6 +216,10 @@ public class Driveunbun extends SubsystemBase {
         SwerveHelper.setToBotCentric(0);
         webcams.setFront();
         break;
+      case sideKillFieldCentric:
+      SwerveHelper.setToFieldCentric();
+      webcams.setLeftAndRight();
+      break;
     }
   }
 
