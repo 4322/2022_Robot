@@ -41,6 +41,7 @@ public class RobotContainer {
   private static JoystickButton driveBottomRightButton;
   private static JoystickButton driveButtonSeven;
   private static JoystickButton rotateTopLeftButton;
+  private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
 
   // The robot's subsystems and commands are defined here...
@@ -143,12 +144,14 @@ public class RobotContainer {
       driveTopRightButton = new JoystickButton(driveStick, 6);
       driveButtonSeven = new JoystickButton(driveStick, 7);
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
+      rotateTopRightButton = new JoystickButton(rotateStick, 6); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
       driveTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric));
       driveBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.leftCamCentric));
       driveBottomRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.rightCamCentric));
       driveTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.frontCamCentric));
       rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
+      rotateTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.sideKillFieldCentric));
       rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
     }
