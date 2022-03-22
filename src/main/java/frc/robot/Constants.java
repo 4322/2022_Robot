@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
+import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 /**
@@ -44,6 +47,11 @@ public final class Constants {
     public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period
     // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
+
+    public static ArrayList<FiringSolution> firingSolutions;
+    static {
+        // add new firing solutions here
+    }
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
