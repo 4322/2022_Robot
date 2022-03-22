@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
+import frc.robot.subsystems.Limelight.LedMode;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -28,6 +29,7 @@ public class Driveunbun extends SubsystemBase {
 
   private PIDController rotPID;
   private Webcams webcams;
+  private Limelight limelight;
 
   private boolean tipDecelerateActive = false;
   private boolean tipSmallStickActive = false;
@@ -51,8 +53,9 @@ public class Driveunbun extends SubsystemBase {
   private NetworkTableEntry tipSmallStickAtiveTab;
   private NetworkTableEntry tipBigStickAtiveTab;
 
-  public Driveunbun(Webcams webcams) {
+  public Driveunbun(Webcams webcams, Limelight limelight) {
     this.webcams = webcams;
+    this.limelight = limelight;
     runTime.start();
 
     if (Constants.driveEnabled) {
@@ -220,6 +223,11 @@ public class Driveunbun extends SubsystemBase {
       SwerveHelper.setToFieldCentric();
       webcams.setLeftAndRight();
       break;
+    }
+    if (mode == DriveMode.limelightFieldCentric) {
+      limelight.setLed(LedMode.On);
+    } else {
+      limelight.setLed(LedMode.Off);
     }
   }
 
