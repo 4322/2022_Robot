@@ -53,6 +53,8 @@ public class Driveunbun extends SubsystemBase {
   private NetworkTableEntry tipDecelerationAtiveTab;
   private NetworkTableEntry tipSmallStickAtiveTab;
   private NetworkTableEntry tipBigStickAtiveTab;
+  private NetworkTableEntry driveXTab;
+  private NetworkTableEntry driveYTab;
 
   public Driveunbun(Webcams webcams, Limelight limelight) {
     this.webcams = webcams;
@@ -169,6 +171,16 @@ public class Driveunbun extends SubsystemBase {
             .withPosition(5, 2)
             .withSize(1, 1)
             .getEntry();
+
+        driveXTab = tab.add("Drive X", 0)
+        .withPosition(0, 2)
+        .withSize(1, 1)
+        .getEntry();
+
+        driveYTab = tab.add("Drive Y", 0)
+        .withPosition(1, 2)
+        .withSize(1, 1)
+        .getEntry();
       }
     }
   }
@@ -300,6 +312,8 @@ public class Driveunbun extends SubsystemBase {
         botAccelerationMag.setDouble(acceleration);
         botVelocityAngle.setDouble(90 - velocityXY.degrees());
         botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
+        driveXTab.setDouble(driveX);
+        driveYTab.setDouble(driveY);
       }
 
       // anti-tipping logic

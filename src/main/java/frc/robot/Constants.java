@@ -100,8 +100,8 @@ public final class Constants {
             public static final double highAccFtPerSec2 = 8.0;
             public static final double lowAccFtPerSec2 = 4.0;
             public static final double velAccDiffMaxDeg = 30;
-            public static final double highPowerOff = 0.3;
-            public static final double lowPowerOff = 0.15;
+            public static final double highPowerOff = 0.4;
+            public static final double lowPowerOff = 0.19;
             public static final double highSpeedSteeringChangeMaxDegrees = 20;
             public static final double velocityHistorySeconds = 0.1;
         }
