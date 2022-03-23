@@ -56,7 +56,7 @@ public class RobotContainer {
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
-  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
+  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(kicker, shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -66,15 +66,15 @@ public class RobotContainer {
   private final HoodReset hoodReset = new HoodReset(hood);
 
   // Kicker Commands
-  private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
+  private final ConveyorEnable kickerEnable = new ConveyorEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
-  private final FiringSolution fenderHigh = new FiringSolution(3000, 1800, 7.3);
-  private final FiringSolution fenderLow = new FiringSolution(1200, 6000, 7.3);
-  private final FiringSolution insideTarmac = new FiringSolution(3100, 4000, 84.75); // used to be 3100
-  private final FiringSolution outsideTarmac = new FiringSolution(3500, 4000, 120);
+  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 7.3);
+  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 7.3);
+  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 4000, 84.75);
+  private final FiringSolution outsideTarmac = new FiringSolution(2200, 3500, 4000, 120);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -120,10 +120,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, outsideTarmac));
-    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, insideTarmac));
-    coPilot.a.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
+    coPilot.x.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderHigh));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, outsideTarmac));
+    coPilot.b.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac));
+    coPilot.a.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderLow));
+
+    coPilot.dPad.up.whenPressed(new CalcSpeedAndAngle(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -163,11 +165,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetSpeedAndAngle(shooter, hood, insideTarmac),
+      new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac),
       new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),
-      new StopSpeedAndAngle(shooter, hood),
+      new StopSpeedAndAngle(kicker, shooter, hood),
       new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
     );
   }
