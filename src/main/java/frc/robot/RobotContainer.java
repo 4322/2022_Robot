@@ -72,10 +72,10 @@ public class RobotContainer {
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
-  private final FiringSolution fenderHigh = new FiringSolution(1500, 3000, 1800, 7.3);
-  private final FiringSolution fenderLow = new FiringSolution(600, 1200, 6000, 7.3);
-  private final FiringSolution insideTarmac = new FiringSolution(1550, 3100, 4000, 84.75);
-  private final FiringSolution outsideTarmac = new FiringSolution(1750, 3500, 4000, 120);
+  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 7.3);
+  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 7.3);
+  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 4000, 84.75);
+  private final FiringSolution outsideTarmac = new FiringSolution(2200, 3500, 4000, 120);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
