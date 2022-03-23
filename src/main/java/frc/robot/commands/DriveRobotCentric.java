@@ -42,7 +42,7 @@ public class DriveRobotCentric extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    previousDriveMode = driveunbun.getDriveMode();
+    previousDriveMode = Driveunbun.getDriveMode();
     driveunbun.setDriveMode(driveMode);
     timer.reset();
     timer.start();

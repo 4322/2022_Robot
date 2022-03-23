@@ -193,9 +193,9 @@ public class Driveunbun extends SubsystemBase {
     }
   }
 
-  private DriveMode driveMode;
+  private static DriveMode driveMode;
 
-  public DriveMode getDriveMode() {
+  public static DriveMode getDriveMode() {
     return driveMode;
   }
 

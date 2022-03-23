@@ -36,7 +36,7 @@ public class DrivePolar extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    previousDriveMode = driveunbun.getDriveMode();
+    previousDriveMode = Driveunbun.getDriveMode();
     driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric);
     timer.reset();
     timer.start();

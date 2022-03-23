@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.subsystems.Driveunbun.DriveMode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.NetworkTable;
@@ -36,14 +37,6 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     if (Constants.limelightEnabled) {
       table = NetworkTableInstance.getDefault().getTable("limelight");
-      tx = table.getEntry("tx");
-      ty = table.getEntry("ty");
-      ta = table.getEntry("ta");
-      tv = table.getEntry("tv");
-      ledMode = table.getEntry("ledMode");
-      camMode = table.getEntry("camMode");
-      pipeline = table.getEntry("pipeline");
-
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Limelight");
 
@@ -57,16 +50,24 @@ public class Limelight extends SubsystemBase {
         .withSize(1,1)
         .getEntry();
       }
+      tx = table.getEntry("tx");
+      ty = table.getEntry("ty");
+      ta = table.getEntry("ta");
+      tv = table.getEntry("tv");
+      ledMode = table.getEntry("ledMode");
+      camMode = table.getEntry("camMode");
+      pipeline = table.getEntry("pipeline");
     }
   }
 
   @Override
   public void periodic() {
     if (Constants.limelightEnabled) {
-      updateLimelightValues();
-      if (Constants.debug) {
-        distanceToTarget.setDouble(getDistance());
-        targetVisible.setBoolean(getTargetVisible());
+      if (Driveunbun.getDriveMode() == DriveMode.limelightFieldCentric) {
+        if (Constants.debug) {
+          distanceToTarget.setDouble(getDistance());
+          targetVisible.setBoolean(getTargetVisible());
+        }
       }
     }
   }
@@ -156,15 +157,5 @@ public class Limelight extends SubsystemBase {
     }
 
     return distance;
-  }
-
-  public void updateLimelightValues() {
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
-    ta = table.getEntry("ta");
-    tv = table.getEntry("tv");
-    ledMode = table.getEntry("ledMode");
-    camMode = table.getEntry("camMode");
-    pipeline = table.getEntry("pipeline");
   }
 }
