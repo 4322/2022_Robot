@@ -269,6 +269,7 @@ public class Driveunbun extends SubsystemBase {
 
   public void drive(double driveX, double driveY, double rotate) {
     if (Constants.driveEnabled) {
+      double clock = runTime.get();  // cache value to reduce CPU usage
       double[] currentAngle = new double[4];
       for (int i = 0; i < swerveModules.length; i++) {
         currentAngle[i] = swerveModules[i].getInternalRotationDegrees();
@@ -291,8 +292,8 @@ public class Driveunbun extends SubsystemBase {
       double velocity = velocityXY.magnitude() / 4;
       double acceleration = accelerationXY.magnitude() / 4;
       velocityHistory.removeIf(n -> 
-        (n.getTime() < runTime.get() - DriveConstants.Tip.velocityHistorySeconds));
-      velocityHistory.add(new SnapshotVectorXY(velocityXY, runTime.get()));
+        (n.getTime() < clock - DriveConstants.Tip.velocityHistorySeconds));
+      velocityHistory.add(new SnapshotVectorXY(velocityXY, clock));
 
       if (Constants.debug) {
         botVelocityMag.setDouble(velocity);
