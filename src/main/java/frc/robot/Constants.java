@@ -183,9 +183,16 @@ public final class Constants {
     }
 
     public static final class KickerConstants {
-        public static double kickerPower = 0.5;
         public static final int kickerID = 16;
-        public static double rampRate = 0.2;
+        public static final double kP = .00025;
+        public static final double kI = 0.000001;
+        public static final double kD = 0.008;
+        public static final double kIz = 200;
+        public static final double kFF = 0.00019;
+        public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
+        public static final double kMaxRange = 1.0;
+        public static final double minVelError = 35; // allowable error to shoot (in rpm)
+        public static final double rampRate = 0.4;  // seconds to go from stopped to full power
     }
     
     public static final class HoodConstants {
@@ -201,7 +208,7 @@ public final class Constants {
         public static final double minForwardPower = 0.1;
         public static final double minReversePower = -0.1;
         public static final double homingPower = -0.3;
-        public static double secondHomingPower = -0.2;
+        public static final double secondHomingPower = -0.2;
 
         public static final int kPIDLoopIdx = 0;
         public static final int kTimeoutMs = 30;
@@ -220,10 +227,10 @@ public final class Constants {
     }
 
     public static final class ConveyorConstants {
-        public static int motorID = 19;
-        public static double minBallDistIn = 2;
-        public static double conveyorPower = 0.5;
-        public static int ballSensorPort = 0; // DIO port for ball sensor
+        public static final int motorID = 19;
+        public static final double minBallDistIn = 2;
+        public static final double conveyorPower = 0.5;
+        public static final int ballSensorPort = 0; // DIO port for ball sensor
     }
 
     public static final class WebCams {
@@ -234,7 +241,7 @@ public final class Constants {
     public static final class LimelightConstants {
         // All distance values in inches
         public static final double limelightAngle = 36.8;
-        public static double targetHeight = 103;
-        public static double limelightHeight = 38;
+        public static final double targetHeight = 103;
+        public static final double limelightHeight = 38;
     }
 }

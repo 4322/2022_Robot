@@ -17,14 +17,13 @@ public class KickerAutoStart extends CommandBase {
     kicker = kickerSubsystem;
     conveyor = conveyorSubsystem;
     shooter = shooterSubsystem;
-    addRequirements(kicker, conveyor);
+    addRequirements(conveyor);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void execute() {
-    if (shooter.isAbleToEject()) {
-      kicker.intake();
+    if (shooter.isAbleToEject() && kicker.isAbleToEject()) {
       conveyor.enableConveyor();
       finished = true;
     }

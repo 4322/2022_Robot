@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
 public class SetSpeedAndAngle extends CommandBase {
@@ -19,21 +20,25 @@ public class SetSpeedAndAngle extends CommandBase {
 
   private Shooter shooter;
   private Hood hood;
+  private Kicker kicker;
   private FiringSolution firingSolution;
 
 
-  public SetSpeedAndAngle(Shooter shooterSubsystem, Hood hoodSubsystem, FiringSolution m_firingSolution) {
+  public SetSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, 
+                          FiringSolution m_firingSolution) {
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
+    kicker = kickerSubsystem;
     firingSolution = m_firingSolution;
-    addRequirements(shooter, hood);
+    addRequirements(kicker, shooter, hood);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setSpeed(firingSolution.getflywheelSpeed());
-    hood.setTargetPosition(firingSolution.gethoodPosition());
+    kicker.setSpeed(firingSolution.getKickerSpeed());
+    shooter.setSpeed(firingSolution.getFlywheelSpeed());
+    hood.setTargetPosition(firingSolution.getHoodPosition());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,6 +56,6 @@ public class SetSpeedAndAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (shooter.isAbleToEject() && hood.isAtTarget());
+    return (shooter.isAbleToEject() && kicker.isAbleToEject() && hood.isAtTarget());
   }
 }

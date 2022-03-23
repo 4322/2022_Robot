@@ -54,13 +54,14 @@ public class FiringSolutionManager {
             return solutions.get(0);
         }
         else {
-            double d = (currentDistance - solutions.get(lower).getDistance()) / (solutions.get(upper).getDistance() - solutions.get(lower).getDistance());
+            double d = (currentDistance - solutions.get(lower).getDistance()) / 
+              (solutions.get(upper).getDistance() - solutions.get(lower).getDistance());
             return new FiringSolution(
-                (solutions.get(upper).gethoodPosition() * d + solutions.get(lower).gethoodPosition() * (1 - d)),
-                (solutions.get(upper).getflywheelSpeed() * d + solutions.get(lower).getflywheelSpeed() * (1 - d)) // new firing solution w/o distance
+              solutions.get(upper).getKickerSpeed() * d + solutions.get(lower).getKickerSpeed() * (1 - d),
+              solutions.get(upper).getFlywheelSpeed() * d + solutions.get(lower).getFlywheelSpeed() * (1 - d),
+              solutions.get(upper).getHoodPosition() * d + solutions.get(lower).getHoodPosition() * (1 - d)
             );
         }
-
     }
 
     public static FiringSolutionManager getSingleton() {

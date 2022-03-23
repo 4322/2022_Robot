@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 
@@ -19,25 +20,28 @@ public class CalcSpeedAndAngle extends CommandBase {
    * Creates a new Enable_Shooter_Power.
    */
 
+  private Kicker kicker;
   private Shooter shooter;
   private Hood hood;
   private Limelight lim;
   private FiringSolutionManager manager;
 
 
-  public CalcSpeedAndAngle(Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
+  public CalcSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
+    kicker = kickerSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     lim = limelight;
-    addRequirements(shooter, hood);
+    addRequirements(kicker, shooter, hood);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
-    shooter.setSpeed(firingSolution.getflywheelSpeed());
-    hood.setTargetPosition(firingSolution.gethoodPosition());
+    kicker.setSpeed(firingSolution.getKickerSpeed());
+    shooter.setSpeed(firingSolution.getFlywheelSpeed());
+    hood.setTargetPosition(firingSolution.getHoodPosition());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

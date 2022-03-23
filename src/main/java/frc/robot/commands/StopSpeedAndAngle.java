@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
 public class StopSpeedAndAngle extends InstantCommand {
@@ -18,17 +19,20 @@ public class StopSpeedAndAngle extends InstantCommand {
 
    private Shooter shooter;
    private Hood hood;
+   private Kicker kicker;
 
-  public StopSpeedAndAngle(Shooter shooterSubsystem, Hood hoodSubsystem) {
+  public StopSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
-    addRequirements(shooter);
+    kicker = kickerSubsystem;
+    addRequirements(shooter, kicker, hood);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    kicker.stop();
     shooter.stop();
     hood.stop();
   }
