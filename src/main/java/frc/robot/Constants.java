@@ -239,7 +239,8 @@ public final class Constants {
 
     public static final class WebCams {
         public static final int fps = 10;
-        public static final int darkExposure = 5;
+        public static final int sideDarkExposure = 5;
+        public static final int frontDarkExposure = 255;  // can't make front cam dark, so go white
     }
 
     public static final class LimelightConstants {
