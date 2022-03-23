@@ -233,8 +233,8 @@ public final class Constants {
 
     public static final class LimelightConstants {
         // All distance values in inches
-        public static final double limelightAngle = 25;
-        public static double targetHeight = 101.625;
-        public static double limelightHeight = 38.5;
+        public static final double limelightAngle = 36.8;
+        public static double targetHeight = 103;
+        public static double limelightHeight = 38;
     }
 }

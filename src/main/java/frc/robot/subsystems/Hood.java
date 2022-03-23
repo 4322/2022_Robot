@@ -90,7 +90,7 @@ public class Hood extends SubsystemBase {
         .withSize(1,1)
         .getEntry();
 
-        hoodPositionTalon = tab.add("Hood Target", 0)
+        hoodTarget = tab.add("Hood Target", 0)
         .withPosition(1,0)   
         .withSize(1,1)
         .getEntry();
@@ -108,7 +108,7 @@ public class Hood extends SubsystemBase {
 
         override = tab.add("Override", false)
         .withWidget(BuiltInWidgets.kToggleButton)
-        .withPosition(0,6)
+        .withPosition(0,2)
         .withSize(1,1)
         .getEntry();
       }

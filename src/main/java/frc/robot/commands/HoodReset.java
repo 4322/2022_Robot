@@ -38,7 +38,6 @@ public class HoodReset extends CommandBase {
   public void initialize() {
     overrideTimer.reset();
     overrideTimer.start();
-    currentPosTimer.reset();
     hood.clearInitialHome();
     hood.moveHome();
   }
