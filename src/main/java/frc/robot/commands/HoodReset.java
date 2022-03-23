@@ -50,6 +50,7 @@ public class HoodReset extends CommandBase {
       case firstDown:
         if (hood.isAtHome()) {
           hood.setCurrentPosition(0);
+          currentPosTimer.reset();  // clear accumulated time from prior hood reset
           currentPosTimer.start();
           currentState = resetStates.settingTarget;
         }
@@ -57,7 +58,6 @@ public class HoodReset extends CommandBase {
       case settingTarget:
         if (currentPosTimer.hasElapsed(0.025)) {
           hood.setTargetPosition(1000, true);
-          currentPosTimer.stop();
           currentState = resetStates.goingUp;
         }
         break;
