@@ -114,7 +114,7 @@ public final class Constants {
             public static final double maxPower = 0.3;  // reduce gear wear and overshoot
             public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
-            public static final double configVoltageCompSaturation = 12;
+            public static final double configVoltageCompSaturation = 11.5;
             public static final boolean enableVoltageCompensation = true;
 
             public static final boolean statorEnabled = true;
@@ -143,7 +143,7 @@ public final class Constants {
         public static final class Drive {
             public static final double configOpenLoopRamp = 0.08;
 
-            public static final double configVoltageCompSaturation = 12;
+            public static final double voltageCompSaturation = 11.5;
             public static final boolean enableVoltageCompensation = true;
 
             public static final double brakeModeDeadband = 0.01;
@@ -169,6 +169,7 @@ public final class Constants {
 
         public static final int flywheelLeftID = 14;
         public static final int flywheelRightID = 15;
+        public static final double voltageCompSaturation = 11.0;
 
         public static final double kP = .00025;
         public static final double kI = 0.000001;
@@ -184,6 +185,8 @@ public final class Constants {
 
     public static final class KickerConstants {
         public static final int kickerID = 16;
+        public static final double voltageCompSaturation = 11.0;
+        
         public static final double kP = .00025;
         public static final double kI = 0.000001;
         public static final double kD = 0.008;

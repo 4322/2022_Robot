@@ -59,7 +59,7 @@ public class TalonFXModule extends ControlModule {
         talon.setInverted(isRightSide);
         talon.setSensorPhase(false);
 		
-		talon.configVoltageCompSaturation(DriveConstants.Drive.configVoltageCompSaturation);
+		talon.configVoltageCompSaturation(DriveConstants.Drive.voltageCompSaturation);
 		talon.enableVoltageCompensation(DriveConstants.Drive.enableVoltageCompensation);
 
 		talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(

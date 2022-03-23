@@ -48,6 +48,7 @@ public class Kicker extends SubsystemBase {
     if (Constants.kickerEnabled) {
       kicker.restoreFactoryDefaults();
       kicker.setOpenLoopRampRate(KickerConstants.rampRate);
+      kicker.enableVoltageCompensation(KickerConstants.voltageCompSaturation);
       kicker.setInverted(false);
       kickerEncoder = kicker.getEncoder();
 
