@@ -35,29 +35,34 @@ public class Webcams {
         rightCamera.setExposureManual(Constants.WebCams.sideDarkExposure);
         leftCamera.setExposureManual(Constants.WebCams.sideDarkExposure);
         frontCamera.setExposureAuto();
+        frontCamera.setBrightness(Constants.WebCams.autoBrightness);
     }
 
     public void setLeft() {
         rightCamera.setExposureManual(Constants.WebCams.sideDarkExposure);
         leftCamera.setExposureAuto();
         frontCamera.setExposureManual(Constants.WebCams.frontDarkExposure);
+        frontCamera.setBrightness(Constants.WebCams.darkBrightness);
     }
 
     public void setRight() {
         rightCamera.setExposureAuto();
         leftCamera.setExposureManual(Constants.WebCams.sideDarkExposure);
         frontCamera.setExposureManual(Constants.WebCams.frontDarkExposure);
+        frontCamera.setBrightness(Constants.WebCams.darkBrightness);
     }
 
     public void setLeftAndRight() {
         rightCamera.setExposureAuto();
         leftCamera.setExposureAuto();
         frontCamera.setExposureManual(Constants.WebCams.frontDarkExposure);
+        frontCamera.setBrightness(Constants.WebCams.darkBrightness);
     }
 
     public void resetCameras() {
         rightCamera.setExposureAuto();
         leftCamera.setExposureAuto();
         frontCamera.setExposureAuto();
+        frontCamera.setBrightness(Constants.WebCams.autoBrightness);
     }
 }
