@@ -57,7 +57,7 @@ public class RobotContainer {
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
-  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(kicker, shooter, hood);
+  private final StopFiringSolution stopSpeedAndAngle = new StopFiringSolution(kicker, shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -121,12 +121,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderHigh));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, outsideTarmac));
-    coPilot.b.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac));
-    coPilot.a.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderLow));
+    coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, fenderHigh));
+    coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, outsideTarmac));
+    coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, insideTarmac));
+    coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, fenderLow));
 
-    coPilot.dPad.up.whenPressed(new CalcSpeedAndAngle(kicker, shooter, hood, limelight));
+    coPilot.dPad.up.whenPressed(new CalcFiringSolution(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -164,11 +164,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac),
+      new SetFiringSolution(kicker, shooter, hood, insideTarmac),
       new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),
-      new StopSpeedAndAngle(kicker, shooter, hood),
+      new StopFiringSolution(kicker, shooter, hood),
       new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
     );
   }
