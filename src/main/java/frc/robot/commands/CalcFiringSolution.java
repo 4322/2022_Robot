@@ -25,7 +25,7 @@ public class CalcFiringSolution extends CommandBase {
   private Shooter shooter;
   private Hood hood;
   private Limelight lim;
-  private FiringSolutionManager manager;
+  private FiringSolutionManager manager = FiringSolutionManager.getSingleton();
 
 
   public CalcFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
