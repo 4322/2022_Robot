@@ -12,7 +12,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
-public class StopSpeedAndAngle extends InstantCommand {
+public class StopFiringSolution extends InstantCommand {
   /**
    * Creates a new Disable_Shooter.
    */
@@ -21,7 +21,7 @@ public class StopSpeedAndAngle extends InstantCommand {
    private Hood hood;
    private Kicker kicker;
 
-  public StopSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem) {
+  public StopFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooterSubsystem;
     hood = hoodSubsystem;

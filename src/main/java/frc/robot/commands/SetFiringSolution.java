@@ -13,7 +13,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
-public class SetSpeedAndAngle extends CommandBase {
+public class SetFiringSolution extends CommandBase {
   /**
    * Creates a new Enable_Shooter_Power.
    */
@@ -24,7 +24,7 @@ public class SetSpeedAndAngle extends CommandBase {
   private FiringSolution firingSolution;
 
 
-  public SetSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, 
+  public SetFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, 
                           FiringSolution m_firingSolution) {
     shooter = shooterSubsystem;
     hood = hoodSubsystem;

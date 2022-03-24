@@ -21,13 +21,17 @@ public class FiringSolutionManager {
     }
 
     public void addSolution(FiringSolution add) { 
-        for (int i = 0; i < solutions.size(); i++) {
-            if (solutions.get(i).getDistance() == add.getDistance()) {
-                break;
-            }
-            if (solutions.get(i).getDistance() > add.getDistance()) { // iterate through ArrayList until desired position found
-                solutions.add(i, add);
-                break;
+        if (solutions.size() == 0) {
+            solutions.add(add);
+        } else {
+            for (int i = 0; i < solutions.size(); i++) {
+                if (solutions.get(i).getDistance() == add.getDistance()) {
+                    break;
+                } else if (solutions.get(i).getDistance() > add.getDistance()) { 
+                    // iterate through ArrayList until desired position found
+                    solutions.add(i, add);
+                    break;
+                }
             }
         }
     }

@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
@@ -15,7 +16,7 @@ import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 
-public class CalcSpeedAndAngle extends CommandBase {
+public class CalcFiringSolution extends CommandBase {
   /**
    * Creates a new Enable_Shooter_Power.
    */
@@ -27,7 +28,7 @@ public class CalcSpeedAndAngle extends CommandBase {
   private FiringSolutionManager manager;
 
 
-  public CalcSpeedAndAngle(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
+  public CalcFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
     kicker = kickerSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
@@ -38,10 +39,15 @@ public class CalcSpeedAndAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
-    kicker.setSpeed(firingSolution.getKickerSpeed());
-    shooter.setSpeed(firingSolution.getFlywheelSpeed());
-    hood.setTargetPosition(firingSolution.getHoodPosition());
+    if (lim.getTargetVisible()) {
+      FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
+      kicker.setSpeed(firingSolution.getKickerSpeed());
+      shooter.setSpeed(firingSolution.getFlywheelSpeed());
+      hood.setTargetPosition(firingSolution.getHoodPosition());
+    } else {
+      // command should end here, add command break later
+      DriverStation.reportError("No target found!", false);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
