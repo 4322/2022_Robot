@@ -50,7 +50,10 @@ public final class Constants {
 
     public static ArrayList<FiringSolution> firingSolutions;
     static {
-        // add new firing solutions here
+        new FiringSolution(2200, 3100, 2800, 55);
+        new FiringSolution(2200, 3300, 4000, 97);
+        new FiringSolution(2200, 3820, 4000, 150);
+        new FiringSolution(2200, 4400, 4300, 205);
     }
 
     public static final class DriveConstants {
@@ -194,7 +197,7 @@ public final class Constants {
         public static final double kFF = 0.000205;
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
-        public static final double minVelError = 35; // allowable error to shoot (in rpm)
+        public static final double minVelError = 100; // allowable error to shoot (in rpm)
         public static final double rampRate = 0.4;  // seconds to go from stopped to full power
     }
     

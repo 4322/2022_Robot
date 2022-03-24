@@ -72,12 +72,15 @@ public class RobotContainer {
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
-  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 7.3);
-  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 7.3);
-  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 4000, 84.75);
-  private final FiringSolution outsideTarmac = new FiringSolution(2200, 3500, 4000, 120);
+  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
+  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
+  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
+  private final FiringSolution outsideTarmac = new FiringSolution(2200, 3300, 4000, 97);
+  private final FiringSolution closeLaunchpad = new FiringSolution(2200, 3820, 4000, 150);
+  private final FiringSolution farLaunchpad = new FiringSolution(2200, 4400, 4300, 205);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
   public RobotContainer() {
 
     // Initialize subsystems that use CAN after all of them have been constructed because the 
@@ -134,7 +137,8 @@ public class RobotContainer {
 
     coPilot.lt.whileHeld(kickerEnable);
 
-    coPilot.back.whenPressed(hoodReset);
+    // to be fixed
+    // coPilot.back.whenPressed(hoodReset);
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
