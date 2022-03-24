@@ -90,7 +90,7 @@ public class Hood extends SubsystemBase {
         .withSize(1,1)
         .getEntry();
 
-        hoodPositionTalon = tab.add("Hood Target", 0)
+        hoodTarget = tab.add("Hood Target", 0)
         .withPosition(1,0)   
         .withSize(1,1)
         .getEntry();
@@ -108,7 +108,7 @@ public class Hood extends SubsystemBase {
 
         override = tab.add("Override", false)
         .withWidget(BuiltInWidgets.kToggleButton)
-        .withPosition(0,6)
+        .withPosition(0,2)
         .withSize(1,1)
         .getEntry();
       }
@@ -184,10 +184,16 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  public void setTargetPosition(double setpoint) {
+  public void setTargetPosition(double setpoint, boolean overrideInitialHome) {
     if (Constants.hoodEnabled) {
-      hood.set(ControlMode.Position, setpoint);
+      if (initialHome || overrideInitialHome) {
+        hood.set(ControlMode.Position, setpoint);
+      }
     }
+  }
+
+  public void setTargetPosition(double setpoint) {
+    setTargetPosition(setpoint, false);
   }
 
   // This is only valid following a set position command
@@ -202,6 +208,10 @@ public class Hood extends SubsystemBase {
   public void setInitiallyHomed() {
     hood.setSelectedSensorPosition(0);
     initialHome = true;
+  }
+
+  public void setCurrentPosition(double pos) {
+    hood.setSelectedSensorPosition(pos);
   }
 
   public boolean isInitialHomed() {

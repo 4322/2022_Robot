@@ -70,6 +70,7 @@ public class Shooter extends SubsystemBase {
       flywheelRight.setIdleMode(IdleMode.kCoast);
       flywheelLeft.setClosedLoopRampRate(ShooterConstants.rampRate);  // don't eject the shooter
       flywheelLeft.setOpenLoopRampRate(ShooterConstants.rampRate);    // for PID tuning
+      flywheelLeft.enableVoltageCompensation(ShooterConstants.voltageCompSaturation);
 
       flywheelEncoder = flywheelLeft.getEncoder();
       flywheelPID = flywheelLeft.getPIDController();
@@ -109,7 +110,7 @@ public class Shooter extends SubsystemBase {
         override = 
           tab.add("Override", false)
           .withWidget(BuiltInWidgets.kToggleButton)
-          .withPosition(0,6)
+          .withPosition(0,1)
           .withSize(1,1)
           .getEntry();
       }

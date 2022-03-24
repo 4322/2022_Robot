@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
+import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 /**
@@ -20,7 +23,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -44,6 +47,11 @@ public final class Constants {
     public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period
     // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
+
+    public static ArrayList<FiringSolution> firingSolutions;
+    static {
+        // add new firing solutions here
+    }
 
     public static final class DriveConstants {
         public static final int frontRightDriveID = 2;
@@ -87,13 +95,15 @@ public final class Constants {
 
         // thresholds at which to engage anti-tipping logic
         public final static class Tip {
-            public static final double highVelocityFtperSec = 6.0; 
-            public static final double lowVelocityFtperSec = 3.0; 
+            public static final double highVelocityFtPerSec = 6.0; 
+            public static final double lowVelocityFtPerSec = 3.0; 
             public static final double highAccFtPerSec2 = 8.0;
             public static final double lowAccFtPerSec2 = 4.0;
             public static final double velAccDiffMaxDeg = 30;
-            public static final double highPowerOff = 0.3;
-            public static final double lowPowerOff = 0.15;
+            public static final double highPowerOff = 0.4;
+            public static final double lowPowerOff = 0.19;
+            public static final double highSpeedSteeringChangeMaxDegrees = 20;
+            public static final double velocityHistorySeconds = 0.1;
         }
 
         public final static class Rotation {
@@ -105,7 +115,7 @@ public final class Constants {
             public static final double maxPower = 0.3;  // reduce gear wear and overshoot
             public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
 
-            public static final double configVoltageCompSaturation = 12;
+            public static final double configVoltageCompSaturation = 11.5;
             public static final boolean enableVoltageCompensation = true;
 
             public static final boolean statorEnabled = true;
@@ -134,7 +144,7 @@ public final class Constants {
         public static final class Drive {
             public static final double configOpenLoopRamp = 0.08;
 
-            public static final double configVoltageCompSaturation = 12;
+            public static final double voltageCompSaturation = 11.5;
             public static final boolean enableVoltageCompensation = true;
 
             public static final double brakeModeDeadband = 0.01;
@@ -160,12 +170,13 @@ public final class Constants {
 
         public static final int flywheelLeftID = 14;
         public static final int flywheelRightID = 15;
+        public static final double voltageCompSaturation = 11.0;
 
         public static final double kP = .00025;
         public static final double kI = 0.000001;
         public static final double kD = 0.008;
         public static final double kIz = 200;
-        public static final double kFF = 0.00019;
+        public static final double kFF = 0.000205;
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
@@ -174,9 +185,18 @@ public final class Constants {
     }
 
     public static final class KickerConstants {
-        public static double kickerPower = 0.5;
         public static final int kickerID = 16;
-        public static double rampRate = 0.2;
+        public static final double voltageCompSaturation = 11.0;
+        
+        public static final double kP = .00025;
+        public static final double kI = 0.000001;
+        public static final double kD = 0.008;
+        public static final double kIz = 200;
+        public static final double kFF = 0.000205;
+        public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
+        public static final double kMaxRange = 1.0;
+        public static final double minVelError = 35; // allowable error to shoot (in rpm)
+        public static final double rampRate = 0.4;  // seconds to go from stopped to full power
     }
     
     public static final class HoodConstants {
@@ -185,14 +205,14 @@ public final class Constants {
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
         public static final int hoodTolerance = 20;
-        public static final double homingTimeout = 5.0; 
-        public static final double autoTimeout = 3.0; 
+        public static final double homingTimeout = 6.0; 
 
         public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
         public static double maxReversePower = -0.5;   //allows to be changed in demo mode
         public static final double minForwardPower = 0.1;
         public static final double minReversePower = -0.1;
         public static final double homingPower = -0.3;
+        public static final double secondHomingPower = -0.2;
 
         public static final int kPIDLoopIdx = 0;
         public static final int kTimeoutMs = 30;
@@ -211,21 +231,24 @@ public final class Constants {
     }
 
     public static final class ConveyorConstants {
-        public static int motorID = 19;
-        public static double minBallDistIn = 2;
-        public static double conveyorPower = 0.5;
-        public static int ballSensorPort = 0; // DIO port for ball sensor
+        public static final int motorID = 19;
+        public static final double minBallDistIn = 2;
+        public static final double conveyorPower = 0.5;
+        public static final int ballSensorPort = 0; // DIO port for ball sensor
     }
 
     public static final class WebCams {
         public static final int fps = 10;
-        public static final int darkExposure = 5;
+        public static final int sideDarkExposure = 10;
+        public static final int frontDarkExposure = 2;  // front cam exposure works differently
+        public static final int darkBrightness = 5;
+        public static final int autoBrightness = 50;
     }
 
     public static final class LimelightConstants {
         // All distance values in inches
-        public static final double limelightAngle = 25;
-        public static double targetHeight = 101.625;
-        public static double limelightHeight = 38.5;
+        public static final double limelightAngle = 36.8;
+        public static final double targetHeight = 103;
+        public static final double limelightHeight = 38;
     }
 }

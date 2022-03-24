@@ -15,10 +15,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -41,23 +39,24 @@ public class RobotContainer {
   private static JoystickButton driveBottomRightButton;
   private static JoystickButton driveButtonSeven;
   private static JoystickButton rotateTopLeftButton;
+  private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
 
   // The robot's subsystems and commands are defined here...
-  private final Driveunbun driveunbun = new Driveunbun();
+  private final Webcams webcams = new Webcams();
+  private final Limelight limelight = new Limelight();
+  private final Driveunbun driveunbun = new Driveunbun(webcams, limelight);
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
-  private final Webcams webcams = new Webcams();
-  private final Limelight limelight = new Limelight();
 
   // Drive Commands
-  private final DriveManual driveManual = new DriveManual(driveunbun, limelight, this);
+  private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
-  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(shooter, hood);
+  private final StopSpeedAndAngle stopSpeedAndAngle = new StopSpeedAndAngle(kicker, shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -67,36 +66,15 @@ public class RobotContainer {
   private final HoodReset hoodReset = new HoodReset(hood);
 
   // Kicker Commands
-  private final KickerEnable kickerEnable = new KickerEnable(kicker, conveyor, shooter);
+  private final ConveyorEnable kickerEnable = new ConveyorEnable(kicker, conveyor, shooter);
 
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
-  private final FiringSolution fenderHigh = new FiringSolution(3000, 1800, 7.3);
-  private final FiringSolution fenderLow = new FiringSolution(1200, 6000, 7.3);
-  private final FiringSolution insideTarmac = new FiringSolution(3100, 4000, 84.75); // used to be 3100
-  private final FiringSolution outsideTarmac = new FiringSolution(3500, 4000, 120);
-
-  public enum DriveMode {
-    fieldCentric(0),
-    frontCamCentric(1),
-    leftCamCentric(2),
-    rightCamCentric(3),
-    limelightFieldCentric(4),
-    killFieldCentric(5);
-
-    private int value;
-
-    DriveMode(int value) {
-        this.value = value;
-    }
-
-    public int get() {
-        return value;
-    }
-  }
-
-  public DriveMode driveMode = DriveMode.fieldCentric;
+  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 7.3);
+  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 7.3);
+  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 4000, 84.75);
+  private final FiringSolution outsideTarmac = new FiringSolution(2600, 3500, 4000, 120);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -142,10 +120,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderHigh));
-    coPilot.y.whenPressed(new SetSpeedAndAngle(shooter, hood, outsideTarmac));
-    coPilot.b.whenPressed(new SetSpeedAndAngle(shooter, hood, insideTarmac));
-    coPilot.a.whenPressed(new SetSpeedAndAngle(shooter, hood, fenderLow));
+    coPilot.x.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderHigh));
+    coPilot.y.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, outsideTarmac));
+    coPilot.b.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac));
+    coPilot.a.whenPressed(new SetSpeedAndAngle(kicker, shooter, hood, fenderLow));
+
+    coPilot.dPad.up.whenPressed(new CalcSpeedAndAngle(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopSpeedAndAngle);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -164,38 +144,16 @@ public class RobotContainer {
       driveTopRightButton = new JoystickButton(driveStick, 6);
       driveButtonSeven = new JoystickButton(driveStick, 7);
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
+      rotateTopRightButton = new JoystickButton(rotateStick, 6); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
-      driveTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.fieldCentric));
-      driveBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.leftCamCentric));
-      driveBottomRightButton.whenPressed(() -> setDriveMode(DriveMode.rightCamCentric));
-      driveTopRightButton.whenPressed(() -> setDriveMode(DriveMode.frontCamCentric));
-      rotateTopLeftButton.whenPressed(() -> setDriveMode(DriveMode.killFieldCentric));
-      rotateBottomLeftButton.whenPressed(() -> setDriveMode(DriveMode.limelightFieldCentric));
+      driveTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric));
+      driveBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.leftCamCentric));
+      driveBottomRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.rightCamCentric));
+      driveTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.frontCamCentric));
+      rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
+      rotateTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.sideKillFieldCentric));
+      rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
-    }
-  }
-
-  public void setDriveMode(DriveMode mode) {
-    driveMode = mode;
-    switch (mode) {
-      case fieldCentric:
-      case limelightFieldCentric:
-      case killFieldCentric:
-        driveunbun.setToFieldCentric();
-        webcams.resetCameras();
-        break;
-      case leftCamCentric:
-        driveunbun.setToRobotCentric(90);
-        webcams.setLeft();
-        break;
-      case rightCamCentric:
-        driveunbun.setToRobotCentric(-90);
-        webcams.setRight();
-        break;
-      case frontCamCentric:
-        driveunbun.setToRobotCentric(0);
-        webcams.setFront();
-        break;
     }
   }
   
@@ -207,11 +165,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetSpeedAndAngle(shooter, hood, insideTarmac),
+      new SetSpeedAndAngle(kicker, shooter, hood, insideTarmac),
       new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),
-      new StopSpeedAndAngle(shooter, hood),
+      new StopSpeedAndAngle(kicker, shooter, hood),
       new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
     );
   }

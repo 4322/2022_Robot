@@ -5,13 +5,13 @@ import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
-public class KickerEnable extends CommandBase {
+public class ConveyorEnable extends CommandBase {
     
   private Kicker kicker;
   private Conveyor conveyor;
   private Shooter shooter;
 
-  public KickerEnable(Kicker kickerSubsystem, Conveyor conveyorSubsystem, Shooter shooterSubsystem) {
+  public ConveyorEnable(Kicker kickerSubsystem, Conveyor conveyorSubsystem, Shooter shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     kicker = kickerSubsystem;
     conveyor = conveyorSubsystem;
@@ -22,16 +22,13 @@ public class KickerEnable extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
   }
 
   @Override
   public void execute() {
-    if (shooter.isAbleToEject()) {
-      kicker.intake();
+    if (shooter.isAbleToEject() && kicker.isAbleToEject()) {
       conveyor.enableConveyor();
     } else {
-      kicker.stop();
       conveyor.stop();
     }
   }
@@ -39,7 +36,6 @@ public class KickerEnable extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    kicker.stop();
     conveyor.stop();
   }
 

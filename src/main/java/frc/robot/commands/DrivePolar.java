@@ -18,23 +18,26 @@ public class DrivePolar extends CommandBase {
   private final double angle;
   private final double speed;
   private final double rotate;
-  private final double time; // seconds
+  private final double seconds;
+  private Driveunbun.DriveMode previousDriveMode;
 
   private Timer timer = new Timer();
 
-  public DrivePolar(Driveunbun drivesubsystem, double m_angle, double m_speed, double m_rotationAngle, double m_timeSeconds) {
+  public DrivePolar(Driveunbun drivesubsystem, double angle, double speed, 
+                    double rotationAngle, double seconds) {
     driveunbun = drivesubsystem;
-    angle = m_angle;
-    speed = m_speed;
-    rotate = m_rotationAngle;
-    time = m_timeSeconds;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.angle = angle;
+    this.speed = speed;
+    rotate = rotationAngle;
+    this.seconds = seconds;
     addRequirements(driveunbun);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    previousDriveMode = Driveunbun.getDriveMode();
+    driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric);
     timer.reset();
     timer.start();
   }
@@ -42,20 +45,19 @@ public class DrivePolar extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveunbun.setToFieldCentric();
     driveunbun.drivePolar(angle, speed, rotate);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveunbun.drive(0, 0, 0); // stop robot
-    driveunbun.setToFieldCentric();
+    driveunbun.stop();
+    driveunbun.setDriveMode(previousDriveMode);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(time);
+    return timer.hasElapsed(seconds);
   }
 }

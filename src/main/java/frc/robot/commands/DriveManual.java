@@ -3,7 +3,6 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.RobotContainer.DriveMode;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
@@ -21,12 +20,10 @@ public class DriveManual extends CommandBase {
 
   private final Driveunbun driveunbun;
   private final Limelight limelight;
-  private final RobotContainer robotContainer;
 
-  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem, RobotContainer robotContainer) {
+  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem) {
     driveunbun = drivesubsystem;
     limelight = limelightsubsystem;
-    this.robotContainer = robotContainer;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveunbun);
@@ -95,7 +92,7 @@ public class DriveManual extends CommandBase {
       rotate = rotate * rotate * rotate;  // increase sensitivity
 
       // move slowly in side cam driving mode for percise cargo alignment
-      if (driveunbun.getDrivingWithSideCams()) {
+      if (driveunbun.isDrivingWithSideCams()) {
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
         rotate *= DriveConstants.sideCamRotationScaleFactor;
@@ -104,9 +101,13 @@ public class DriveManual extends CommandBase {
       }
 
       // determine drive mode
-      //Kill, Limelight, Polar, Normal
-      if (robotContainer.driveMode == DriveMode.killFieldCentric) {
+      // Kill, Limelight, Polar, Normal
+      if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) ||
+          (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric)) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          if (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric) {
+            rotate += 90;
+          }
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation
@@ -118,7 +119,7 @@ public class DriveManual extends CommandBase {
             driveunbun.driveAutoRotate(-driveX, driveY, error);
           }
       }
-      else if ((robotContainer.driveMode == DriveMode.limelightFieldCentric) &&
+      else if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()){
         double error = limelight.getHorizontalDegToTarget();
         driveunbun.driveAutoRotate(-driveX, driveY, error);
