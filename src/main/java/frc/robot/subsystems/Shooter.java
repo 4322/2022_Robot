@@ -159,7 +159,7 @@ public class Shooter extends SubsystemBase {
     if (Constants.shooterEnabled) {
       boolean atSpeed = Math.abs(target - getSpeed()) <= ShooterConstants.minVelError;
 
-      if (atSpeed && upToSpeed.hasElapsed(ShooterConstants.speedConfirmationTime)) {
+      if (atSpeed && upToSpeed.hasElapsed(ShooterConstants.speedSettlingSec)) {
         return true;
       } else if (!atSpeed) {
         upToSpeed.reset();
