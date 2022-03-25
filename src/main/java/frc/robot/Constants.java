@@ -50,9 +50,9 @@ public final class Constants {
     static {
         firingSolutions = new FiringSolution[4];
         firingSolutions[0] = new FiringSolution(2200, 3100, 2800, 55);
-        firingSolutions[1] = new FiringSolution(2200, 3300, 4000, 97);
-        firingSolutions[2] = new FiringSolution(2200, 3820, 4000, 150);
-        firingSolutions[3] = new FiringSolution(2200, 4400, 4300, 205);
+        firingSolutions[1] = new FiringSolution(2400, 3300, 4000, 97);
+        firingSolutions[2] = new FiringSolution(2600, 3820, 4000, 150);
+        firingSolutions[3] = new FiringSolution(2600, 4400, 4300, 205);
     }
 
     public static final class DriveConstants {
@@ -184,6 +184,8 @@ public final class Constants {
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
 
         public static final double minVelError = 35; // allowable error to shoot (in rpm)
+
+        public static double speedConfirmationTime = 0.1;
     }
 
     public static final class KickerConstants {
@@ -199,6 +201,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double minVelError = 100; // allowable error to shoot (in rpm)
         public static final double rampRate = 0.4;  // seconds to go from stopped to full power
+        public static final double speedConfirmationTime = 0.1;
     }
     
     public static final class HoodConstants {

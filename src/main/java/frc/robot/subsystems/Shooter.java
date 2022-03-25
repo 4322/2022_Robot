@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -39,10 +40,14 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry targetRPM;
   private NetworkTableEntry override;
 
+  private Timer upToSpeed = new Timer();
+
   public Shooter() {
     if (Constants.shooterEnabled) {
       flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
       flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
+
+      upToSpeed.start();
 
       // increase status reporting periods to reduce CAN bus utilization
       flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
@@ -132,6 +137,7 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(double rpm) {
     if (Constants.shooterEnabled) {
+      upToSpeed.reset();
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
       if (Constants.debug) {
@@ -151,10 +157,15 @@ public class Shooter extends SubsystemBase {
   // don't let balls get stuck in the shooter
   public boolean isAbleToEject() {
     if (Constants.shooterEnabled) {
-      return (Math.abs(target - getSpeed()) <= ShooterConstants.minVelError);
-    } else {
-      return false;
+      boolean atSpeed = Math.abs(target - getSpeed()) <= ShooterConstants.minVelError;
+
+      if (atSpeed && upToSpeed.hasElapsed(ShooterConstants.speedConfirmationTime)) {
+        return true;
+      } else if (!atSpeed) {
+        upToSpeed.reset();
+      }
     }
+    return false;
   }
   
   public void stop() {

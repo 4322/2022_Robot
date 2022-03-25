@@ -25,6 +25,7 @@ public class CalcFiringSolution extends CommandBase {
   private Shooter shooter;
   private Hood hood;
   private Limelight lim;
+  private boolean forceQuit = false;
   private FiringSolutionManager manager = FiringSolutionManager.getSingleton();
 
 
@@ -45,8 +46,8 @@ public class CalcFiringSolution extends CommandBase {
       shooter.setSpeed(firingSolution.getFlywheelSpeed());
       hood.setTargetPosition(firingSolution.getHoodPosition());
     } else {
-      // command should end here, add command break later
       DriverStation.reportError("No target found!", false);
+      forceQuit = true;
     }
   }
 
@@ -65,6 +66,6 @@ public class CalcFiringSolution extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (shooter.isAbleToEject() && hood.isAtTarget());
+    return ((shooter.isAbleToEject() && hood.isAtTarget()) || forceQuit);
   }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,6 +24,8 @@ public class Kicker extends SubsystemBase {
   private SparkMaxPIDController kickerPID;
   private double target;
 
+  private Timer upToSpeed = new Timer();
+
   private ShuffleboardTab tab;
   
   private NetworkTableEntry power;
@@ -34,6 +37,8 @@ public class Kicker extends SubsystemBase {
     if (Constants.kickerEnabled) {
       kicker = new CANSparkMax(KickerConstants.kickerID, MotorType.kBrushless);
       
+      upToSpeed.start();
+
       // increase status reporting periods to reduce CAN bus utilization
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
@@ -114,6 +119,7 @@ public class Kicker extends SubsystemBase {
 
   public void setSpeed(double rpm) {
     if (Constants.kickerEnabled) {
+      upToSpeed.reset();
       kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
       if (Constants.debug) {
@@ -133,10 +139,15 @@ public class Kicker extends SubsystemBase {
   // don't let balls get stuck in the kicker
   public boolean isAbleToEject() {
     if (Constants.kickerEnabled) {
-      return (Math.abs(target - getSpeed()) <= KickerConstants.minVelError);
-    } else {
-      return false;
+      boolean atSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
+
+      if (atSpeed && upToSpeed.hasElapsed(KickerConstants.speedConfirmationTime)) {
+        return true;
+      } else if (!atSpeed) {
+        upToSpeed.reset();
+      }
     }
+    return false;
   }
   
   public void setCoastMode() {
