@@ -2,6 +2,7 @@ package frc.robot.FiringSolution;
 
 import java.util.*;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 
 // https://github.com/Team3309/FRC2020/blob/master/src/main/java/frc/robot/util/FiringSolutionManager.java

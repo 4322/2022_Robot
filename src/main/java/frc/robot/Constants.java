@@ -49,10 +49,10 @@ public final class Constants {
     public static FiringSolution[] firingSolutions;
     static {
         firingSolutions = new FiringSolution[4];
-        new FiringSolution(2200, 3100, 2800, 55);
-        new FiringSolution(2200, 3300, 4000, 97);
-        new FiringSolution(2200, 3820, 4000, 150);
-        new FiringSolution(2200, 4400, 4300, 205);
+        firingSolutions[0] = new FiringSolution(2200, 3100, 2800, 55);
+        firingSolutions[1] = new FiringSolution(2200, 3300, 4000, 97);
+        firingSolutions[2] = new FiringSolution(2200, 3820, 4000, 150);
+        firingSolutions[3] = new FiringSolution(2200, 4400, 4300, 205);
     }
 
     public static final class DriveConstants {
