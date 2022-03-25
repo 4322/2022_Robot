@@ -134,30 +134,32 @@ public class Kicker extends SubsystemBase {
         power.setDouble(kicker.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
       }
-      boolean atSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
+      boolean isAtSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
       switch (kickerMode) {
         case stopped:
           break;
         case started:
-          if (atSpeed) {
+          if (isAtSpeed) {
             kickerMode = KickerMode.atSpeed;
             modeTimer.reset();
           }
           break;
         case atSpeed:
-          if (modeTimer.hasElapsed(KickerConstants.speedSettlingSec)) {
+          if (isAtSpeed && modeTimer.hasElapsed(KickerConstants.speedSettlingSec)) {
             kickerMode = KickerMode.stableAtSpeed;
+          } else if (!isAtSpeed) {
+            kickerMode = KickerMode.started;  // restart settling timer
           }
           break;
         case stableAtSpeed:
-          if (!atSpeed) {
-            kickerMode = KickerMode.shooting;
+          if (!isAtSpeed) {
+            kickerMode = KickerMode.shooting;  // don't stop conveyor as cargo enters kicker
             modeTimer.reset();
           }
           break;
         case shooting:
           if (modeTimer.hasElapsed(KickerConstants.minShotSec)) {
-            kickerMode = KickerMode.started;
+            kickerMode = KickerMode.started;  // cargo is through kicker, allow conveyor to be stopped
           }
       }
     }
