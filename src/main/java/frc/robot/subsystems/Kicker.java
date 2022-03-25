@@ -36,7 +36,6 @@ public class Kicker extends SubsystemBase {
   public Kicker() {
     if (Constants.kickerEnabled) {
       kicker = new CANSparkMax(KickerConstants.kickerID, MotorType.kBrushless);
-      
       modeTimer.start();
 
       // increase status reporting periods to reduce CAN bus utilization
@@ -116,7 +115,7 @@ public class Kicker extends SubsystemBase {
     }
   }
 
-  private static KickerMode kickerMode = KickerMode.stopped;
+  private KickerMode kickerMode = KickerMode.stopped;
 
   public void stop() {
     if (Constants.kickerEnabled) {
@@ -127,13 +126,39 @@ public class Kicker extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (Constants.debug) {  // don't combine if statements to avoid dead code warning
-      if (Constants.kickerEnabled) {
-        if (override.getBoolean(false)) {
+    if (Constants.kickerEnabled) {
+      if (Constants.debug) {
+        if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
           setSpeed(targetRPM.getDouble(0));
         }
         power.setDouble(kicker.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
+      }
+      boolean atSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
+      switch (kickerMode) {
+        case stopped:
+          break;
+        case started:
+          if (atSpeed) {
+            kickerMode = KickerMode.atSpeed;
+            modeTimer.reset();
+          }
+          break;
+        case atSpeed:
+          if (modeTimer.hasElapsed(KickerConstants.speedSettlingSec)) {
+            kickerMode = KickerMode.stableAtSpeed;
+          }
+          break;
+        case stableAtSpeed:
+          if (!atSpeed) {
+            kickerMode = KickerMode.shooting;
+            modeTimer.reset();
+          }
+          break;
+        case shooting:
+          if (modeTimer.hasElapsed(KickerConstants.minShotSec)) {
+            kickerMode = KickerMode.started;
+          }
       }
     }
   }
@@ -160,37 +185,7 @@ public class Kicker extends SubsystemBase {
 
   // don't let balls get stuck in the kicker
   public boolean isAbleToEject() {
-    if (Constants.kickerEnabled) {
-      boolean atSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
-      switch (kickerMode) {
-        case stopped:
-          break;
-        case started:
-          if (atSpeed) {
-            kickerMode = KickerMode.atSpeed;
-            modeTimer.reset();
-          }
-          break;
-        case atSpeed:
-          if (modeTimer.hasElapsed(KickerConstants.speedSettlingSec)) {
-            kickerMode = KickerMode.stableAtSpeed;
-          }
-          break;
-        case stableAtSpeed:
-          if (!atSpeed) {
-            kickerMode = KickerMode.shooting;
-            modeTimer.reset();
-            return true;
-          }
-          break;
-        case shooting:
-          if (modeTimer.hasElapsed(KickerConstants.minShotSec)) {
-            kickerMode = KickerMode.started;
-          }
-          return true;
-      }
-    }
-    return false;
+    return (kickerMode == KickerMode.stableAtSpeed) || (kickerMode == KickerMode.shooting);
   }
   
   public void setCoastMode() {
