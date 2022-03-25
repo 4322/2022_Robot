@@ -21,18 +21,18 @@ public class FiringSolutionManager {
     }
 
     public void addSolution(FiringSolution add) { 
-        if (solutions.size() == 0) {
-            solutions.add(add);
-        } else {
-            for (int i = 0; i < solutions.size(); i++) {
-                if (solutions.get(i).getDistance() == add.getDistance()) {
-                    break;
-                } else if (solutions.get(i).getDistance() > add.getDistance()) { 
-                    // iterate through ArrayList until desired position found
-                    solutions.add(i, add);
-                    break;
-                }
+        int i;
+        // iterate through ArrayList until desired position found
+        for (i = 0; i < solutions.size(); i++) {
+            if (solutions.get(i).getDistance() == add.getDistance()) {
+                break;
+            } else if (solutions.get(i).getDistance() > add.getDistance()) { 
+                solutions.add(i, add);
+                break;
             }
+        }
+        if (i == solutions.size()) {
+            solutions.add(i, add);
         }
     }
 
@@ -69,6 +69,11 @@ public class FiringSolutionManager {
     }
 
     public static FiringSolutionManager getSingleton() {
-        return singleton == null ? new FiringSolutionManager() : singleton;
+
+        if (singleton == null) {
+            singleton = new FiringSolutionManager();
+        }
+ 
+        return singleton;
     }
 }

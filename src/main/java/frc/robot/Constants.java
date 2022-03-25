@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
@@ -48,8 +46,9 @@ public final class Constants {
     // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
-    public static ArrayList<FiringSolution> firingSolutions;
+    public static FiringSolution[] firingSolutions;
     static {
+        firingSolutions = new FiringSolution[4];
         new FiringSolution(2200, 3100, 2800, 55);
         new FiringSolution(2200, 3300, 4000, 97);
         new FiringSolution(2200, 3820, 4000, 150);
