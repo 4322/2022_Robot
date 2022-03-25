@@ -46,13 +46,25 @@ public final class Constants {
     // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
-    public static FiringSolution[] firingSolutions;
-    static {
-        firingSolutions = new FiringSolution[4];
-        firingSolutions[0] = new FiringSolution(2200, 3100, 2800, 55);
-        firingSolutions[1] = new FiringSolution(2400, 3300, 4000, 97);
-        firingSolutions[2] = new FiringSolution(2600, 3820, 4000, 150);
-        firingSolutions[3] = new FiringSolution(2600, 4400, 4300, 205);
+    // Firing Solutions
+    // fender distances need to be remeasured
+    // measurement from back of bumper for now
+    public static final class FiringSolutions {
+      public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
+      public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
+      public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
+      public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
+      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
+      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 205);
+    }
+
+    public static FiringSolution[] limelightFiringSolutions;
+    static {  // limelight can't see target from the fender
+        limelightFiringSolutions = new FiringSolution[4];
+        limelightFiringSolutions[0] = FiringSolutions.insideTarmac;
+        limelightFiringSolutions[1] = FiringSolutions.outsideTarmac;
+        limelightFiringSolutions[2] = FiringSolutions.closeLaunchpad;
+        limelightFiringSolutions[3] = FiringSolutions.farLaunchpad;
     }
 
     public static final class DriveConstants {

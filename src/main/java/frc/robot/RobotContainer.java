@@ -10,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
@@ -68,16 +67,6 @@ public class RobotContainer {
   // Kicker Commands
   private final ConveyorEnable kickerEnable = new ConveyorEnable(kicker, conveyor, shooter);
 
-  // Firing Solutions
-  // fender distances need to be remeasured
-  // measurement from back of bumper for now
-  private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
-  private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
-  private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
-  private final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
-  private final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
-  private final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 205);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
   public RobotContainer() {
@@ -123,10 +112,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, fenderHigh));
-    coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, outsideTarmac));
-    coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, insideTarmac));
-    coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, fenderLow));
+    coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh));
+    coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac));
+    coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
+    coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
 
     coPilot.dPad.up.whenPressed(new CalcFiringSolution(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopSpeedAndAngle);
@@ -169,7 +158,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
       new HoodReset(hood),
-      new SetFiringSolution(kicker, shooter, hood, insideTarmac),
+      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
       new KickerAutoStart(kicker, conveyor, shooter),
       new WaitCommand(5), // wait for balls to shoot
       new KickerStop(kicker, conveyor),

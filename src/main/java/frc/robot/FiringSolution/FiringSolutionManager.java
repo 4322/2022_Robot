@@ -2,7 +2,6 @@ package frc.robot.FiringSolution;
 
 import java.util.*;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 
 // https://github.com/Team3309/FRC2020/blob/master/src/main/java/frc/robot/util/FiringSolutionManager.java
@@ -16,7 +15,7 @@ public class FiringSolutionManager {
         singleton = this;
         solutions = new ArrayList<FiringSolution>(); // new ArrayList to organize based on distance
 
-        for (FiringSolution solution : Constants.firingSolutions) {
+        for (FiringSolution solution : Constants.limelightFiringSolutions) {
             addSolution(solution);
         }
     }
