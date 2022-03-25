@@ -40,14 +40,14 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry targetRPM;
   private NetworkTableEntry override;
 
-  private Timer upToSpeed = new Timer();
+  private Timer modeTimer = new Timer();
 
   public Shooter() {
     if (Constants.shooterEnabled) {
       flywheelLeft = new CANSparkMax(ShooterConstants.flywheelLeftID, MotorType.kBrushless);
       flywheelRight = new CANSparkMax(ShooterConstants.flywheelRightID, MotorType.kBrushless);
 
-      upToSpeed.start();
+      modeTimer.start();
 
       // increase status reporting periods to reduce CAN bus utilization
       flywheelLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
@@ -122,24 +122,68 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  // no need for shooting state as in Kicker because the conveyor 
+  // isn't needed once cargo enters the shooter
+  public enum ShooterMode {
+    stopped(0),
+    started(1),
+    atSpeed(2),
+    stableAtSpeed(3);
+
+    private int value;
+
+    ShooterMode(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
+
+  private ShooterMode shooterMode = ShooterMode.stopped;
+
   @Override
   public void periodic() {
-    if (Constants.debug) {  // don't combine if statements to avoid dead code warning
-      if (Constants.shooterEnabled) {
-        if (override.getBoolean(false)) {
+    if (Constants.shooterEnabled) {
+      if (Constants.debug) {
+        if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
           setSpeed(targetRPM.getDouble(0));
         }
         power.setDouble(flywheelLeft.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
+      }
+      boolean isAtSpeed = Math.abs(target - getSpeed()) <= ShooterConstants.minVelError;
+      switch (shooterMode) {
+        case stopped:
+          break;
+        case started:
+          if (isAtSpeed) {
+            shooterMode = ShooterMode.atSpeed;
+            modeTimer.reset();
+          }
+          break;
+        case atSpeed:
+          if (isAtSpeed && modeTimer.hasElapsed(ShooterConstants.speedSettlingSec)) {
+            shooterMode = ShooterMode.stableAtSpeed;
+          } else if (!isAtSpeed) {
+            shooterMode = ShooterMode.started;  // restart settling timer
+          }
+          break;
+        case stableAtSpeed:
+          if (!isAtSpeed) {
+            shooterMode = ShooterMode.started;  // restart settling timer
+          }
+          break;
       }
     }
   }
 
   public void setSpeed(double rpm) {
     if (Constants.shooterEnabled) {
-      upToSpeed.reset();
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
+      shooterMode = ShooterMode.started;
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }
@@ -156,21 +200,13 @@ public class Shooter extends SubsystemBase {
 
   // don't let balls get stuck in the shooter
   public boolean isAbleToEject() {
-    if (Constants.shooterEnabled) {
-      boolean atSpeed = Math.abs(target - getSpeed()) <= ShooterConstants.minVelError;
-
-      if (atSpeed && upToSpeed.hasElapsed(ShooterConstants.speedSettlingSec)) {
-        return true;
-      } else if (!atSpeed) {
-        upToSpeed.reset();
-      }
-    }
-    return false;
+    return shooterMode == ShooterMode.stableAtSpeed;
   }
   
   public void stop() {
     if (Constants.shooterEnabled) {
       flywheelLeft.stopMotor();
+      shooterMode = ShooterMode.stopped;
     }
   }
 }

@@ -167,7 +167,6 @@ public class Kicker extends SubsystemBase {
 
   public void setSpeed(double rpm) {
     if (Constants.kickerEnabled) {
-      modeTimer.reset();
       kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
       kickerMode = KickerMode.started;
