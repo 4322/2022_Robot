@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Driveunbun;
-import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -19,30 +18,32 @@ public class DriveRobotCentric extends CommandBase {
   private final double x;
   private final double y;
   private final double rotate;
-  private final double offset;
-  private final double time; // seconds
+  private final double seconds;
+  private Driveunbun.DriveMode previousDriveMode;
+  private Driveunbun.DriveMode driveMode;
 
   private Timer timer = new Timer();
 
-  public DriveRobotCentric(Driveunbun drivesubsystem, double m_x, double m_y, double m_rotate, double m_timeSeconds, double offsetDeg) {
+  public DriveRobotCentric(Driveunbun drivesubsystem, double x, double y, double rotate, 
+          double seconds, Driveunbun.DriveMode driveMode) {
     driveunbun = drivesubsystem;
-    x = m_x;
-    y = m_y;
-    rotate = m_rotate;
-    offset = offsetDeg;
-    time = m_timeSeconds;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.x = x;
+    this.y = y;
+    this.rotate = rotate;
+    this.driveMode = driveMode;
+    this.seconds = seconds;
     addRequirements(driveunbun);
   }
 
-  public DriveRobotCentric(Driveunbun drivesubsystem, double m_x, double m_y, double m_rotate, double m_timeSeconds) {
-    this(drivesubsystem, m_x, m_y, m_rotate, m_timeSeconds, 0.0);
+  public DriveRobotCentric(Driveunbun drivesubsystem, double x, double y, double rotate, double seconds) {
+    this(drivesubsystem, x, y, rotate, seconds, Driveunbun.DriveMode.frontCamCentric);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SwerveHelper.setToBotCentric(offset);
+    previousDriveMode = Driveunbun.getDriveMode();
+    driveunbun.setDriveMode(driveMode);
     timer.reset();
     timer.start();
   }
@@ -57,12 +58,12 @@ public class DriveRobotCentric extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveunbun.stop();
-    SwerveHelper.setToFieldCentric();
+    driveunbun.setDriveMode(previousDriveMode);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(time);
+    return timer.hasElapsed(seconds);
   }
 }

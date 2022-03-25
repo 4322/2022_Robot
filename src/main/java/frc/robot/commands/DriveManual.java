@@ -92,7 +92,7 @@ public class DriveManual extends CommandBase {
       rotate = rotate * rotate * rotate;  // increase sensitivity
 
       // move slowly in side cam driving mode for percise cargo alignment
-      if (driveunbun.getDrivingWithSideCams()) {
+      if (driveunbun.isDrivingWithSideCams()) {
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
         rotate *= DriveConstants.sideCamRotationScaleFactor;
@@ -101,9 +101,13 @@ public class DriveManual extends CommandBase {
       }
 
       // determine drive mode
-      //Kill, Limelight, Polar, Normal
-      if (driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) {
+      // Kill, Limelight, Polar, Normal
+      if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) ||
+          (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric)) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          if (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric) {
+            rotate += 90;
+          }
           double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation
@@ -115,7 +119,7 @@ public class DriveManual extends CommandBase {
             driveunbun.driveAutoRotate(-driveX, driveY, error);
           }
       }
-      else if ((driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+      else if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()){
         double error = limelight.getHorizontalDegToTarget();
         driveunbun.driveAutoRotate(-driveX, driveY, error);

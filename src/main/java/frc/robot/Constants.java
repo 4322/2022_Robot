@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -97,14 +97,15 @@ public final class Constants {
 
         // thresholds at which to engage anti-tipping logic
         public final static class Tip {
-            public static final double highVelocityFtperSec = 6.0; 
-            public static final double lowVelocityFtperSec = 3.0; 
+            public static final double highVelocityFtPerSec = 6.0; 
+            public static final double lowVelocityFtPerSec = 3.0; 
             public static final double highAccFtPerSec2 = 8.0;
             public static final double lowAccFtPerSec2 = 4.0;
             public static final double velAccDiffMaxDeg = 30;
-            public static final double highPowerOff = 0.3;
-            public static final double lowPowerOff = 0.15;
+            public static final double highPowerOff = 0.4;
+            public static final double lowPowerOff = 0.19;
             public static final double highSpeedSteeringChangeMaxDegrees = 20;
+            public static final double velocityHistorySeconds = 0.1;
         }
 
         public final static class Rotation {
@@ -240,7 +241,10 @@ public final class Constants {
 
     public static final class WebCams {
         public static final int fps = 10;
-        public static final int darkExposure = 5;
+        public static final int sideDarkExposure = 10;
+        public static final int frontDarkExposure = 2;  // front cam exposure works differently
+        public static final int darkBrightness = 5;
+        public static final int autoBrightness = 50;
     }
 
     public static final class LimelightConstants {

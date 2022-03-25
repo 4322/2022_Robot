@@ -15,10 +15,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -41,17 +39,18 @@ public class RobotContainer {
   private static JoystickButton driveBottomRightButton;
   private static JoystickButton driveButtonSeven;
   private static JoystickButton rotateTopLeftButton;
+  private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
 
   // The robot's subsystems and commands are defined here...
   private final Webcams webcams = new Webcams();
-  private final Driveunbun driveunbun = new Driveunbun(webcams);
+  private final Limelight limelight = new Limelight();
+  private final Driveunbun driveunbun = new Driveunbun(webcams, limelight);
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = new Conveyor();
-  private final Limelight limelight = new Limelight();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
@@ -75,9 +74,9 @@ public class RobotContainer {
   private final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
   private final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
   private final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
-  private final FiringSolution outsideTarmac = new FiringSolution(2200, 3300, 4000, 97);
-  private final FiringSolution closeLaunchpad = new FiringSolution(2200, 3820, 4000, 150);
-  private final FiringSolution farLaunchpad = new FiringSolution(2200, 4400, 4300, 205);
+  private final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
+  private final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
+  private final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 205);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -149,12 +148,14 @@ public class RobotContainer {
       driveTopRightButton = new JoystickButton(driveStick, 6);
       driveButtonSeven = new JoystickButton(driveStick, 7);
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
+      rotateTopRightButton = new JoystickButton(rotateStick, 6); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
       driveTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric));
       driveBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.leftCamCentric));
       driveBottomRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.rightCamCentric));
       driveTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.frontCamCentric));
       rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
+      rotateTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.sideKillFieldCentric));
       rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
     }
