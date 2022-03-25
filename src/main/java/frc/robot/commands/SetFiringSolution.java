@@ -7,13 +7,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
-public class SetFiringSolution extends CommandBase {
+public class SetFiringSolution extends InstantCommand {
   /**
    * Creates a new Enable_Shooter_Power.
    */
@@ -23,13 +23,12 @@ public class SetFiringSolution extends CommandBase {
   private Kicker kicker;
   private FiringSolution firingSolution;
 
-
-  public SetFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, 
-                          FiringSolution m_firingSolution) {
+  public SetFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, 
+                           Hood hoodSubsystem, FiringSolution firingSolution) {
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     kicker = kickerSubsystem;
-    firingSolution = m_firingSolution;
+    this.firingSolution = firingSolution;
     addRequirements(kicker, shooter, hood);
   }
 
@@ -51,11 +50,5 @@ public class SetFiringSolution extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return (shooter.isAbleToEject() && kicker.isAbleToEject() && hood.isAtTarget());
   }
 }

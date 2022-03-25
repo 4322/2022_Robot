@@ -8,11 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
-public class StopFiringSolution extends InstantCommand {
+public class StopFiring extends InstantCommand {
   /**
    * Creates a new Disable_Shooter.
    */
@@ -20,18 +21,22 @@ public class StopFiringSolution extends InstantCommand {
    private Shooter shooter;
    private Hood hood;
    private Kicker kicker;
+   private Conveyor conveyor;
 
-  public StopFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem) {
+  public StopFiring(Kicker kickerSubsystem, Conveyor conveyorSubsystem,
+                    Shooter shooterSubsystem, Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
+    conveyor = conveyorSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     kicker = kickerSubsystem;
-    addRequirements(shooter, kicker, hood);
+    addRequirements(conveyor, shooter, kicker, hood);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    conveyor.stop();
     kicker.stop();
     shooter.stop();
     hood.stop();

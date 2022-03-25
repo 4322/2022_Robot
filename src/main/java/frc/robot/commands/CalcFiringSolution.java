@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
@@ -25,11 +24,11 @@ public class CalcFiringSolution extends CommandBase {
   private Shooter shooter;
   private Hood hood;
   private Limelight lim;
-  private boolean forceQuit = false;
   private FiringSolutionManager manager = FiringSolutionManager.getSingleton();
 
 
-  public CalcFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
+  public CalcFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, 
+                            Hood hoodSubsystem, Limelight limelight) {
     kicker = kickerSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
@@ -40,32 +39,27 @@ public class CalcFiringSolution extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (lim.getTargetVisible()) {
-      FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
-      kicker.setSpeed(firingSolution.getKickerSpeed());
-      shooter.setSpeed(firingSolution.getFlywheelSpeed());
-      hood.setTargetPosition(firingSolution.getHoodPosition());
-    } else {
-      DriverStation.reportError("No target found!", false);
-      forceQuit = true;
-    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (lim.getTargetVisible()) {
+      FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
+      kicker.setSpeed(firingSolution.getKickerSpeed());
+      shooter.setSpeed(firingSolution.getFlywheelSpeed());
+      hood.setTargetPosition(firingSolution.getHoodPosition());
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((shooter.isAbleToEject() && hood.isAtTarget()) || forceQuit);
+    return false;
   }
 }

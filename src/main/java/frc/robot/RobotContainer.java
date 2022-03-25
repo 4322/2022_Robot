@@ -15,7 +15,6 @@ import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -55,7 +54,8 @@ public class RobotContainer {
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
-  private final StopFiringSolution stopSpeedAndAngle = new StopFiringSolution(kicker, shooter, hood);
+  private final StartFiring startFiring = new StartFiring(kicker, conveyor, shooter, hood, 0);
+  private final StopFiring stopFiring = new StopFiring(kicker, conveyor, shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -63,9 +63,6 @@ public class RobotContainer {
 
   // Hood Commands
   private final HoodReset hoodReset = new HoodReset(hood);
-
-  // Kicker Commands
-  private final ConveyorEnable kickerEnable = new ConveyorEnable(kicker, conveyor, shooter);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -118,12 +115,12 @@ public class RobotContainer {
     coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
 
     coPilot.dPad.up.whenPressed(new CalcFiringSolution(kicker, shooter, hood, limelight));
-    coPilot.lb.whenPressed(stopSpeedAndAngle);
+    coPilot.lb.whenPressed(stopFiring);
 
     coPilot.rb.whileHeld(intakeIn);
     coPilot.rt.whileHeld(intakeOut);
 
-    coPilot.lt.whileHeld(kickerEnable);
+    coPilot.lt.whileHeld(startFiring);
 
     // to be fixed
     // coPilot.back.whenPressed(hoodReset);
@@ -159,10 +156,8 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       new HoodReset(hood),
       new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-      new KickerAutoStart(kicker, conveyor, shooter),
-      new WaitCommand(5), // wait for balls to shoot
-      new KickerStop(kicker, conveyor),
-      new StopFiringSolution(kicker, shooter, hood),
+      new StartFiring(kicker, conveyor, shooter, hood, 5),
+      new StopFiring(kicker, conveyor, shooter, hood),
       new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
     );
   }
