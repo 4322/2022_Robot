@@ -211,7 +211,7 @@ public class RobotContainer {
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
           new DrivePolar(driveunbun, 0, 0, 45, 0.7),
-          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StartFiring(kicker, conveyor, shooter, hood, 4),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
     }
