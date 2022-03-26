@@ -10,6 +10,10 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
@@ -39,6 +43,9 @@ public class RobotContainer {
   private static JoystickButton rotateTopLeftButton;
   private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
+
+  private ShuffleboardTab tab;
+  private SendableChooser<String> autoModeChooser;
 
   // The robot's subsystems and commands are defined here...
   private final Webcams webcams = new Webcams();
@@ -79,6 +86,16 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    tab = Shuffleboard.getTab("Auto");
+    autoModeChooser.setDefaultOption("Preload Only", "1");
+    autoModeChooser.addOption("Preload + 1", "2");
+    autoModeChooser.addOption("Preload + 2", "3");
+
+    tab.add("Auto Mode", autoModeChooser)
+      .withWidget(BuiltInWidgets.kComboBoxChooser)
+      .withPosition(0, 0)
+      .withSize(1, 1);
 
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
@@ -153,13 +170,36 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-      new HoodReset(hood),
-      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-      new StartFiring(kicker, conveyor, shooter, hood, 5),
-      new StopFiring(kicker, conveyor, shooter, hood),
-      new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
-    );
+    switch(autoModeChooser.getSelected()) {
+      case "1":
+        return new SequentialCommandGroup(
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new HoodReset(hood),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StopFiring(kicker, conveyor, shooter, hood),
+          new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
+        );
+      case "2":
+        return new SequentialCommandGroup(
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new HoodReset(hood),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StopFiring(kicker, conveyor, shooter, hood),
+          new DriveRobotCentric(driveunbun, 0, 0.7, 0.3, 1)
+        );
+      case "3":
+        return new SequentialCommandGroup(
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new HoodReset(hood),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StopFiring(kicker, conveyor, shooter, hood),
+          new DriveRobotCentric(driveunbun, 0, 0.7, -0.3, 1)
+        );
+    }
+    return null;
   }
 
   public void hoodReset() {
