@@ -18,6 +18,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -186,8 +187,14 @@ public class RobotContainer {
           new HoodReset(hood),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new StopFiring(kicker, conveyor, shooter, hood),
-          new DriveRobotCentric(driveunbun, 0, 0.7, 0.3, 1)
+          new ParallelCommandGroup(
+            new IntakeIn(intake, conveyor),
+            new DrivePolar(driveunbun, -150, 0.3, 120, 0.7)
+          ),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
+          new DrivePolar(driveunbun, 0, 0, 45, 0.7),
+          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StopFiring(kicker, conveyor, shooter, hood)
         );
       case "3":
         return new SequentialCommandGroup(
