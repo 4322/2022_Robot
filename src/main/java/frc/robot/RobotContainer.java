@@ -132,7 +132,7 @@ public class RobotContainer {
     coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
     coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
 
-    coPilot.dPad.up.whenPressed(new CalcFiringSolution(kicker, shooter, hood, limelight));
+    coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopFiring);
 
     coPilot.rb.whileHeld(intakeIn);

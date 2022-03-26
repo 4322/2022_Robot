@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -52,6 +52,7 @@ public final class Constants {
     public static final class FiringSolutions {
       public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
       public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
+      public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 42.28);
       public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
       public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
       public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
@@ -60,11 +61,12 @@ public final class Constants {
 
     public static FiringSolution[] limelightFiringSolutions;
     static {  // limelight can't see target from the fender
-        limelightFiringSolutions = new FiringSolution[4];
-        limelightFiringSolutions[0] = FiringSolutions.insideTarmac;
-        limelightFiringSolutions[1] = FiringSolutions.outsideTarmac;
-        limelightFiringSolutions[2] = FiringSolutions.closeLaunchpad;
-        limelightFiringSolutions[3] = FiringSolutions.farLaunchpad;
+        limelightFiringSolutions = new FiringSolution[5];
+        limelightFiringSolutions[0] = FiringSolutions.middleTarmac;
+        limelightFiringSolutions[1] = FiringSolutions.insideTarmac;
+        limelightFiringSolutions[2] = FiringSolutions.outsideTarmac;
+        limelightFiringSolutions[3] = FiringSolutions.closeLaunchpad;
+        limelightFiringSolutions[4] = FiringSolutions.farLaunchpad;
     }
 
     public static final class DriveConstants {
@@ -96,7 +98,7 @@ public final class Constants {
 
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
-        public static final double autoRotateToleranceDegrees = 3.0;
+        public static final double autoRotateToleranceDegrees = 1.5;
         public static final double autoRotationMaxSpeed = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
