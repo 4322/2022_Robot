@@ -188,7 +188,7 @@ public class RobotContainer {
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 0.7),
+            new IntakeIn(intake, conveyor, 0.8),
             new DrivePolar(driveunbun, -150, 0.3, 120, 0.7)
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
@@ -203,7 +203,7 @@ public class RobotContainer {
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 2.0),
+            new IntakeIn(intake, conveyor, 2.1),
             new SequentialCommandGroup(
               new DrivePolar(driveunbun, 150, 0.3, -120, 0.7),
               new DrivePolar(driveunbun, -85, 0.3, 0, 1.3)
