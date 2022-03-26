@@ -429,10 +429,11 @@ public class Driveunbun extends SubsystemBase {
   // Drives the robot at a certain angle (relative to the field, forward = 0 deg)
   // Must be periodically updated to work
   public void drivePolar(double angle, double speed, double rotationDeg) {
-    angle = Math.toRadians(-angle + 90); // adjust for front of robot as 0 and clockwise rotation
+    angle = Math.toRadians(90 - angle); // adjust for front of robot as 0 and clockwise rotation
     double x = speed * Math.cos(angle);
     double y = speed * Math.sin(angle);
-    driveAutoRotate(x, y, rotationDeg);
+    double error = SwerveHelper.boundDegrees(rotationDeg - getAngle());
+    driveAutoRotate(-x, -y, error);
   }
 
   public boolean isDrivingWithSideCams() {

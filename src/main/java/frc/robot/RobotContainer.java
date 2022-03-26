@@ -46,7 +46,7 @@ public class RobotContainer {
   private static JoystickButton rotateBottomLeftButton;
 
   private ShuffleboardTab tab;
-  private SendableChooser<String> autoModeChooser;
+  private SendableChooser<Integer> autoModeChooser = new SendableChooser<Integer>();
 
   // The robot's subsystems and commands are defined here...
   private final Webcams webcams = new Webcams();
@@ -89,14 +89,14 @@ public class RobotContainer {
     configureButtonBindings();
 
     tab = Shuffleboard.getTab("Auto");
-    autoModeChooser.setDefaultOption("Preload Only", "1");
-    autoModeChooser.addOption("Preload + 1", "2");
-    autoModeChooser.addOption("Preload + 2", "3");
+    autoModeChooser.setDefaultOption("Preload Only", 1);
+    autoModeChooser.addOption("Preload + 1", 2);
+    autoModeChooser.addOption("Preload + 2", 3);
 
     tab.add("Auto Mode", autoModeChooser)
-      .withWidget(BuiltInWidgets.kComboBoxChooser)
+      .withWidget(BuiltInWidgets.kSplitButtonChooser)
       .withPosition(0, 0)
-      .withSize(1, 1);
+      .withSize(3, 2);
 
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
@@ -172,7 +172,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     switch(autoModeChooser.getSelected()) {
-      case "1":
+      case 1:
         return new SequentialCommandGroup(
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new HoodReset(hood),
@@ -181,22 +181,22 @@ public class RobotContainer {
           new StopFiring(kicker, conveyor, shooter, hood),
           new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
         );
-      case "2":
+      case 2:
         return new SequentialCommandGroup(
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new HoodReset(hood),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 0.8),
-            new DrivePolar(driveunbun, -150, 0.3, 120, 0.7)
+            new IntakeIn(intake, conveyor, 1.4),
+            new DrivePolar(driveunbun, -168, 0.6, 90, 1.2)
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
-          new DrivePolar(driveunbun, 0, 0, 45, 0.7),
+          new DrivePolar(driveunbun, 0, 0, 28, 1),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
-      case "3":
+      case 3:
         return new SequentialCommandGroup(
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new HoodReset(hood),

@@ -11,7 +11,7 @@ public class IntakeIn extends CommandBase {
     private Conveyor conveyor;
 
     private double intakeSec;
-    private Timer intakeTimer;
+    private Timer intakeTimer = new Timer();
 
     public IntakeIn(Intake intakeSubsystem, Conveyor conveyorSubsystem, double seconds) {
             // Use addRequirements() here to declare subsystem dependencies.
