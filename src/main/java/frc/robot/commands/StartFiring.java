@@ -14,7 +14,7 @@ public class StartFiring extends CommandBase {
   private Shooter shooter;
   private Hood hood;
   private double fireSec;
-  private Timer firingTimer;
+  private Timer firingTimer = new Timer();
 
   public StartFiring(Kicker kickerSubsystem, Conveyor conveyorSubsystem, 
               Shooter shooterSubsystem, Hood hoodSubsystem, double fireSec) {
