@@ -99,6 +99,7 @@ public final class Constants {
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
         public static final double autoRotateToleranceDegrees = 1.5;
+        public static final double limelightRotateToleranceDegrees = 2.0;
         public static final double autoRotationMaxSpeed = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
@@ -178,6 +179,7 @@ public final class Constants {
             public static final double wheelDiameter = 4.0;
             public static final double gearRatio = 6.55;
         }
+
     }
 
     public static final class ShooterConstants {
