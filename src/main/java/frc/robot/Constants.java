@@ -96,7 +96,7 @@ public final class Constants {
 
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
-        public static final double autoRotateToleranceDegrees = 3.0;
+        public static final double autoRotateToleranceDegrees = 1.5;
         public static final double autoRotationMaxSpeed = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
