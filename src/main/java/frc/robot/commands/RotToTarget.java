@@ -50,6 +50,6 @@ public class RotToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(lim.getHorizontalDegToTarget()) < DriveConstants.autoRotateToleranceDegrees;
+    return Math.abs(lim.getHorizontalDegToTarget()) < DriveConstants.limelightRotateToleranceDegrees;
   }
 }
