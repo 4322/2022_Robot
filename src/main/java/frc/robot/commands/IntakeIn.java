@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
@@ -9,10 +10,14 @@ public class IntakeIn extends CommandBase {
     private Intake intake;
     private Conveyor conveyor;
 
-    public IntakeIn(Intake intakeSubsystem, Conveyor conveyorSubsystem) {
+    private double intakeSec;
+    private Timer intakeTimer;
+
+    public IntakeIn(Intake intakeSubsystem, Conveyor conveyorSubsystem, double seconds) {
             // Use addRequirements() here to declare subsystem dependencies.
     intake = intakeSubsystem;
     conveyor = conveyorSubsystem;
+    intakeSec = seconds;
     addRequirements(intake, conveyor);
   }
 
@@ -20,6 +25,8 @@ public class IntakeIn extends CommandBase {
   @Override
   public void initialize() {
     intake.intake();
+    intakeTimer.reset();
+    intakeTimer.start();
     if (!conveyor.getSensedBall()) {
       conveyor.enableConveyor();
     }
@@ -42,6 +49,10 @@ public class IntakeIn extends CommandBase {
   // Run until interrupted
   @Override
   public boolean isFinished() {
-    return false;     
+    if (intakeSec > 0 && intakeTimer.hasElapsed(intakeSec)) {
+      return true;
+    } else {
+      return false;  
+    }      
   }
 }

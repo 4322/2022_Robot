@@ -66,7 +66,7 @@ public class RobotContainer {
   private final StopFiring stopFiring = new StopFiring(kicker, conveyor, shooter, hood);
 
   // Intake Commands
-  private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
+  private final IntakeIn intakeIn = new IntakeIn(intake, conveyor, 0);
   private final IntakeOut intakeOut = new IntakeOut(intake);
 
   // Hood Commands
@@ -188,7 +188,7 @@ public class RobotContainer {
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor),
+            new IntakeIn(intake, conveyor, 0.7),
             new DrivePolar(driveunbun, -150, 0.3, 120, 0.7)
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
@@ -202,8 +202,17 @@ public class RobotContainer {
           new HoodReset(hood),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new StopFiring(kicker, conveyor, shooter, hood),
-          new DriveRobotCentric(driveunbun, 0, 0.7, -0.3, 1)
+          new ParallelCommandGroup(
+            new IntakeIn(intake, conveyor, 2.0),
+            new SequentialCommandGroup(
+              new DrivePolar(driveunbun, 150, 0.3, -120, 0.7),
+              new DrivePolar(driveunbun, -85, 0.3, 0, 1.3)
+            )
+          ),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
+          new DrivePolar(driveunbun, 0, 0, 45, 0.7),
+          new StartFiring(kicker, conveyor, shooter, hood, 2),
+          new StopFiring(kicker, conveyor, shooter, hood)
         );
     }
     return null;
