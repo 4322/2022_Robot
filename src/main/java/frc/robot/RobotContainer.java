@@ -55,6 +55,7 @@ public class RobotContainer {
 
   // Shooter Commands
   private final StartFiring startFiring = new StartFiring(kicker, conveyor, shooter, hood, 0);
+  private final StartFiringOverride startFiringOverride = new StartFiringOverride(conveyor);
   private final StopFiring stopFiring = new StopFiring(kicker, conveyor, shooter, hood);
 
   // Intake Commands
@@ -121,6 +122,7 @@ public class RobotContainer {
     coPilot.rt.whileHeld(intakeOut);
 
     coPilot.lt.whileHeld(startFiring);
+    coPilot.start.whileHeld(startFiringOverride);
 
     // to be fixed
     // coPilot.back.whenPressed(hoodReset);
