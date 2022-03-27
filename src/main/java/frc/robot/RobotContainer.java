@@ -223,8 +223,8 @@ public class RobotContainer {
     double disposalEndDriveDeg = 130;
     double disposalEndRotateDeg = 0;
 
-    double ballTwoRightAutoDriveSec = 0.8;
-    double ballTwoRightAutoDriveDeg = 92;
+    double ballTwoRightAutoDriveSec = 0.7;
+    double ballTwoRightAutoDriveDeg = 85;
     double ballTwoRightAutoApproachDeg = 90;
 
     double ballThreeDriveSec = 1.3;
@@ -248,16 +248,20 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
+        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
+            alongWith(new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 
+            smallNonZeroSpeed, 0, wheelPreRotateSec))  // doesn't hurt in 1 ball mode
       );
 
     // Start of 3 or 5 ball auto
     SequentialCommandGroup rightAuto = 
       new SequentialCommandGroup(
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
-        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
+            alongWith(new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 
+                                     smallNonZeroSpeed, 0, wheelPreRotateSec)),
         new StopFiring(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
           new IntakeIn(intake, conveyor, 0),
