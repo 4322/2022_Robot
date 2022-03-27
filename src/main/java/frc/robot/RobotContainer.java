@@ -305,8 +305,8 @@ public class RobotContainer {
                 new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, maxDriveSpeed, 
                               ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
                 new WaitCommand(intakeAfterArrivalSec),
-                new RotToTarget(driveunbun, limelight),
-                new CalcFiringSolutionAuto(kicker, shooter, hood, limelight)
+                new RotToTarget(driveunbun, limelight, 1),
+                new CalcFiringSolution(kicker, shooter, hood, limelight)
               )
             ),
             new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
@@ -377,8 +377,8 @@ public class RobotContainer {
 
       case 3:
         rightAuto.addCommands(
-          new RotToTarget(driveunbun, limelight),
-          new CalcFiringSolutionAuto(kicker, shooter, hood, limelight),
+          new RotToTarget(driveunbun, limelight, 1),
+          new CalcFiringSolution(kicker, shooter, hood, limelight),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
@@ -403,8 +403,8 @@ public class RobotContainer {
           ),
           new DrivePolar(driveunbun, ballFiveShootDeg, maxDriveSpeed, 
                          ballFiveShootDeg, ballFiveShootApproachSec),
-          new RotToTarget(driveunbun, limelight),
-          new CalcFiringSolutionAuto(kicker, shooter, hood, limelight),
+          new RotToTarget(driveunbun, limelight, 1),
+          new CalcFiringSolution(kicker, shooter, hood, limelight),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
         );

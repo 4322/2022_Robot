@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
@@ -20,11 +21,14 @@ public class RotToTarget extends CommandBase {
 
   private Driveunbun driveunbun;
   private Limelight lim;
+  private Timer timeout = new Timer();
+  private double timeoutLength;
 
 
-  public RotToTarget(Driveunbun driveSubsystem, Limelight limelight) {
+  public RotToTarget(Driveunbun driveSubsystem, Limelight limelight, double timeoutSeconds) {
     driveunbun = driveSubsystem;
     lim = limelight;
+    timeoutLength = timeoutSeconds;
     addRequirements(driveunbun);
   }
 
@@ -51,6 +55,7 @@ public class RotToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(lim.getHorizontalDegToTarget()) < DriveConstants.limelightRotateToleranceDegrees;
+    return (Math.abs(lim.getHorizontalDegToTarget()) < DriveConstants.limelightRotateToleranceDegrees) ||
+            timeout.hasElapsed(timeoutLength);
   }
 }
