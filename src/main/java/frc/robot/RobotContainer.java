@@ -192,54 +192,55 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    double smallNonZeroSpeed = 0.001;  // not enough to move the robot
-    double wheelPreRotateSec = 0.5;
-    double maxDriveSpeed = 1.0;
-    double spinUpMediumSec = 1.0;
-    double shootOneCargoSec = 0.8;  // must already be spun-up
-    double shootTwoCargoSec = 2.0;  // must already be spun-up
-    double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
-    double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
-    double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
-    double slowApproachSec = 0.2;  // duration of slow approach
-    double rotateToShootSec = 0.8;
-    double oneCargoDriveBackSec = 1.0;
+    final double smallNonZeroSpeed = 0.001;  // not enough to move the robot
+    final double wheelPreRotateSec = 0.5;
+    final double maxDriveSpeed = 1.0;
+    final double spinUpMediumSec = 1.0;
+    final double shootOneCargoSec = 0.8;  // must already be spun-up
+    final double shootTwoCargoSec = 2.0;  // must already be spun-up
+    final double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
+    final double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
+    final double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
+    final double slowApproachSec = 0.2;  // duration of slow approach
+    final double rotateToShootStaticSec = 0.8;
+    final double rotateToShootLimelightSec = 1.0;
+    final double oneCargoDriveBackSec = 1.0;
 
-    double ballTwoLeftAutoDriveSec = 0.8;
-    double ballTwoLeftAutoDriveDeg = -168;
-    double ballTwoLeftAutoShootDeg = 28;
+    final double ballTwoLeftAutoDriveSec = 0.8;
+    final double ballTwoLeftAutoDriveDeg = -168;
+    final double ballTwoLeftAutoShootDeg = 28;
 
-    double disposalLeft1DriveSec = 1.0;
-    double disposalLeft1DriveDeg = -55.0;
+    final double disposalLeft1DriveSec = 1.0;
+    final double disposalLeft1DriveDeg = -55.0;
 
-    double disposalRightDriveSec = 1.0;
-    double disposalRightDriveDeg = 110;
-    double disposalLeft2DriveSec = 1.4;
-    double disposalLeft2DriveDeg = -70.0;
+    final double disposalRightDriveSec = 1.0;
+    final double disposalRightDriveDeg = 110;
+    final double disposalLeft2DriveSec = 1.4;
+    final double disposalLeft2DriveDeg = -70.0;
 
-    double disposalShootDeg = -180.0;
+    final double disposalShootDeg = -180.0;
 
-    double disposalEndDriveSec = 0.8;
-    double disposalEndDriveDeg = 130;
-    double disposalEndRotateDeg = 0;
+    final double disposalEndDriveSec = 0.8;
+    final double disposalEndDriveDeg = 130;
+    final double disposalEndRotateDeg = 0;
 
-    double ballTwoRightAutoDriveSec = 0.7;
-    double ballTwoRightAutoDriveDeg = 85;
-    double ballTwoRightAutoApproachDeg = 90;
+    final double ballTwoRightAutoDriveSec = 0.7;
+    final double ballTwoRightAutoDriveDeg = 85;
+    final double ballTwoRightAutoApproachDeg = 90;
 
-    double ballThreeDriveSec = 1.3;
-    double ballThreeDriveDeg = -147;
-    double ballThreeShootDeg = -45;
+    final double ballThreeDriveSec = 1.3;
+    final double ballThreeDriveDeg = -147;
+    final double ballThreeShootDeg = -45;
 
-    double ballFourDriveSec = 1.5;
-    double ballFourDriveDeg = 170;
-    double ballFourApproachDeg = 135;
+    final double ballFourDriveSec = 1.5;
+    final double ballFourDriveDeg = 170;
+    final double ballFourApproachDeg = 135;
     
-    double ballFiveDriveSec = 0.4;
-    double ballFiveDriveDeg = -45;
-    double ballFiveWaitSec = 1.0;  // time for human player to roll ball into intake
-    double ballFiveShootApproachSec = 1.0;
-    double ballFiveShootDeg = -30;
+    final double ballFiveDriveSec = 0.4;
+    final double ballFiveDriveDeg = -45;
+    final double ballFiveWaitSec = 1.0;  // time for human player to roll ball into intake
+    final double ballFiveShootApproachSec = 1.0;
+    final double ballFiveShootDeg = -30;
 
     // Start of 1 or 2 ball auto
     SequentialCommandGroup leftAuto = 
@@ -304,7 +305,7 @@ public class RobotContainer {
                 new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, maxDriveSpeed, 
                               ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
                 new WaitCommand(intakeAfterArrivalSec),
-                new RotToTarget(driveunbun, limelight, 1),
+                new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
                 new CalcFiringSolution(kicker, shooter, hood, limelight)
               )
             ),
@@ -321,7 +322,7 @@ public class RobotContainer {
                                 ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
                   new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-                  new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootSec)
+                  new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
                 )
               ),
               new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
@@ -333,7 +334,7 @@ public class RobotContainer {
                                  disposalLeft1DriveDeg - 90, disposalLeft1DriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
                   new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow),
-                  new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootSec)
+                  new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
               new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
@@ -349,7 +350,7 @@ public class RobotContainer {
                                 ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
                   new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-                  new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootSec)
+                  new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
                 )
               ),
               new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
@@ -364,7 +365,7 @@ public class RobotContainer {
                                 disposalLeft2DriveDeg - 90, disposalLeft2DriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
                   new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow),
-                  new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootSec)
+                  new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
               new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
@@ -376,7 +377,7 @@ public class RobotContainer {
 
       case 3:
         rightAuto.addCommands(
-          new RotToTarget(driveunbun, limelight, 1),
+          new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
@@ -385,7 +386,7 @@ public class RobotContainer {
 
       case 5:
         rightAuto.addCommands(
-          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootSec),
+          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood),
           new ParallelRaceGroup(
@@ -402,7 +403,7 @@ public class RobotContainer {
           ),
           new DrivePolar(driveunbun, ballFiveShootDeg, maxDriveSpeed, 
                          ballFiveShootDeg, ballFiveShootApproachSec),
-          new RotToTarget(driveunbun, limelight, 1),
+          new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
