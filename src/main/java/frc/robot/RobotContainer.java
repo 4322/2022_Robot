@@ -241,7 +241,6 @@ public class RobotContainer {
     double ballFiveShootApproachSec = 1.0;
     double ballFiveShootDeg = -30;
 
-    //RaceCommandGroup
     // Start of 1 or 2 ball auto
     SequentialCommandGroup leftAuto = 
       new SequentialCommandGroup(
