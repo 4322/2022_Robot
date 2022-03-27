@@ -93,11 +93,12 @@ public class RobotContainer {
     autoModeChooser.setDefaultOption("Preload Only", 1);
     autoModeChooser.addOption("Preload + 1", 2);
     autoModeChooser.addOption("Preload + 2", 3);
+    autoModeChooser.addOption("Quintet", 5);
 
     tab.add("Auto Mode", autoModeChooser)
       .withWidget(BuiltInWidgets.kSplitButtonChooser)
       .withPosition(0, 0)
-      .withSize(3, 2);
+      .withSize(4, 2);
 
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
@@ -200,22 +201,56 @@ public class RobotContainer {
         );
       case 3:
         return new SequentialCommandGroup(
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
           new HoodReset(hood),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 2.1),
+            new IntakeIn(intake, conveyor, 3.4),
             new SequentialCommandGroup(
-              new DrivePolar(driveunbun, 150, 0.3, -120, 0.7),
-              new DrivePolar(driveunbun, -85, 0.3, 0, 1.3)
+              new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
+              new DrivePolar(driveunbun, 92, 0.6, 0, 1.2),
+              new DrivePolar(driveunbun, 92, 0.3, 0, 0.4),
+              new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
             )
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
-          new DrivePolar(driveunbun, 0, 0, 45, 0.7),
+          new DrivePolar(driveunbun, 0, 0, -45, 1),
           new StartFiring(kicker, conveyor, shooter, hood, 4),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
+      case 5:
+      return new SequentialCommandGroup(
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
+        new HoodReset(hood),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
+        new StartFiring(kicker, conveyor, shooter, hood, 2),
+        new ParallelCommandGroup(
+          new IntakeIn(intake, conveyor, 3.4),
+          new SequentialCommandGroup(
+            new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
+            new DrivePolar(driveunbun, 92, 0.6, 0, 1.2),
+            new DrivePolar(driveunbun, 92, 0.3, 0, 0.4),
+            new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
+          )
+        ),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
+        new DrivePolar(driveunbun, 0, 0, -45, 1),
+        new StartFiring(kicker, conveyor, shooter, hood, 4),
+        new ParallelCommandGroup(
+          new IntakeIn(intake, conveyor, 2.7),
+          new SequentialCommandGroup(
+            new DrivePolar(driveunbun, 140, 0.6, 45, 1.7),
+            new DrivePolar(driveunbun, 140, 0.3, 45, 0.2),
+            new DrivePolar(driveunbun, -40, 0.3, 45, 0.2),
+            new DrivePolar(driveunbun, 0, 0, 45, 0.5)
+          )
+        ),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.farLaunchpad),
+        new DrivePolar(driveunbun, 0, 0, -30, 1),
+        new StartFiring(kicker, conveyor, shooter, hood, 4),
+        new StopFiring(kicker, conveyor, shooter, hood)
+      );
     }
     return null;
   }

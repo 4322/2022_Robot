@@ -103,7 +103,7 @@ public final class Constants {
         public static final double autoRotationMaxSpeed = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
-        public static final double rotatePolarDeadband = 0.3;
+        public static final double rotatePolarDeadband = 0.5;
         public static final double twistDeadband = 0.08;
  
         public static final double sideCamDriveScaleFactor = 0.25;
