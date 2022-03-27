@@ -55,18 +55,21 @@ public final class Constants {
       public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 42.28);
       public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
       public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
+      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 120);  // needs calibration
       public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
+      public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 175);  // needs calibration
       public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 205);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
     static {  // limelight can't see target from the fender
         limelightFiringSolutions = new FiringSolution[5];
-        limelightFiringSolutions[0] = FiringSolutions.middleTarmac;
-        limelightFiringSolutions[1] = FiringSolutions.insideTarmac;
-        limelightFiringSolutions[2] = FiringSolutions.outsideTarmac;
-        limelightFiringSolutions[3] = FiringSolutions.closeLaunchpad;
-        limelightFiringSolutions[4] = FiringSolutions.farLaunchpad;
+        int i = 0;
+        limelightFiringSolutions[i++] = FiringSolutions.middleTarmac;
+        limelightFiringSolutions[i++] = FiringSolutions.insideTarmac;
+        limelightFiringSolutions[i++] = FiringSolutions.outsideTarmac;
+        limelightFiringSolutions[i++] = FiringSolutions.closeLaunchpad;
+        limelightFiringSolutions[i++] = FiringSolutions.farLaunchpad;
     }
 
     public static final class DriveConstants {
