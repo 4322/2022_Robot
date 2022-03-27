@@ -18,6 +18,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -305,8 +306,10 @@ public class RobotContainer {
                 new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, maxDriveSpeed, 
                               ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
                 new WaitCommand(intakeAfterArrivalSec),
+                new InstantCommand(limelight::enableLed),
                 new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
-                new CalcFiringSolution(kicker, shooter, hood, limelight)
+                new CalcFiringSolution(kicker, shooter, hood, limelight),
+                new InstantCommand(limelight::disableLed)
               )
             ),
             new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
@@ -377,8 +380,10 @@ public class RobotContainer {
 
       case 3:
         rightAuto.addCommands(
+          new InstantCommand(limelight::enableLed),
           new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
+          new InstantCommand(limelight::disableLed),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
@@ -403,8 +408,11 @@ public class RobotContainer {
           ),
           new DrivePolar(driveunbun, ballFiveShootDeg, maxDriveSpeed, 
                          ballFiveShootDeg, ballFiveShootApproachSec),
+
+          new InstantCommand(limelight::enableLed),
           new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
+          new InstantCommand(limelight::disableLed),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
         );

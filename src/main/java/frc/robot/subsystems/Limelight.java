@@ -108,7 +108,7 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public void setLed(LedMode mode) {
+  private void setLed(LedMode mode) {
     if (Constants.limelightEnabled) {
       ledMode.setNumber(mode.value);
     }
@@ -157,5 +157,13 @@ public class Limelight extends SubsystemBase {
     }
 
     return distance;
+  }
+
+  public void enableLed() {
+    setLed(LedMode.On);
+  }
+
+  public void disableLed() {
+    setLed(LedMode.Off);
   }
 }
