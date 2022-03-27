@@ -179,9 +179,9 @@ public class RobotContainer {
       rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
       rotateTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.sideKillFieldCentric));
       rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
-      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0));
-      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69)); // 2 ball
-      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -21)); // 5 ball
+      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
+      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69, false)); // 2 ball
+      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -21, false)); // 5 ball
     }
   }
   

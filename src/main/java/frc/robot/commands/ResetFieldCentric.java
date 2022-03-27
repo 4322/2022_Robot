@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.Driveunbun;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class ResetFieldCentric extends InstantCommand {
@@ -8,17 +9,21 @@ public class ResetFieldCentric extends InstantCommand {
 
   private final Driveunbun driveSubsystem;
   private final double offset;
+  private final boolean runWhenEnabled;
 
-  public ResetFieldCentric(Driveunbun driveSubsystem, double offset) {
+  public ResetFieldCentric(Driveunbun driveSubsystem, double offset, boolean runWhenEnabled) {
     this.driveSubsystem = driveSubsystem;
     this.offset = offset;
+    this.runWhenEnabled = runWhenEnabled;
     // no need to interrupt other commands when changing drive mode
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveSubsystem.resetFieldCentric(offset);
+    if (DriverStation.isDisabled() || runWhenEnabled) {
+      driveSubsystem.resetFieldCentric(offset);
+    }
   }
 
   // Called once the command ends or is interrupted.
