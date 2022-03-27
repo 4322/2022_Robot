@@ -14,6 +14,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Limelight.LedMode;
 
 public class CalcFiringSolutionAuto extends CommandBase {
   /**
@@ -40,7 +41,7 @@ public class CalcFiringSolutionAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    lim.setLed(LedMode.On);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
