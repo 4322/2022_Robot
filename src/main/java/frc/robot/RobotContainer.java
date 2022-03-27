@@ -206,11 +206,11 @@ public class RobotContainer {
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
           new StartFiring(kicker, conveyor, shooter, hood, 2),
           new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 3.4),
+            new IntakeIn(intake, conveyor, 3.3),
             new SequentialCommandGroup(
               new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
-              new DrivePolar(driveunbun, 92, 0.6, 0, 1.2),
-              new DrivePolar(driveunbun, 92, 0.3, 0, 0.4),
+              new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
+              new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
               new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
             )
           ),
@@ -226,11 +226,11 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
         new StartFiring(kicker, conveyor, shooter, hood, 2),
         new ParallelCommandGroup(
-          new IntakeIn(intake, conveyor, 3.4),
+          new IntakeIn(intake, conveyor, 3.3),
           new SequentialCommandGroup(
             new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
-            new DrivePolar(driveunbun, 92, 0.6, 0, 1.2),
-            new DrivePolar(driveunbun, 92, 0.3, 0, 0.4),
+            new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
+            new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
             new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
           )
         ),
