@@ -403,6 +403,8 @@ public class RobotContainer {
           ),
           new DrivePolar(driveunbun, ballFiveShootDeg, maxDriveSpeed, 
                          ballFiveShootDeg, ballFiveShootApproachSec),
+          new RotToTarget(driveunbun, limelight),
+          new CalcFiringSolution(kicker, shooter, hood, limelight),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
