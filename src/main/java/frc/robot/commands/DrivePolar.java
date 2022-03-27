@@ -19,7 +19,6 @@ public class DrivePolar extends CommandBase {
   private final double speed;
   private final double rotate;
   private final double seconds;
-  private Driveunbun.DriveMode previousDriveMode;
 
   private Timer timer = new Timer();
 
@@ -36,8 +35,11 @@ public class DrivePolar extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    previousDriveMode = Driveunbun.getDriveMode();
-    driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric);
+    if (Driveunbun.getDriveMode() != Driveunbun.DriveMode.fieldCentric) {
+      // This command is only used in auto, so it's OK to not restore the 
+      // previous drive mode.
+      driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric);
+    }
     timer.reset();
     timer.start();
   }
@@ -52,7 +54,6 @@ public class DrivePolar extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveunbun.stop();
-    driveunbun.setDriveMode(previousDriveMode);
   }
 
   // Returns true when the command should end.
