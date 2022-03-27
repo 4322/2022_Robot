@@ -45,6 +45,8 @@ public class RobotContainer {
   private static JoystickButton rotateTopLeftButton;
   private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
+  private static JoystickButton rotateButtonNine;
+  private static JoystickButton rotateButtonTen;
 
   private ShuffleboardTab tab;
   private SendableChooser<Integer> autoModeChooser = new SendableChooser<Integer>();
@@ -168,6 +170,8 @@ public class RobotContainer {
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
       rotateTopRightButton = new JoystickButton(rotateStick, 6); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
+      rotateButtonNine = new JoystickButton(rotateStick, 9);
+      rotateButtonTen = new JoystickButton(rotateStick, 10);
       driveTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric));
       driveBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.leftCamCentric));
       driveBottomRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.rightCamCentric));
@@ -175,7 +179,9 @@ public class RobotContainer {
       rotateTopLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.killFieldCentric));
       rotateTopRightButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.sideKillFieldCentric));
       rotateBottomLeftButton.whenPressed(() -> driveunbun.setDriveMode(Driveunbun.DriveMode.limelightFieldCentric));
-      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun));
+      driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0));
+      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69)); // 2 ball
+      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -21)); // 5 ball
     }
   }
   

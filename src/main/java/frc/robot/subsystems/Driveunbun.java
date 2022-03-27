@@ -95,7 +95,7 @@ public class Driveunbun extends SubsystemBase {
         } catch (InterruptedException e) {
         }
 
-        resetFieldCentric();
+        resetFieldCentric(0);
         SwerveHelper.setGyro(gyro);
       } else {
         setDriveMode(DriveMode.frontCamCentric);
@@ -270,11 +270,11 @@ public class Driveunbun extends SubsystemBase {
     }
   }
 
-  // make the current robot direction be forward
-  public void resetFieldCentric() {
+  // make the current robot direction be forward, or add an offset
+  public void resetFieldCentric(double offset) {
     if (gyro != null) {
       gyro.setAngleAdjustment(0);
-      gyro.setAngleAdjustment(-gyro.getAngle());
+      gyro.setAngleAdjustment(-gyro.getAngle() + offset);
     }
     setDriveMode(DriveMode.fieldCentric);
   }

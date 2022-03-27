@@ -7,16 +7,18 @@ public class ResetFieldCentric extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final Driveunbun driveSubsystem;
+  private final double offset;
 
-  public ResetFieldCentric(Driveunbun driveSubsystem) {
+  public ResetFieldCentric(Driveunbun driveSubsystem, double offset) {
     this.driveSubsystem = driveSubsystem;
+    this.offset = offset;
     // no need to interrupt other commands when changing drive mode
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveSubsystem.resetFieldCentric();
+    driveSubsystem.resetFieldCentric(offset);
   }
 
   // Called once the command ends or is interrupted.
