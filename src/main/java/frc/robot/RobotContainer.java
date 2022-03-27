@@ -47,6 +47,7 @@ public class RobotContainer {
 
   private ShuffleboardTab tab;
   private SendableChooser<Integer> autoModeChooser = new SendableChooser<Integer>();
+  private SendableChooser<Integer> autoSubModeChooser = new SendableChooser<Integer>();
 
   // The robot's subsystems and commands are defined here...
   private final Webcams webcams = new Webcams();
@@ -98,6 +99,15 @@ public class RobotContainer {
     tab.add("Auto Mode", autoModeChooser)
       .withWidget(BuiltInWidgets.kSplitButtonChooser)
       .withPosition(0, 0)
+      .withSize(4, 2);
+
+    autoSubModeChooser.setDefaultOption("None", 0);
+    autoSubModeChooser.addOption("Left Only", 1);
+    autoSubModeChooser.addOption("Left and Right", 2);
+
+    tab.add("Preload + 1 Disposal Mode", autoSubModeChooser)
+      .withWidget(BuiltInWidgets.kSplitButtonChooser)
+      .withPosition(0, 2)
       .withSize(4, 2);
 
     if (Constants.driveEnabled) {
@@ -174,83 +184,107 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    switch(autoModeChooser.getSelected()) {
-      case 1:
-        return new SequentialCommandGroup(
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-          new HoodReset(hood),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-          new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new StopFiring(kicker, conveyor, shooter, hood),
-          new DriveRobotCentric(driveunbun, 0, 0.7, 0, 1)
-        );
-      case 2:
-        return new SequentialCommandGroup(
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-          new HoodReset(hood),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-          new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 1.4),
-            new DrivePolar(driveunbun, -168, 0.6, 90, 1.2)
-          ),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
-          new DrivePolar(driveunbun, 0, 0, 28, 1),
-          new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new StopFiring(kicker, conveyor, shooter, hood)
-        );
-      case 3:
-        return new SequentialCommandGroup(
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
-          new HoodReset(hood),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
-          new StartFiring(kicker, conveyor, shooter, hood, 2),
-          new ParallelCommandGroup(
-            new IntakeIn(intake, conveyor, 3.3),
-            new SequentialCommandGroup(
-              new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
-              new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
-              new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
-              new DrivePolar(driveunbun, -147, 0.6, -60, 1.7)
-            )
-          ),
-          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
-          new DrivePolar(driveunbun, 0, 0, -45, 1),
-          new StartFiring(kicker, conveyor, shooter, hood, 3),
-          new StopFiring(kicker, conveyor, shooter, hood)
-        );
-      case 5:
-      return new SequentialCommandGroup(
+
+    double wheelPreRotateSpeed = 0.001;  // not enough to move the robot
+    double wheelPreRotateSec = 0.5;
+    double spinUpMediumSec = 1.0;
+    double shootOneCargoSec = 1.0;  // must already be spun-up
+    double shootTwoCargoSec = 2.0;  // must already be spun-up
+    double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
+    double conveyorTransitSec = 1.0;  // time to push cargo up to the button
+    double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
+    double slowApproachSec = 0.2;  // duration of slow approach
+    double rotateToShootSec = 1.0;
+    double oneCargoDriveBackSec = 1.0;
+    double ballTwoLeftAutoDriveSec = 1.2;
+    double ballTwoRightAutoDriveSec = 1.3;
+    double ballTwoRightAutoDriveDeg = 92;
+    double ballTwoRightAutoRotateDeg = 0;
+    double ballThreeDriveSec = 1.7;
+    double ballFourDriveSec = 1.5;
+    double ballFourDriveDeg = 170;
+    double ballFourRotateDeg = 45;
+    double ballFiveDriveSec = 0.4;
+    double ballFiveDriveDeg = -45;
+    double ballFiveRotateDeg = 45;
+    double ballFiveWaitSec = 1.0;  // time for human player to roll ball into intake
+
+    //RaceCommandGroup
+    // Start of 1 or 2 ball auto
+    SequentialCommandGroup leftAuto = 
+      new SequentialCommandGroup(
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+        new HoodReset(hood),
+        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
+        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec),
+        new StopFiring(kicker, conveyor, shooter, hood)
+      );
+
+    // Start of 3 or 5 ball auto
+    SequentialCommandGroup rightAuto = 
+      new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
-        new StartFiring(kicker, conveyor, shooter, hood, 2),
+        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec),
         new ParallelCommandGroup(
           new IntakeIn(intake, conveyor, 3.3),
           new SequentialCommandGroup(
-            new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
-            new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
-            new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
-            new DrivePolar(driveunbun, -147, 0.6, -60, 1.7)
+            new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 0.6, 
+                           ballTwoRightAutoRotateDeg, ballTwoRightAutoDriveSec),
+            new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, slowApproachSpeed, 
+                           ballTwoRightAutoRotateDeg, slowApproachSec),
+            new DrivePolar(driveunbun, -147, 0.6, -60, ballThreeDriveSec)
           )
         ),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
-        new DrivePolar(driveunbun, 0, 0, -45, 1),
-        new StartFiring(kicker, conveyor, shooter, hood, 2),
-        new ParallelCommandGroup(
-          new IntakeIn(intake, conveyor, 2.5),
-          new SequentialCommandGroup(
-            new DrivePolar(driveunbun, 170, 1.0, 45, 1.5),
-            new DrivePolar(driveunbun, 170, 0.3, 45, 0.2),
-            new DrivePolar(driveunbun, -10, 1.0, 45, 0.4),
-            new DrivePolar(driveunbun, 0, 0, 45, 1.0)
-          )
-        ),
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.farLaunchpad),
-        new DrivePolar(driveunbun, 0, 0, -30, 1),
-        new StartFiring(kicker, conveyor, shooter, hood, 2),
+        new DrivePolar(driveunbun, 0, 0, -45, rotateToShootSec),
+        new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
         new StopFiring(kicker, conveyor, shooter, hood)
       );
+
+    switch(autoModeChooser.getSelected()) {
+
+      case 1:
+        leftAuto.addCommands(
+          new StopFiring(kicker, conveyor, shooter, hood),
+          new DriveRobotCentric(driveunbun, 0, 0.7, 0, oneCargoDriveBackSec)
+        );
+        return leftAuto;
+
+      case 2:
+        leftAuto.addCommands(
+          new ParallelCommandGroup(
+            new IntakeIn(intake, conveyor, ballTwoLeftAutoDriveSec + intakeAfterArrivalSec),
+            new DrivePolar(driveunbun, -168, 0.6, 90, ballTwoLeftAutoDriveSec)
+          ),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
+          new DrivePolar(driveunbun, 0, 0, 28, rotateToShootSec),
+          new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
+          new StopFiring(kicker, conveyor, shooter, hood)
+        );
+        return leftAuto;
+
+      case 3:
+        return rightAuto;
+
+      case 5:
+        rightAuto.addCommands(
+          new ParallelCommandGroup(
+            new IntakeIn(intake, conveyor, 2.5),
+            new SequentialCommandGroup(
+              new DrivePolar(driveunbun, ballFourDriveDeg, 1.0, ballFourRotateDeg, ballFourDriveSec),
+              new DrivePolar(driveunbun, ballFourDriveDeg, slowApproachSpeed, ballFourRotateDeg, slowApproachSec),
+              new DrivePolar(driveunbun, ballFiveDriveDeg, 1.0, ballFiveRotateDeg, ballFiveDriveSec),
+              new DrivePolar(driveunbun, 0, 0, ballFiveRotateDeg, ballFiveWaitSec)
+            )
+          ),
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.farLaunchpad),
+          new DrivePolar(driveunbun, 0, 0, -30, rotateToShootSec),
+          new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new StopFiring(kicker, conveyor, shooter, hood)
+        );
+        return rightAuto;
     }
     return null;
   }
