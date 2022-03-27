@@ -211,12 +211,12 @@ public class RobotContainer {
               new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
               new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
               new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
-              new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
+              new DrivePolar(driveunbun, -147, 0.6, -60, 1.7)
             )
           ),
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
           new DrivePolar(driveunbun, 0, 0, -45, 1),
-          new StartFiring(kicker, conveyor, shooter, hood, 4),
+          new StartFiring(kicker, conveyor, shooter, hood, 3),
           new StopFiring(kicker, conveyor, shooter, hood)
         );
       case 5:
@@ -231,24 +231,24 @@ public class RobotContainer {
             new DrivePolar(driveunbun, 90, 0.6, -69, 0.1),
             new DrivePolar(driveunbun, 92, 0.6, 0, 1.3),
             new DrivePolar(driveunbun, 92, 0.4, 0, 0.2),
-            new DrivePolar(driveunbun, -150, 0.6, -60, 1.7)
+            new DrivePolar(driveunbun, -147, 0.6, -60, 1.7)
           )
         ),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac),
         new DrivePolar(driveunbun, 0, 0, -45, 1),
-        new StartFiring(kicker, conveyor, shooter, hood, 4),
+        new StartFiring(kicker, conveyor, shooter, hood, 2),
         new ParallelCommandGroup(
-          new IntakeIn(intake, conveyor, 2.7),
+          new IntakeIn(intake, conveyor, 2.5),
           new SequentialCommandGroup(
-            new DrivePolar(driveunbun, 140, 0.6, 45, 1.7),
-            new DrivePolar(driveunbun, 140, 0.3, 45, 0.2),
-            new DrivePolar(driveunbun, -40, 0.3, 45, 0.2),
-            new DrivePolar(driveunbun, 0, 0, 45, 0.5)
+            new DrivePolar(driveunbun, 170, 1.0, 45, 1.5),
+            new DrivePolar(driveunbun, 170, 0.3, 45, 0.2),
+            new DrivePolar(driveunbun, -10, 1.0, 45, 0.4),
+            new DrivePolar(driveunbun, 0, 0, 45, 1.0)
           )
         ),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.farLaunchpad),
         new DrivePolar(driveunbun, 0, 0, -30, 1),
-        new StartFiring(kicker, conveyor, shooter, hood, 4),
+        new StartFiring(kicker, conveyor, shooter, hood, 2),
         new StopFiring(kicker, conveyor, shooter, hood)
       );
     }
