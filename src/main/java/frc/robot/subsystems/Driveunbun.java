@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
-import frc.robot.subsystems.Limelight.LedMode;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
@@ -238,9 +237,9 @@ public class Driveunbun extends SubsystemBase {
       break;
     }
     if (mode == DriveMode.limelightFieldCentric) {
-      limelight.setLed(LedMode.On);
+      limelight.enableLed();
     } else {
-      limelight.setLed(LedMode.Off);
+      limelight.disableLed();
     }
   }
 
