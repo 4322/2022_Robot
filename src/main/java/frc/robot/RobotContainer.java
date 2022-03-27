@@ -388,7 +388,7 @@ public class RobotContainer {
         rightAuto.addCommands(
           new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootSec),
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new StopFiring(kicker, conveyor, shooter, hood)
+          new StopFiring(kicker, conveyor, shooter, hood),
           new ParallelRaceGroup(
             new IntakeIn(intake, conveyor, 0),
             new SequentialCommandGroup(
