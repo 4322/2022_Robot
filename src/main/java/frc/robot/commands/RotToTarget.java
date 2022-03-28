@@ -36,6 +36,7 @@ public class RotToTarget extends CommandBase {
   public void initialize() {
     timeout.reset();
     timeout.start();
+    driveunbun.resetRotatePID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +44,7 @@ public class RotToTarget extends CommandBase {
   public void execute() {
     if (lim.getTargetVisible()) {
       double error = lim.getHorizontalDegToTarget();
-      driveunbun.driveAutoRotate(0, 0, error);
+      driveunbun.driveAutoRotate(0, 0, error, DriveConstants.limelightRotateToleranceDegrees);
     }
   }
 
@@ -55,7 +56,8 @@ public class RotToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(lim.getHorizontalDegToTarget()) < DriveConstants.limelightRotateToleranceDegrees) ||
+    return (!lim.getTargetVisible() ||
+            Math.abs(lim.getHorizontalDegToTarget()) <= DriveConstants.limelightRotateToleranceDegrees) ||
             timeout.hasElapsed(timeoutLength);
   }
 }

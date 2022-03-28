@@ -63,7 +63,9 @@ public class FiringSolutionManager {
             return new FiringSolution(
               solutions.get(upper).getKickerSpeed() * d + solutions.get(lower).getKickerSpeed() * (1 - d),
               solutions.get(upper).getFlywheelSpeed() * d + solutions.get(lower).getFlywheelSpeed() * (1 - d),
-              solutions.get(upper).getHoodPosition() * d + solutions.get(lower).getHoodPosition() * (1 - d)
+              solutions.get(upper).getHoodPosition() * d + solutions.get(lower).getHoodPosition() * (1 - d),
+              solutions.get(upper).getAimingToleranceDeg() * d + solutions.get(lower).getAimingToleranceDeg() * (1 - d),
+              currentDistance
             );
         }
     }

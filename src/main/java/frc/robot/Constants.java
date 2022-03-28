@@ -50,15 +50,15 @@ public final class Constants {
     // fender distances need to be remeasured
     // measurement from back of bumper for now
     public static final class FiringSolutions {
-      public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 0);
-      public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 0);
-      public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 42.28);
-      public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 55);
-      public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 97);
-      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 120);  // needs calibration
-      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 150);
-      public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 175);  // needs calibration
-      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 205);
+      public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1400, 3.0, 0);
+      public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 6000, 5.0, 0);
+      public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 42.28);
+      public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 55);
+      public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 97);
+      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 1.5, 120);  // needs calibration
+      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 1.5, 150);
+      public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 175);  // needs calibration
+      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4400, 4300, 1.0, 205);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
@@ -101,7 +101,8 @@ public final class Constants {
 
         public static final double autoRotkP = 0.008;
         public static final double autoRotkD = 0.0004;
-        public static final double autoRotateToleranceDegrees = 1.5;
+        public static final double manualRotateToleranceDegrees = 1.5;
+        public static final double autoRotateToleranceDegrees = 1.0;
         public static final double limelightRotateToleranceDegrees = 2.0;
         public static final double autoRotationMaxSpeed = 0.5;
 

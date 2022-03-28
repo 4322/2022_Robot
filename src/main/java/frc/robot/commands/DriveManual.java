@@ -115,22 +115,24 @@ public class DriveManual extends CommandBase {
           }
           if (driveRawR < DriveConstants.drivePolarDeadband) {
             driveunbun.stop();
+            driveunbun.resetRotatePID();
           } else {
-            driveunbun.driveAutoRotate(-driveX, driveY, error);
+            driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
           }
       }
       else if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
-                limelight.getTargetVisible()){
+                limelight.getTargetVisible()) {
         double error = limelight.getHorizontalDegToTarget();
-        driveunbun.driveAutoRotate(-driveX, driveY, error);
+        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.limelightRotateToleranceDegrees);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
         double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
-        driveunbun.driveAutoRotate(-driveX, driveY, error);
+        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
       } else {
         // normal drive
+        driveunbun.resetRotatePID();
         driveunbun.drive(-driveX, driveY, -rotate);
       }
     }

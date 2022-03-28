@@ -398,7 +398,7 @@ public class Driveunbun extends SubsystemBase {
 
   // Uses a PID Controller to rotate the robot to a certain degree
   // Must be periodically updated to work
-  public void driveAutoRotate(double driveX, double driveY, double error) {
+  public void driveAutoRotate(double driveX, double driveY, double error, double toleranceDeg) {
 
     if (Constants.debug) {
       rotPID.setP(rotkP.getDouble(DriveConstants.autoRotkP));
@@ -407,7 +407,7 @@ public class Driveunbun extends SubsystemBase {
 
     double rotPIDSpeed = rotPID.calculate(error, 0);
 
-    if (Math.abs(error) <= DriveConstants.autoRotateToleranceDegrees) {
+    if (Math.abs(error) <= toleranceDeg) {
       rotPIDSpeed = 0;
     }
 
@@ -425,14 +425,16 @@ public class Driveunbun extends SubsystemBase {
     }
   }
 
+  // To be called at the start of a set rotation movement.
+  // Do not use for continously changing rotations.
+  public void resetRotatePID() {
+    rotPID.reset();
+  }
+
   // Drives the robot at a certain angle (relative to the field, forward = 0 deg)
   // Must be periodically updated to work
   public void drivePolar(double angle, double speed, double rotationDeg) {
-    angle = Math.toRadians(90 - angle); // adjust for front of robot as 0 and clockwise rotation
-    double x = speed * Math.cos(angle);
-    double y = speed * Math.sin(angle);
-    double error = SwerveHelper.boundDegrees(rotationDeg - getAngle());
-    driveAutoRotate(-x, -y, error);
+
   }
 
   public boolean isDrivingWithSideCams() {
