@@ -59,7 +59,7 @@ public class RobotContainer {
   private final Driveunbun driveunbun = new Driveunbun(webcams, limelight);
   private final Shooter shooter = new Shooter();
   private final Kicker kicker = new Kicker();
-  private final Intake intake = new Intake();
+  private final Intake intake = Intake.getSingleton();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = Conveyor.getSingleton();
 

@@ -14,7 +14,44 @@ public class Intake extends SubsystemBase{
 
   private CANSparkMax intakeMotor;
 
-  public Intake() {
+  private static Intake singleton;
+
+  public enum IntakeManualMode {
+    stopped(0),
+    intaking(1),
+    ejecting(2);
+
+    private int value;
+
+    IntakeManualMode(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
+
+  private IntakeManualMode intakeManualMode = IntakeManualMode.stopped;
+
+  public enum IntakeAutoMode {
+    stopped(0),
+    intaking(1);
+
+    private int value;
+
+    IntakeAutoMode(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
+
+  private IntakeAutoMode intakeAutoMode = IntakeAutoMode.stopped;
+
+  private Intake() {
     if (Constants.intakeEnabled) {
       intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
 
@@ -38,21 +75,48 @@ public class Intake extends SubsystemBase{
     }
   }
 
-  public void intake() {
+  public void manualIntake() {
     if (Constants.intakeEnabled) {
       intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+      intakeManualMode = IntakeManualMode.intaking;
     }
   }
 
-  public void eject() {
+  public void manualEject() {
     if (Constants.intakeEnabled) {
       intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
+      intakeManualMode = IntakeManualMode.ejecting;
     }
   }
 
-  public void stop() {
+  public void manualStop() {
     if (Constants.intakeEnabled) {
-      intakeMotor.stopMotor();
+      if (intakeAutoMode == IntakeAutoMode.stopped) {
+        intakeMotor.stopMotor();
+      } else {
+        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+      }
+      intakeManualMode = IntakeManualMode.stopped;
+    }
+  }
+
+  // safe to call without requiring the subsystem
+  public void autoIntake() {
+    if (Constants.intakeEnabled) {
+      if (intakeManualMode == IntakeManualMode.stopped) {
+        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+      }
+      intakeAutoMode = IntakeAutoMode.intaking;
+    }
+  }
+
+  // safe to call without requiring the subsystem
+  public void autoStop() {
+    if (Constants.intakeEnabled) {
+      if (intakeManualMode == IntakeManualMode.stopped) {
+        intakeMotor.stopMotor();
+      }
+      intakeAutoMode = IntakeAutoMode.stopped;
     }
   }
 
@@ -71,5 +135,14 @@ public class Intake extends SubsystemBase{
     if (Constants.intakeEnabled) {
       intakeMotor.setIdleMode(IdleMode.kBrake);
     }
+  }
+
+  public static Intake getSingleton() {
+
+    if (singleton == null) {
+        singleton = new Intake();
+    }
+
+    return singleton;
   }
 }

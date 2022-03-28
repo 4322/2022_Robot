@@ -16,12 +16,12 @@ public class IntakeStop extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.stop(); 
+    intake.manualStop(); 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stop();
+    intake.manualStop();
   }
 }

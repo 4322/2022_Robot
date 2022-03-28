@@ -119,11 +119,13 @@ public class Conveyor extends SubsystemBase {
       if (conveyorMode == ConveyorMode.loaded) {
         conveyorMode = ConveyorMode.shooting;
         start();
+        Intake.getSingleton().autoIntake();
         shotTimer.reset();
         shotTimer.start();
       } else if (conveyorMode == ConveyorMode.stopped) {
         conveyorMode = ConveyorMode.intaking;
         start();
+        Intake.getSingleton().autoIntake();
       }
     }
   }
@@ -133,12 +135,14 @@ public class Conveyor extends SubsystemBase {
       if (conveyorMode == ConveyorMode.stopped) {
         conveyorMode = ConveyorMode.intaking;
         start();
+        Intake.getSingleton().autoIntake();
       }
     }
   }
 
   public void stop() {
     if (Constants.conveyorEnabled) {
+      Intake.getSingleton().autoStop();
       if (conveyorMode == ConveyorMode.shooting) {
         conveyorMode = ConveyorMode.stopping;
       } else if (conveyorMode == ConveyorMode.intaking) {

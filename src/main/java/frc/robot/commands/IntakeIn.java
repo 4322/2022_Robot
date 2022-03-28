@@ -19,7 +19,7 @@ public class IntakeIn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.intake();
+    intake.manualIntake();
     conveyor.intake();
   }
 
@@ -30,7 +30,7 @@ public class IntakeIn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stop();
+    intake.manualStop();
     conveyor.stop();
   }
 
