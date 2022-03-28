@@ -186,7 +186,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setSpeed(double rpm) {
-    if (Constants.shooterEnabled) {
+    if (Constants.shooterEnabled && Conveyor.getSingleton().canShooterStop()) {
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
       shooterMode = ShooterMode.started;

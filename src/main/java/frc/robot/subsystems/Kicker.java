@@ -163,7 +163,7 @@ public class Kicker extends SubsystemBase {
   }
 
   public void setSpeed(double rpm) {
-    if (Constants.kickerEnabled) {
+    if (Constants.kickerEnabled && Conveyor.getSingleton().canKickerStop()) {
       kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
       target = rpm;
       kickerMode = KickerMode.started;
