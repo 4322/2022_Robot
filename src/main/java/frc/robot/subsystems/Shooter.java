@@ -208,6 +208,10 @@ public class Shooter extends SubsystemBase {
   public boolean isAtSpeed() {
     return shooterMode == ShooterMode.stableAtSpeed;
   }
+
+  public boolean isRunning() {
+    return (shooterMode != ShooterMode.stopped) && (shooterMode != ShooterMode.stopping);
+  }
   
   public void stop() {
     shooterMode = ShooterMode.stopping;
