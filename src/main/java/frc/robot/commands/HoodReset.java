@@ -23,19 +23,19 @@ public class HoodReset extends CommandBase {
     secondDown,
     secondAtHome
   }
-  private resetStates currentState = resetStates.firstDown;
+  private resetStates currentState;
 
   public HoodReset(Hood hoodSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     hood = hoodSubsystem;
     addRequirements(hood);
-  
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentState = resetStates.firstDown;
     overrideTimer.reset();
     overrideTimer.start();
     hood.clearInitialHome();
