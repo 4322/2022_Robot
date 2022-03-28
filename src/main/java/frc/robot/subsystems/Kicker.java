@@ -131,7 +131,10 @@ public class Kicker extends SubsystemBase {
         power.setDouble(kicker.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
       }
-      boolean isAtSpeed = Math.abs(target - getSpeed()) <= KickerConstants.minVelError;
+      boolean isAtSpeed = Math.abs(target - getSpeed()) <= 
+        (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+        KickerConstants.minVelErrorLime : KickerConstants.minVelErrorPreset);
+
       switch (kickerMode) {
         case stopped:
           break;
@@ -142,7 +145,10 @@ public class Kicker extends SubsystemBase {
           }
           break;
         case atSpeed:
-          if (isAtSpeed && modeTimer.hasElapsed(KickerConstants.speedSettlingSec)) {
+          if (isAtSpeed && modeTimer.hasElapsed(
+            (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+            KickerConstants.speedSettlingLimeSec : KickerConstants.speedSettlingPresetSec))) {
+
             kickerMode = KickerMode.stableAtSpeed;
           } else if (!isAtSpeed) {
             kickerMode = KickerMode.started;  // restart settling timer

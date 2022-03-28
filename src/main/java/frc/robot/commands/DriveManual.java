@@ -123,7 +123,7 @@ public class DriveManual extends CommandBase {
       else if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()) {
         double error = limelight.getHorizontalDegToTarget();
-        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.limelightRotateToleranceDegrees);
+        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.limeRotNotMovingToleranceDegrees);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target

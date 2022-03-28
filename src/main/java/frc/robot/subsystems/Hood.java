@@ -62,7 +62,7 @@ public class Hood extends SubsystemBase {
       * position, and intitally set the relative sensor to match.
       */
       hood.configAllowableClosedloopError(HoodConstants.kPIDLoopIdx,
-        HoodConstants.hoodTolerance,
+        HoodConstants.hoodTolerancePreset,
         HoodConstants.kTimeoutMs);
       hood.config_kP(HoodConstants.kPIDLoopIdx,
         HoodConstants.kP, HoodConstants.kTimeoutMs);
@@ -198,7 +198,9 @@ public class Hood extends SubsystemBase {
 
   // This is only valid following a set position command
   public boolean isAtTarget() {
-    return (hood.getClosedLoopError() <= HoodConstants.hoodTolerance);
+    return (hood.getClosedLoopError() <= 
+      (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+        HoodConstants.hoodToleranceLime : HoodConstants.hoodTolerancePreset));
   }
 
   public void clearInitialHome() {

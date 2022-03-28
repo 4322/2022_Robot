@@ -103,7 +103,8 @@ public final class Constants {
         public static final double autoRotkD = 0.0004;
         public static final double manualRotateToleranceDegrees = 1.5;
         public static final double autoRotateToleranceDegrees = 1.0;
-        public static final double limelightRotateToleranceDegrees = 2.0;
+        public static final double limeRotNotMovingToleranceDegrees = 2.0;
+        public static final double limeRotMovingToleranceDegrees = 4.0;
         public static final double autoRotationMaxSpeed = 0.5;
         public static final double movingVelocityThresholdFtPerSec = 0.2;  // rotation doesn't count as movement
 
@@ -203,8 +204,10 @@ public final class Constants {
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
-        public static final double minVelError = 35; // allowable error to shoot (in rpm)
-        public static final double speedSettlingSec = 0.1; // don't shoot until speed is stable
+        public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
+        public static final double minVelErrorLime = 70;
+        public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
+        public static final double speedSettlingLimeSec = 0;
     }
 
     public static final class KickerConstants {
@@ -218,9 +221,11 @@ public final class Constants {
         public static final double kFF = 0.000205;
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
-        public static final double minVelError = 100; // allowable error to shoot (in rpm)
         public static final double rampRate = 0.4;  // seconds to go from stopped to full power
-        public static final double speedSettlingSec = 0.1;  // don't shoot until speed is stable
+        public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
+        public static final double minVelErrorLime = 70; // allowable error to shoot (in rpm)
+        public static final double speedSettlingPresetSec = 0.1;  // don't shoot until speed is stable
+        public static final double speedSettlingLimeSec = 0;  // don't shoot until speed is stable
         public static final double minShotSec = 0.2;  // don't stop conveyor when kicker slows down as cargo enters
     }
     
@@ -229,7 +234,8 @@ public final class Constants {
         public static final int hoodMaxPosition = 7388; 
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
-        public static final int hoodTolerance = 20;
+        public static final int hoodTolerancePreset = 20;
+        public static final int hoodToleranceLime = 40;
         public static final double homingTimeout = 6.0; 
 
         public static double maxForwardPower = 0.6;    //allows to be changed in demo mode

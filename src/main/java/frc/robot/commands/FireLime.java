@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
@@ -17,14 +19,17 @@ public class FireLime extends CommandBase {
   private Conveyor conveyor;
   private Shooter shooter;
   private Hood hood;
+  private Driveunbun driveunbun;
   private Limelight limelight;
 
   public FireLime(Kicker kickerSubsystem, Conveyor conveyorSubsystem, 
-              Shooter shooterSubsystem, Hood hoodSubsystem, Limelight limelight) {
+              Shooter shooterSubsystem, Hood hoodSubsystem, 
+              Driveunbun driveunbun, Limelight limelight) {
     kicker = kickerSubsystem;
     conveyor = conveyorSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
+    this.driveunbun = driveunbun;
     this.limelight = limelight;
 
     // stop updating firing solution so everything can stabilize
@@ -53,7 +58,10 @@ public class FireLime extends CommandBase {
       shooter.setSpeed(firingSolution.getFlywheelSpeed());
       hood.setTargetPosition(firingSolution.getHoodPosition());
       
-      if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget()) {
+      if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget() &&
+          (Math.abs(limelight.getHorizontalDegToTarget()) <= 
+           (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
+                                      : DriveConstants.limeRotNotMovingToleranceDegrees))) {
         conveyor.shoot();
       } else {
         conveyor.autoStop();

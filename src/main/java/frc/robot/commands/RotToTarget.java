@@ -44,7 +44,7 @@ public class RotToTarget extends CommandBase {
   public void execute() {
     if (lim.getTargetVisible()) {
       double error = lim.getHorizontalDegToTarget();
-      driveunbun.driveAutoRotate(0, 0, error, DriveConstants.limelightRotateToleranceDegrees);
+      driveunbun.driveAutoRotate(0, 0, error, DriveConstants.limeRotNotMovingToleranceDegrees);
     }
   }
 
@@ -57,7 +57,7 @@ public class RotToTarget extends CommandBase {
   @Override
   public boolean isFinished() {
     return (!lim.getTargetVisible() ||
-            Math.abs(lim.getHorizontalDegToTarget()) <= DriveConstants.limelightRotateToleranceDegrees) ||
+            Math.abs(lim.getHorizontalDegToTarget()) <= DriveConstants.limeRotNotMovingToleranceDegrees) ||
             timeout.hasElapsed(timeoutLength);
   }
 }

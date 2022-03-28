@@ -154,7 +154,10 @@ public class Shooter extends SubsystemBase {
         power.setDouble(flywheelLeft.getAppliedOutput());
         currentRPM.setDouble(getSpeed());
       }
-      boolean isAtSpeed = Math.abs(target - getSpeed()) <= ShooterConstants.minVelError;
+      boolean isAtSpeed = Math.abs(target - getSpeed()) <= 
+        (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+        ShooterConstants.minVelErrorLime : ShooterConstants.minVelErrorPreset);
+
       switch (shooterMode) {
         case stopped:
           break;
@@ -165,7 +168,10 @@ public class Shooter extends SubsystemBase {
           }
           break;
         case atSpeed:
-          if (isAtSpeed && modeTimer.hasElapsed(ShooterConstants.speedSettlingSec)) {
+          if (isAtSpeed && modeTimer.hasElapsed(
+            (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+            ShooterConstants.speedSettlingLimeSec : ShooterConstants.speedSettlingPresetSec))) {
+              
             shooterMode = ShooterMode.stableAtSpeed;
           } else if (!isAtSpeed) {
             shooterMode = ShooterMode.started;  // restart settling timer

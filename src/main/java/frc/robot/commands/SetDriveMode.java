@@ -50,7 +50,7 @@ public class SetDriveMode extends InstantCommand {
         boolean interruptable = false;
         driveunbun.setDriveMode(newDriveMode);
         if (fireLime == null) {
-          fireLime = new FireLime(kicker, conveyor, shooter, hood, limelight);
+          fireLime = new FireLime(kicker, conveyor, shooter, hood, driveunbun, limelight);
           CommandScheduler.getInstance().schedule(interruptable, fireLime);
         }
         return;
