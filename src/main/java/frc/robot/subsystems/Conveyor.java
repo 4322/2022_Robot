@@ -86,8 +86,12 @@ public class Conveyor extends SubsystemBase {
           break;
         case stopping:
           if (shotTimer.hasElapsed(Constants.ConveyorConstants.kickerInjectSec)) {
-            conveyorMode = ConveyorMode.stopped;
-            conveyor.stopMotor();
+            if (autoAdvanceCargoActive || manualAdvanceCargoActive) {
+              conveyorMode = ConveyorMode.advancingCargo;
+            } else {
+              conveyorMode = ConveyorMode.stopped;
+              conveyor.stopMotor();
+            }
           }
           break;
       }
@@ -108,7 +112,7 @@ public class Conveyor extends SubsystemBase {
     conveyor.set(ConveyorConstants.conveyorPower);
   }
 
-  public boolean getSensedBall() {
+  private boolean getSensedBall() {
     if (Constants.ballSensorEnabled) {
       return !ballSensor.get();
     } else {
@@ -116,25 +120,24 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
+  public boolean isLoaded() {
+    return conveyorMode == ConveyorMode.loaded;
+  }
+
   public void shoot() {
-    if (Constants.conveyorEnabled) {
-      if (conveyorMode == ConveyorMode.loaded) {
-        conveyorMode = ConveyorMode.shooting;
-        start();
-        Intake.getSingleton().autoIntake();
-        shotTimer.reset();
-        shotTimer.start();
-      } else if (conveyorMode == ConveyorMode.stopped) {
-        conveyorMode = ConveyorMode.advancingCargo;
-        start();
-        Intake.getSingleton().autoIntake();
-      }
+    if (Constants.conveyorEnabled && (conveyorMode == ConveyorMode.loaded)) {
+      conveyorMode = ConveyorMode.shooting;
+      start();
+      shotTimer.reset();
+      shotTimer.start();
+      Intake.getSingleton().autoIntake();
+      autoAdvanceCargoActive = true;
     }
   }
 
   public void autoAdvanceCargo() {
     if (Constants.conveyorEnabled) {
-      if ((conveyorMode == ConveyorMode.stopped) || (conveyorMode == ConveyorMode.stopping)) {
+      if (conveyorMode == ConveyorMode.stopped) {
         conveyorMode = ConveyorMode.advancingCargo;
         start();
       }
@@ -162,7 +165,7 @@ public class Conveyor extends SubsystemBase {
   // shooting during manual intake.
   public void manualAdvanceCargo() {
     if (Constants.conveyorEnabled) {
-      if ((conveyorMode == ConveyorMode.stopped) || (conveyorMode == ConveyorMode.stopping)) {
+      if (conveyorMode == ConveyorMode.stopped) {
         conveyorMode = ConveyorMode.advancingCargo;
         start();
       }
