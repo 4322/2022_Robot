@@ -35,6 +35,8 @@ public class Driveunbun extends SubsystemBase {
   private boolean tipBigStickActive = false;
   private Timer runTime = new Timer();
   private boolean ledsOff = false;
+  private double latestVelocity;
+  private double latestAcceleration;
 
   private ArrayList<SnapshotVectorXY> velocityHistory = new ArrayList<SnapshotVectorXY>();
 
@@ -269,6 +271,11 @@ public class Driveunbun extends SubsystemBase {
     }
   }
 
+  // rotation isn't considered to be movement
+  public boolean isRobotMoving() {
+    return latestVelocity >= DriveConstants.movingVelocityThresholdFtPerSec;
+  }
+
   // make the current robot direction be forward, or add an offset
   public void resetFieldCentric(double offset) {
     if (gyro != null) {
@@ -300,15 +307,15 @@ public class Driveunbun extends SubsystemBase {
             swerveModules[i].getAcceleration(),
             wheelAngleDegrees));
       }
-      double velocity = velocityXY.magnitude() / 4;
-      double acceleration = accelerationXY.magnitude() / 4;
+      latestVelocity = velocityXY.magnitude() / 4;
+      latestAcceleration = accelerationXY.magnitude() / 4;
       velocityHistory.removeIf(n -> 
         (n.getTime() < clock - DriveConstants.Tip.velocityHistorySeconds));
       velocityHistory.add(new SnapshotVectorXY(velocityXY, clock));
 
       if (Constants.debug) {
-        botVelocityMag.setDouble(velocity);
-        botAccelerationMag.setDouble(acceleration);
+        botVelocityMag.setDouble(latestVelocity);
+        botAccelerationMag.setDouble(latestAcceleration);
         botVelocityAngle.setDouble(90 - velocityXY.degrees());
         botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
         driveXTab.setDouble(driveX);
@@ -316,9 +323,9 @@ public class Driveunbun extends SubsystemBase {
       }
 
       // anti-tipping logic
-      if (velocity >= (tipDecelerateActive ? DriveConstants.Tip.lowVelocityFtPerSec
+      if (latestVelocity >= (tipDecelerateActive ? DriveConstants.Tip.lowVelocityFtPerSec
                                            : DriveConstants.Tip.highVelocityFtPerSec) &&
-          acceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
+          latestAcceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
                                                : DriveConstants.Tip.highAccFtPerSec2) &&
           // check if decelerating
           Math.abs(SwerveHelper.boundDegrees(180 +
@@ -334,12 +341,12 @@ public class Driveunbun extends SubsystemBase {
       // at low power and low velocity.
       double powerOffThreshold = DriveConstants.Tip.lowPowerOff +
           (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
-              (velocity - DriveConstants.Tip.lowVelocityFtPerSec) /
+              (latestVelocity - DriveConstants.Tip.lowVelocityFtPerSec) /
               (DriveConstants.Tip.highVelocityFtPerSec - DriveConstants.Tip.lowVelocityFtPerSec);
       powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff,
           Math.min(DriveConstants.Tip.highPowerOff, powerOffThreshold));
 
-      if (velocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
+      if (latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
           driveXY.magnitude() < powerOffThreshold) {
         rotate = 0; // don't tip when about to start declerating
         tipSmallStickActive = true;
@@ -360,7 +367,7 @@ public class Driveunbun extends SubsystemBase {
 
       // detect large changes in drive stick that would tip due to excessive wheel rotation
       if (!isDrivingWithSideCams() &&
-          velocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
+          latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
           maxSteeringChangeDegrees >= DriveConstants.Tip.highSpeedSteeringChangeMaxDegrees &&
           driveXY.magnitude() >= DriveConstants.Tip.highPowerOff) {
 

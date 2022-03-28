@@ -12,14 +12,40 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Conveyor extends SubsystemBase {
 
   private WPI_TalonSRX conveyor;
   private DigitalInput ballSensor;
+  private Timer shotTimer = new Timer();
 
-  public Conveyor() {
+  private static Conveyor singleton;
+
+  public enum ConveyorMode {
+    stopped(0),
+    intaking(1),
+    loaded(2),
+    shooting(3),
+    stopping(4);
+
+    private int value;
+
+    ConveyorMode(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
+
+  private ConveyorMode conveyorMode = ConveyorMode.stopped;
+
+  private Conveyor() {
+    singleton = this;
+
     if (Constants.conveyorEnabled) {
       conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
       RobotContainer.staggerTalonStatusFrames(conveyor);
@@ -39,12 +65,45 @@ public class Conveyor extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (Constants.conveyorEnabled) {
+      switch (conveyorMode) {
+        case stopped:
+          break;
+        case intaking:
+          if (getSensedBall()) {
+            conveyorMode = ConveyorMode.loaded;
+            conveyor.stopMotor();
+          }
+          break;
+        case loaded:
+          break;
+        case shooting:
+          if (shotTimer.hasElapsed(Constants.ConveyorConstants.kickerInjectSec)) {
+            conveyorMode = ConveyorMode.intaking;
+          }
+          break;
+        case stopping:
+          if (shotTimer.hasElapsed(Constants.ConveyorConstants.kickerInjectSec)) {
+            conveyorMode = ConveyorMode.stopped;
+            conveyor.stopMotor();
+          }
+          break;
+      }
+    }
   }
 
-  public void enableConveyor() {
-    if (Constants.conveyorEnabled) {
-      conveyor.set(ConveyorConstants.conveyorPower);
-    }
+  public boolean canKickerStop() {
+    return (conveyorMode != ConveyorMode.shooting) || 
+            shotTimer.hasElapsed(Constants.ConveyorConstants.kickerClearanceSec);
+  }
+
+  public boolean canShooterStop() {
+    return (conveyorMode != ConveyorMode.shooting) || 
+            shotTimer.hasElapsed(Constants.ConveyorConstants.shooterClearanceSec);
+  }
+
+  private void start() {
+    conveyor.set(ConveyorConstants.conveyorPower);
   }
 
   public boolean getSensedBall() {
@@ -55,9 +114,37 @@ public class Conveyor extends SubsystemBase {
     }
   }
 
+  public void shoot() {
+    if (Constants.conveyorEnabled) {
+      if (conveyorMode == ConveyorMode.loaded) {
+        conveyorMode = ConveyorMode.shooting;
+        start();
+        shotTimer.reset();
+        shotTimer.start();
+      } else if (conveyorMode == ConveyorMode.stopped) {
+        conveyorMode = ConveyorMode.intaking;
+        start();
+      }
+    }
+  }
+
+  public void intake() {
+    if (Constants.conveyorEnabled) {
+      if (conveyorMode == ConveyorMode.stopped) {
+        conveyorMode = ConveyorMode.intaking;
+        start();
+      }
+    }
+  }
+
   public void stop() {
     if (Constants.conveyorEnabled) {
-      conveyor.stopMotor();
+      if (conveyorMode == ConveyorMode.shooting) {
+        conveyorMode = ConveyorMode.stopping;
+      } else if (conveyorMode == ConveyorMode.intaking) {
+        conveyor.stopMotor();
+        conveyorMode = ConveyorMode.stopped;
+      }
     }
   }
 
@@ -71,5 +158,14 @@ public class Conveyor extends SubsystemBase {
     if (Constants.hoodEnabled) {
       conveyor.setNeutralMode(NeutralMode.Brake);
     }
+  }
+
+  public static Conveyor getSingleton() {
+
+    if (singleton == null) {
+        singleton = new Conveyor();
+    }
+
+    return singleton;
   }
 }

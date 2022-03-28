@@ -102,7 +102,7 @@ public class Kicker extends SubsystemBase {
     started(1),
     atSpeed(2),
     stableAtSpeed(3),
-    shooting(4);
+    stopping(4);
 
     private int value;
 
@@ -118,10 +118,7 @@ public class Kicker extends SubsystemBase {
   private KickerMode kickerMode = KickerMode.stopped;
 
   public void stop() {
-    if (Constants.kickerEnabled) {
-      kicker.stopMotor();
-      kickerMode = KickerMode.stopped;
-    }
+    kickerMode = KickerMode.stopping;
   }
 
   @Override
@@ -153,13 +150,13 @@ public class Kicker extends SubsystemBase {
           break;
         case stableAtSpeed:
           if (!isAtSpeed) {
-            kickerMode = KickerMode.shooting;  // don't stop conveyor as cargo enters kicker
-            modeTimer.reset();
+            kickerMode = KickerMode.started;  // restart settling timer
           }
           break;
-        case shooting:
-          if (modeTimer.hasElapsed(KickerConstants.minShotSec)) {
-            kickerMode = KickerMode.started;  // cargo is through kicker, allow conveyor to be stopped
+        case stopping:
+          if (Conveyor.getSingleton().canKickerStop()) {
+            kicker.stopMotor();
+            kickerMode = KickerMode.stopped;
           }
       }
     }
@@ -185,8 +182,8 @@ public class Kicker extends SubsystemBase {
   }
 
   // don't let balls get stuck in the kicker
-  public boolean isAbleToEject() {
-    return (kickerMode == KickerMode.stableAtSpeed) || (kickerMode == KickerMode.shooting);
+  public boolean isAtSpeed() {
+    return kickerMode == KickerMode.stableAtSpeed;
   }
   
   public void setCoastMode() {

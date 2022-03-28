@@ -61,18 +61,17 @@ public class RobotContainer {
   private final Kicker kicker = new Kicker();
   private final Intake intake = new Intake();
   private final Hood hood = new Hood();
-  private final Conveyor conveyor = new Conveyor();
+  private final Conveyor conveyor = Conveyor.getSingleton();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
   private final StartFiring startFiring = new StartFiring(kicker, conveyor, shooter, hood, 0);
-  private final StartFiringOverride startFiringOverride = new StartFiringOverride(conveyor);
   private final StopFiring stopFiring = new StopFiring(kicker, conveyor, shooter, hood);
 
   // Intake Commands
-  private final IntakeIn intakeIn = new IntakeIn(intake, conveyor, 0);
+  private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
   private final IntakeOut intakeOut = new IntakeOut(intake);
 
   // Hood Commands
@@ -120,6 +119,7 @@ public class RobotContainer {
   }
 
   public void disableSubsystems() {
+    limelight.disableLed();
     driveunbun.setCoastMode();
     hood.setCoastMode();
     conveyor.setCoastMode();
@@ -128,6 +128,7 @@ public class RobotContainer {
   }
 
   public void enableSubsystems() {
+    driveunbun.setDriveMode(Driveunbun.getDriveMode());  // reset limelight LED state
     driveunbun.setBrakeMode();
     hood.setBrakeMode();
     conveyor.setBrakeMode();
@@ -155,7 +156,6 @@ public class RobotContainer {
     coPilot.rt.whileHeld(intakeOut);
 
     coPilot.lt.whileHeld(startFiring);
-    coPilot.start.whileHeld(startFiringOverride);
 
     // to be fixed
     // coPilot.back.whenPressed(hoodReset);
@@ -265,7 +265,7 @@ public class RobotContainer {
                                      smallNonZeroSpeed, 0, wheelPreRotateSec)),
         new StopFiring(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
-          new IntakeIn(intake, conveyor, 0),
+          new IntakeIn(intake, conveyor),
           new SequentialCommandGroup(
             new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, maxDriveSpeed, 
                            ballTwoRightAutoApproachDeg - 90, ballTwoRightAutoDriveSec),
@@ -299,7 +299,7 @@ public class RobotContainer {
       case 2:
         leftAuto.addCommands(
           new ParallelRaceGroup(
-            new IntakeIn(intake, conveyor, 0),
+            new IntakeIn(intake, conveyor),
             new SequentialCommandGroup(
               new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, maxDriveSpeed, 
                             ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
@@ -326,7 +326,7 @@ public class RobotContainer {
               new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new StopFiring(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
-                new IntakeIn(intake, conveyor, 0),
+                new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
                   new DrivePolar(driveunbun, disposalLeft1DriveDeg, maxDriveSpeed, 
                                  disposalLeft1DriveDeg - 90, disposalLeft1DriveSec),
@@ -345,7 +345,7 @@ public class RobotContainer {
               new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new StopFiring(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
-                new IntakeIn(intake, conveyor, 0),
+                new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
                   new DrivePolar(driveunbun, disposalRightDriveDeg, maxDriveSpeed, 
                                 disposalRightDriveDeg - 90, disposalRightDriveSec),
@@ -382,7 +382,7 @@ public class RobotContainer {
           new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new StopFiring(kicker, conveyor, shooter, hood),
           new ParallelRaceGroup(
-            new IntakeIn(intake, conveyor, 0),
+            new IntakeIn(intake, conveyor),
             new SequentialCommandGroup(
               new DrivePolar(driveunbun, ballFourDriveDeg, maxDriveSpeed, 
                              ballFourApproachDeg - 90, ballFourDriveSec),

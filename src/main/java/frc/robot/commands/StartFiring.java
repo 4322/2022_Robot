@@ -38,10 +38,10 @@ public class StartFiring extends CommandBase {
 
   @Override
   public void execute() {
-    if (shooter.isAbleToEject() && kicker.isAbleToEject() && hood.isAtTarget()) {
-      conveyor.enableConveyor();
+    if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget()) {
+      conveyor.shoot();
     } else {
-      conveyor.stop();
+      conveyor.intake();
     }
   }
 

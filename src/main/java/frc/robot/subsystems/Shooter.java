@@ -128,7 +128,8 @@ public class Shooter extends SubsystemBase {
     stopped(0),
     started(1),
     atSpeed(2),
-    stableAtSpeed(3);
+    stableAtSpeed(3),
+    stopping(4);
 
     private int value;
 
@@ -175,6 +176,11 @@ public class Shooter extends SubsystemBase {
             shooterMode = ShooterMode.started;  // restart settling timer
           }
           break;
+        case stopping:
+          if (Conveyor.getSingleton().canShooterStop()) {
+            flywheelLeft.stopMotor();
+            shooterMode = ShooterMode.stopped;
+          }
       }
     }
   }
@@ -199,14 +205,11 @@ public class Shooter extends SubsystemBase {
   }
 
   // don't let balls get stuck in the shooter
-  public boolean isAbleToEject() {
+  public boolean isAtSpeed() {
     return shooterMode == ShooterMode.stableAtSpeed;
   }
   
   public void stop() {
-    if (Constants.shooterEnabled) {
-      flywheelLeft.stopMotor();
-      shooterMode = ShooterMode.stopped;
-    }
+    shooterMode = ShooterMode.stopping;
   }
 }

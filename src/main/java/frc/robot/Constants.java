@@ -105,6 +105,7 @@ public final class Constants {
         public static final double autoRotateToleranceDegrees = 1.0;
         public static final double limelightRotateToleranceDegrees = 2.0;
         public static final double autoRotationMaxSpeed = 0.5;
+        public static final double movingVelocityThresholdFtPerSec = 0.2;  // rotation doesn't count as movement
 
         public static final double drivePolarDeadband = 0.06;
         public static final double rotatePolarDeadband = 0.5;
@@ -256,9 +257,12 @@ public final class Constants {
 
     public static final class ConveyorConstants {
         public static final int motorID = 19;
-        public static final double minBallDistIn = 2;
         public static final double conveyorPower = 0.5;
         public static final int ballSensorPort = 0; // DIO port for ball sensor
+
+        public static final double kickerInjectSec = 0.1;  // time to advance ball into the kicker
+        public static final double kickerClearanceSec = 0.25;  // start of shot to kicker clear (low speed shot)
+        public static final double shooterClearanceSec = 0.4;  // start of shot to shooter clear (low speed shot)
     }
 
     public static final class WebCams {
