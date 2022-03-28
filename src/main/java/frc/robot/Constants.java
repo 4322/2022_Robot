@@ -266,9 +266,9 @@ public final class Constants {
         public static final double conveyorPower = 0.5;
         public static final int ballSensorPort = 0; // DIO port for ball sensor
 
-        public static final double kickerInjectSec = 0.1;  // time to advance ball into the kicker
-        public static final double kickerClearanceSec = 0.25;  // start of shot to kicker clear (low speed shot)
-        public static final double shooterClearanceSec = 0.4;  // start of shot to shooter clear (low speed shot)
+        public static final double kickerInjectSec = 0.5;  // time to advance ball into the kicker
+        public static final double kickerClearanceSec = kickerInjectSec + 0.2;
+        public static final double shooterClearanceSec = kickerClearanceSec + 0.1;
     }
 
     public static final class WebCams {

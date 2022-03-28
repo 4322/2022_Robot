@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.Hood;
@@ -35,6 +36,7 @@ public class SetFiringSolution extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DriverStation.reportError("Should not happen!", false);
     kicker.setSpeed(firingSolution.getKickerSpeed());
     shooter.setSpeed(firingSolution.getFlywheelSpeed());
     hood.setTargetPosition(firingSolution.getHoodPosition());
@@ -43,12 +45,10 @@ public class SetFiringSolution extends InstantCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
   }
 }

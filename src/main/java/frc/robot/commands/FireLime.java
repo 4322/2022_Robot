@@ -7,6 +7,7 @@ import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -23,7 +24,7 @@ public class FireLime extends CommandBase {
   private Limelight limelight;
 
   public FireLime(Kicker kickerSubsystem, Conveyor conveyorSubsystem, 
-              Shooter shooterSubsystem, Hood hoodSubsystem, 
+              Shooter shooterSubsystem, Hood hoodSubsystem, Intake intake,
               Driveunbun driveunbun, Limelight limelight) {
     kicker = kickerSubsystem;
     conveyor = conveyorSubsystem;
@@ -33,7 +34,7 @@ public class FireLime extends CommandBase {
     this.limelight = limelight;
 
     // stop updating firing solution so everything can stabilize
-    addRequirements(kicker, conveyor, shooter, hood);  
+    addRequirements(kicker, conveyor, shooter, hood, intake);  
   }
 
   // Called when the command is initially scheduled.

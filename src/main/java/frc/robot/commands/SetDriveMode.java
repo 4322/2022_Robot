@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -19,17 +20,19 @@ public class SetDriveMode extends InstantCommand {
   private Hood hood;
   private Kicker kicker;
   private Conveyor conveyor;
+  private Intake intake;
   private Driveunbun driveunbun;
   private Limelight limelight;
   private DriveMode newDriveMode;
   private static FireLime fireLime;
 
   public SetDriveMode(Kicker kickerSubsystem, Conveyor conveyorSubsystem,
-      Shooter shooterSubsystem, Hood hoodSubsystem,
+      Shooter shooterSubsystem, Hood hoodSubsystem, Intake intake,
       Driveunbun driveunbun, Limelight limelight, DriveMode newDriveMode) {
     conveyor = conveyorSubsystem;
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
+    this.intake = intake;
     kicker = kickerSubsystem;
     this.driveunbun = driveunbun;
     this.limelight = limelight;
@@ -47,10 +50,10 @@ public class SetDriveMode extends InstantCommand {
         // preset firing solution is running, deny limelight mode
         return;
       } else {
-        boolean interruptable = false;
         driveunbun.setDriveMode(newDriveMode);
         if (fireLime == null) {
-          fireLime = new FireLime(kicker, conveyor, shooter, hood, driveunbun, limelight);
+          fireLime = new FireLime(kicker, conveyor, shooter, hood, intake, driveunbun, limelight);
+          boolean interruptable = false;
           CommandScheduler.getInstance().schedule(interruptable, fireLime);
         }
         return;
@@ -60,10 +63,12 @@ public class SetDriveMode extends InstantCommand {
       fireLime.cancel();
       fireLime = null;
     }
-    conveyor.autoStop();
-    kicker.stop();
-    shooter.stop();
-    hood.stop();
+    if (oldDriveMode == DriveMode.limelightFieldCentric) {
+      conveyor.autoStop();
+      kicker.stop();
+      shooter.stop();
+      hood.stop();
+    }
     driveunbun.setDriveMode(newDriveMode);
   }
 
