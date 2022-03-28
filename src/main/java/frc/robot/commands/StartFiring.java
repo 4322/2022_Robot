@@ -41,14 +41,14 @@ public class StartFiring extends CommandBase {
     if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget()) {
       conveyor.shoot();
     } else {
-      conveyor.intake();
+      conveyor.autoAdvanceCargo();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    conveyor.stop();
+    conveyor.autoStop();
   }
 
   // Run until time has expired or interrupted

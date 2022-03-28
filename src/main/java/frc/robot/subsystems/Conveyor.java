@@ -19,13 +19,15 @@ public class Conveyor extends SubsystemBase {
 
   private WPI_TalonSRX conveyor;
   private DigitalInput ballSensor;
+  private boolean manualAdvanceCargoActive;
+  private boolean autoAdvanceCargoActive;
   private Timer shotTimer = new Timer();
 
   private static Conveyor singleton;
 
   public enum ConveyorMode {
     stopped(0),
-    intaking(1),
+    advancingCargo(1),
     loaded(2),
     shooting(3),
     stopping(4);
@@ -69,7 +71,7 @@ public class Conveyor extends SubsystemBase {
       switch (conveyorMode) {
         case stopped:
           break;
-        case intaking:
+        case advancingCargo:
           if (getSensedBall()) {
             conveyorMode = ConveyorMode.loaded;
             conveyor.stopMotor();
@@ -79,7 +81,7 @@ public class Conveyor extends SubsystemBase {
           break;
         case shooting:
           if (shotTimer.hasElapsed(Constants.ConveyorConstants.kickerInjectSec)) {
-            conveyorMode = ConveyorMode.intaking;
+            conveyorMode = ConveyorMode.advancingCargo;
           }
           break;
         case stopping:
@@ -123,32 +125,66 @@ public class Conveyor extends SubsystemBase {
         shotTimer.reset();
         shotTimer.start();
       } else if (conveyorMode == ConveyorMode.stopped) {
-        conveyorMode = ConveyorMode.intaking;
+        conveyorMode = ConveyorMode.advancingCargo;
         start();
         Intake.getSingleton().autoIntake();
       }
     }
   }
 
-  public void intake() {
+  public void autoAdvanceCargo() {
     if (Constants.conveyorEnabled) {
-      if (conveyorMode == ConveyorMode.stopped) {
-        conveyorMode = ConveyorMode.intaking;
+      if ((conveyorMode == ConveyorMode.stopped) || (conveyorMode == ConveyorMode.stopping)) {
+        conveyorMode = ConveyorMode.advancingCargo;
         start();
-        Intake.getSingleton().autoIntake();
       }
+      Intake.getSingleton().autoIntake();
+      autoAdvanceCargoActive = true;
     }
   }
 
-  public void stop() {
+  public void autoStop() {
     if (Constants.conveyorEnabled) {
+      if (!manualAdvanceCargoActive) {
+        if (conveyorMode == ConveyorMode.shooting) {
+          conveyorMode = ConveyorMode.stopping;
+        } else if (conveyorMode == ConveyorMode.advancingCargo) {
+          conveyor.stopMotor();
+          conveyorMode = ConveyorMode.stopped;
+        }
+      }
       Intake.getSingleton().autoStop();
-      if (conveyorMode == ConveyorMode.shooting) {
-        conveyorMode = ConveyorMode.stopping;
-      } else if (conveyorMode == ConveyorMode.intaking) {
-        conveyor.stopMotor();
-        conveyorMode = ConveyorMode.stopped;
+      autoAdvanceCargoActive = false;
+    }
+  }
+
+  // Can be called by one command only without requirements to continue
+  // shooting during manual intake.
+  public void manualAdvanceCargo() {
+    if (Constants.conveyorEnabled) {
+      if ((conveyorMode == ConveyorMode.stopped) || (conveyorMode == ConveyorMode.stopping)) {
+        conveyorMode = ConveyorMode.advancingCargo;
+        start();
       }
+      Intake.getSingleton().manualIntake();
+      manualAdvanceCargoActive = true;
+    }
+  }
+
+  // Can be called by one command only without requirements to continue
+  // shooting during manual intake.
+  public void manualStop() {
+    if (Constants.conveyorEnabled) {
+      if (!autoAdvanceCargoActive) {
+        if (conveyorMode == ConveyorMode.shooting) {
+          conveyorMode = ConveyorMode.stopping;
+        } else if (conveyorMode == ConveyorMode.advancingCargo) {
+          conveyor.stopMotor();
+          conveyorMode = ConveyorMode.stopped;
+        }
+      }
+      Intake.getSingleton().manualStop();
+      manualAdvanceCargoActive = false;
     }
   }
 

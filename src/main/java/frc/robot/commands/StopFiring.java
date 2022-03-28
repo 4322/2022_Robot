@@ -36,7 +36,7 @@ public class StopFiring extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    conveyor.stop();
+    conveyor.autoStop();
     kicker.stop();
     shooter.stop();
     hood.stop();

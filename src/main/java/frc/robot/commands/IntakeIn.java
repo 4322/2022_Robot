@@ -10,17 +10,17 @@ public class IntakeIn extends CommandBase {
     private Conveyor conveyor;
 
     public IntakeIn(Intake intakeSubsystem, Conveyor conveyorSubsystem) {
-            // Use addRequirements() here to declare subsystem dependencies.
     intake = intakeSubsystem;
     conveyor = conveyorSubsystem;
-    addRequirements(intake, conveyor);
+
+    // Don't require conveyor to continue shooting during manual intake.
+    addRequirements(intake);  
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.manualIntake();
-    conveyor.intake();
+    conveyor.manualAdvanceCargo();  // also starts intake
   }
 
   @Override
@@ -30,8 +30,7 @@ public class IntakeIn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.manualStop();
-    conveyor.stop();
+    conveyor.manualStop();  // also stops intake
   }
 
   // Run until interrupted
