@@ -67,8 +67,8 @@ public class RobotContainer {
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
 
   // Shooter Commands
-  private final StartFiring startFiring = new StartFiring(kicker, conveyor, shooter, hood, 0);
-  private final StopFiring stopFiring = new StopFiring(kicker, conveyor, shooter, hood);
+  private final FirePreset startFiring = new FirePreset(kicker, conveyor, shooter, hood, 0);
+  private final FireStop stopFiring = new FireStop(kicker, conveyor, shooter, hood);
 
   // Intake Commands
   private final IntakeIn intakeIn = new IntakeIn(intake, conveyor);
@@ -172,19 +172,19 @@ public class RobotContainer {
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
       rotateButtonNine = new JoystickButton(rotateStick, 9);
       rotateButtonTen = new JoystickButton(rotateStick, 10);
-      driveTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      driveTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.fieldCentric));
-      driveBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      driveBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun,limelight,
         Driveunbun.DriveMode.leftCamCentric));
-      driveBottomRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      driveBottomRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.rightCamCentric));
-      driveTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      driveTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.frontCamCentric));
-      rotateTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      rotateTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.killFieldCentric));
-      rotateTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      rotateTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.sideKillFieldCentric));
-      rotateBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, 
+      rotateBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood, driveunbun, limelight,
         Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
       rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69, false)); // 2 ball
@@ -255,7 +255,7 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
             alongWith(new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 
             smallNonZeroSpeed, 0, wheelPreRotateSec))  // doesn't hurt in 1 ball mode
       );
@@ -266,10 +266,10 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new StartFiring(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
             alongWith(new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 
                                      smallNonZeroSpeed, 0, wheelPreRotateSec)),
-        new StopFiring(kicker, conveyor, shooter, hood),
+        new FireStop(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
           new IntakeIn(intake, conveyor),
           new SequentialCommandGroup(
@@ -288,7 +288,7 @@ public class RobotContainer {
     // Reset pose after opposing alliance cargo disposal
     SequentialCommandGroup endDisposal = 
       new SequentialCommandGroup(
-        new StopFiring(kicker, conveyor, shooter, hood),
+        new FireStop(kicker, conveyor, shooter, hood),
         new DrivePolar(driveunbun, disposalEndDriveDeg, maxDriveSpeed, 
                        disposalEndRotateDeg, disposalEndDriveSec)
       );
@@ -297,7 +297,7 @@ public class RobotContainer {
 
       case 1:
         leftAuto.addCommands(
-          new StopFiring(kicker, conveyor, shooter, hood),
+          new FireStop(kicker, conveyor, shooter, hood),
           new DriveRobotCentric(driveunbun, 0, 0.7, 0, oneCargoDriveBackSec)
         );
         return leftAuto;
@@ -322,15 +322,15 @@ public class RobotContainer {
               new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
               new CalcFiringSolution(kicker, shooter, hood, limelight),
               new InstantCommand(limelight::disableLed),
-              new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new StopFiring(kicker, conveyor, shooter, hood)
+              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
+              new FireStop(kicker, conveyor, shooter, hood)
             );
             break;
           case 1:
             leftAuto.addCommands(
               new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
-              new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new StopFiring(kicker, conveyor, shooter, hood),
+              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
+              new FireStop(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
                 new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
@@ -341,15 +341,15 @@ public class RobotContainer {
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
-              new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
+              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               endDisposal
             );
             break;
           case 2:
             leftAuto.addCommands(
               new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
-              new StartFiring(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new StopFiring(kicker, conveyor, shooter, hood),
+              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
+              new FireStop(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
                 new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
@@ -363,7 +363,7 @@ public class RobotContainer {
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
-              new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+              new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
               endDisposal
             );
             break;
@@ -377,16 +377,16 @@ public class RobotContainer {
           new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
           new InstantCommand(limelight::disableLed),
-          new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new StopFiring(kicker, conveyor, shooter, hood)
+          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new FireStop(kicker, conveyor, shooter, hood)
         );
         return rightAuto;
 
       case 5:
         rightAuto.addCommands(
           new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec),
-          new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new StopFiring(kicker, conveyor, shooter, hood),
+          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new FireStop(kicker, conveyor, shooter, hood),
           new ParallelRaceGroup(
             new IntakeIn(intake, conveyor),
             new SequentialCommandGroup(
@@ -406,8 +406,8 @@ public class RobotContainer {
           new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
           new InstantCommand(limelight::disableLed),
-          new StartFiring(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new StopFiring(kicker, conveyor, shooter, hood)
+          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new FireStop(kicker, conveyor, shooter, hood)
         );
         return rightAuto;
     }
