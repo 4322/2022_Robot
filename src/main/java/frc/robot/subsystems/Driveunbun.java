@@ -431,12 +431,6 @@ public class Driveunbun extends SubsystemBase {
     rotPID.reset();
   }
 
-  // Drives the robot at a certain angle (relative to the field, forward = 0 deg)
-  // Must be periodically updated to work
-  public void drivePolar(double angle, double speed, double rotationDeg) {
-
-  }
-
   public boolean isDrivingWithSideCams() {
     return (driveMode == DriveMode.leftCamCentric) || (driveMode == DriveMode.rightCamCentric);
   }
