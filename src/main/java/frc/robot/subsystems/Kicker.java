@@ -142,6 +142,10 @@ public class Kicker extends SubsystemBase {
           if (isAtSpeed) {
             kickerMode = KickerMode.atSpeed;
             modeTimer.reset();
+            if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+                (KickerConstants.speedSettlingLimeSec == 0)) {
+              kickerMode = KickerMode.stableAtSpeed;
+            }
           }
           break;
         case atSpeed:
@@ -176,6 +180,7 @@ public class Kicker extends SubsystemBase {
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }
+      periodic();  // kludge for limelight
     }
   }
 

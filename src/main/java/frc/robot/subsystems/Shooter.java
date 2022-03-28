@@ -165,6 +165,10 @@ public class Shooter extends SubsystemBase {
           if (isAtSpeed) {
             shooterMode = ShooterMode.atSpeed;
             modeTimer.reset();
+            if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+                (ShooterConstants.speedSettlingLimeSec == 0)) {
+              shooterMode = ShooterMode.stableAtSpeed;
+            }
           }
           break;
         case atSpeed:
@@ -199,6 +203,7 @@ public class Shooter extends SubsystemBase {
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }
+      periodic();  // kludge for limelight mode
     }
   }
 

@@ -202,7 +202,7 @@ public class RobotContainer {
     final double wheelPreRotateSec = 0.5;
     final double maxDriveSpeed = 1.0;
     final double spinUpMediumSec = 1.0;
-    final double shootOneCargoSec = 0.8;  // must already be spun-up
+    final double shootOneCargoSec = 1.0;  // must already be spun-up
     final double shootTwoCargoSec = 2.0;  // must already be spun-up
     final double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
     final double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
@@ -212,8 +212,8 @@ public class RobotContainer {
     final double rotateToShootLimelightSec = 1.0;
     final double oneCargoDriveBackSec = 1.0;
 
-    final double ballTwoLeftAutoDriveSec = 0.8;
-    final double ballTwoLeftAutoDriveDeg = -168;
+    final double ballTwoLeftAutoDriveSec = 1.5;
+    final double ballTwoLeftAutoDriveDeg = -175;
     final double ballTwoLeftAutoShootDeg = 28;
 
     final double disposalLeft1DriveSec = 1.0;
@@ -254,9 +254,9 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
-            alongWith(new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 
-            smallNonZeroSpeed, 0, wheelPreRotateSec))  // doesn't hurt in 1 ball mode
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
+            //.alongWith(new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 
+            //smallNonZeroSpeed, 0, wheelPreRotateSec))  // doesn't hurt in 1 ball mode
       );
 
     // Start of 3 or 5 ball auto
@@ -265,10 +265,10 @@ public class RobotContainer {
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec).
-            alongWith(new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 
-                                     smallNonZeroSpeed, 0, wheelPreRotateSec)),
-        new FireStop(kicker, conveyor, shooter, hood),
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
+            //.alongWith(new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 
+            //                         smallNonZeroSpeed, 0, wheelPreRotateSec)),
+        ,new FireStop(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
           new IntakeIn(intake, conveyor),
           new SequentialCommandGroup(
@@ -306,10 +306,10 @@ public class RobotContainer {
           new ParallelRaceGroup(
             new IntakeIn(intake, conveyor),
             new SequentialCommandGroup(
-              new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, maxDriveSpeed, 
+              new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 0.6, 
                             ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new WaitCommand(intakeAfterArrivalSec)
+              new WaitCommand(intakeAfterArrivalSec + 1.0)
             )
           )
         );
@@ -317,9 +317,10 @@ public class RobotContainer {
           case 0:
             leftAuto.addCommands(
               new InstantCommand(limelight::enableLed),
+              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
               new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
-              new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
-              new CalcFiringSolution(kicker, shooter, hood, limelight),
+              //new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
+              //new CalcFiringSolution(kicker, shooter, hood, limelight),
               new InstantCommand(limelight::disableLed),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood)

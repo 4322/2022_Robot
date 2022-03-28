@@ -103,8 +103,8 @@ public final class Constants {
         public static final double autoRotkD = 0.0004;
         public static final double manualRotateToleranceDegrees = 1.5;
         public static final double autoRotateToleranceDegrees = 1.0;
-        public static final double limeRotNotMovingToleranceDegrees = 2.0;
-        public static final double limeRotMovingToleranceDegrees = 4.0;
+        public static final double limeRotNotMovingToleranceDegrees = 1.5;
+        public static final double limeRotMovingToleranceDegrees = 2.0;
         public static final double autoRotationMaxSpeed = 0.5;
         public static final double movingVelocityThresholdFtPerSec = 0.2;  // rotation doesn't count as movement
 
