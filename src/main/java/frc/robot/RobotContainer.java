@@ -233,13 +233,13 @@ public class RobotContainer {
     final double disposalEndDriveDeg = 130;
     final double disposalEndRotateDeg = 0;
 
-    final double ballTwoRightAutoDriveSec = 1.1;
-    final double ballTwoRightAutoDriveDeg = 65;
+    final double ballTwoRightAutoDriveSec = 1.2;
+    final double ballTwoRightAutoDriveDeg = 62;
     final double ballTwoRightAutoApproachDeg = 90;
 
-    final double ballThreeDriveSec = 1.6;
-    final double ballThreeDriveDeg = -147;
-    final double ballThreeShootDeg = -45;
+    final double ballThreeDriveSec = 1.8;
+    final double ballThreeDriveDeg = -142;
+    final double ballThreeShootDeg = -40;
 
     final double ballFourDriveSec = 1.5;
     final double ballFourDriveDeg = 170;
@@ -276,12 +276,12 @@ public class RobotContainer {
         new ParallelRaceGroup(
           new IntakeIn(intake, conveyor),
           new SequentialCommandGroup(
-            new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, maxDriveSpeed, 
+            new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, tightTurnDriveSpeed, 
                            ballTwoRightAutoApproachDeg - 90, ballTwoRightAutoDriveSec),
             new DrivePolar(driveunbun, ballTwoRightAutoApproachDeg, slowApproachSpeed, 
                            ballTwoRightAutoApproachDeg - 90, slowApproachSec),
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-            new DrivePolar(driveunbun, ballThreeDriveDeg, maxDriveSpeed, 
+            new DrivePolar(driveunbun, ballThreeDriveDeg, tightTurnDriveSpeed, 
                            ballThreeDriveDeg + 90, ballThreeDriveSec),
             new WaitCommand(intakeAfterArrivalNoTipSec)
           )
