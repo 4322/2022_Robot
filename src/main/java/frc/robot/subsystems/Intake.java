@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.IntakeConstants;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
@@ -13,6 +19,17 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 public class Intake extends SubsystemBase{
 
   private CANSparkMax intakeMotor;
+  private SparkMaxPIDController intakePID;
+
+  private double target;
+
+  private ShuffleboardTab tab;
+  
+  private NetworkTableEntry power;
+  private NetworkTableEntry currentRPM;
+  private NetworkTableEntry targetRPM;
+  private NetworkTableEntry override;
+  private RelativeEncoder intakeEncoder;
 
   private static Intake singleton;
 
@@ -59,7 +76,7 @@ public class Intake extends SubsystemBase{
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextVerySlowStatusPeriodSparkMs());
+        RobotContainer.nextSlowStatusPeriodMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
         RobotContainer.nextVerySlowStatusPeriodSparkMs());  
     }
@@ -70,21 +87,59 @@ public class Intake extends SubsystemBase{
       intakeMotor.restoreFactoryDefaults();
       intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
       intakeMotor.setInverted(true);
+      intakeEncoder = intakeMotor.getEncoder();
+
+      intakePID = intakeMotor.getPIDController();
+      intakePID.setP(IntakeConstants.kP);
+      intakePID.setI(IntakeConstants.kI);
+      intakePID.setD(IntakeConstants.kD);
+      intakePID.setIZone(IntakeConstants.kIz);
+      intakePID.setFF(IntakeConstants.kFF);  
+
       intakeMotor.burnFlash();
       setCoastMode();  // Allow manual movement until enabled
+
+      if (Constants.debug) {
+        tab = Shuffleboard.getTab("Intake");
+      
+        power =
+          tab.add("Power", 0)
+          .withPosition(0,0)
+          .withSize(1,1)
+          .getEntry();
+
+        currentRPM =
+          tab.add("Current RPM", 0)
+          .withPosition(1,0)
+          .withSize(1,1)
+          .getEntry();
+
+        targetRPM =
+          tab.add("Target RPM", 0)
+          .withPosition(2,0)
+          .withSize(1,1)
+          .getEntry();
+
+        override = 
+          tab.add("Override", false)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(0,1)
+          .withSize(1,1)
+          .getEntry();
+      }
     }
   }
 
   public void manualIntake() {
     if (Constants.intakeEnabled) {
-      intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+      setSpeed(IntakeConstants.intakeVelocity);
       intakeManualMode = IntakeManualMode.intaking;
     }
   }
 
   public void manualEject() {
     if (Constants.intakeEnabled) {
-      intakeMotor.set(-Constants.IntakeConstants.intakeSpeed);
+      setSpeed(IntakeConstants.ejectVelocity);
       intakeManualMode = IntakeManualMode.ejecting;
     }
   }
@@ -94,7 +149,7 @@ public class Intake extends SubsystemBase{
       if (intakeAutoMode == IntakeAutoMode.stopped) {
         intakeMotor.stopMotor();
       } else {
-        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+        setSpeed(IntakeConstants.intakeVelocity);
       }
       intakeManualMode = IntakeManualMode.stopped;
     }
@@ -104,7 +159,7 @@ public class Intake extends SubsystemBase{
   public void autoIntake() {
     if (Constants.intakeEnabled) {
       if (intakeManualMode == IntakeManualMode.stopped) {
-        intakeMotor.set(Constants.IntakeConstants.intakeSpeed);
+        setSpeed(IntakeConstants.intakeVelocity);
       }
       intakeAutoMode = IntakeAutoMode.intaking;
     }
@@ -122,7 +177,33 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (Constants.intakeEnabled) {
+      if (Constants.debug) {
+        if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
+          setSpeed(targetRPM.getDouble(0));
+        }
+        power.setDouble(intakeMotor.getAppliedOutput());
+        currentRPM.setDouble(getSpeed());
+      }
+    }
+  }
+
+  private void setSpeed(double rpm) {
+    if (Constants.intakeEnabled) {
+      intakePID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      target = rpm;
+      if (Constants.debug) {
+        targetRPM.setDouble(rpm);
+      }
+    }
+  }
+
+  private double getSpeed() {
+    if (Constants.intakeEnabled) {
+      return intakeEncoder.getVelocity();
+    } else {
+      return -1;
+    }
   }
   
   public void setCoastMode() {

@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -259,8 +259,15 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int motorID = 18;
-        public static final double intakeSpeed = 0.5;
-        public static double rampRate = 0.5;
+
+        public static final double kP = .00025;
+        public static final double kI = 0.000001;
+        public static final double kD = 0.0;
+        public static final double kIz = 200;
+        public static final double kFF = 0.00033;
+        public static final double rampRate = 0.4;  // seconds to go from stopped to full power
+        public static final double intakeVelocity = 1350;
+        public static final double ejectVelocity = -1350;
     }
 
     public static final class ConveyorConstants {
