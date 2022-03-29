@@ -51,12 +51,13 @@ public class FireLime extends CommandBase {
       return;
     }
 
-    if (conveyor.isLoaded()) {
-      FiringSolution firingSolution = FiringSolutionManager.getSingleton()
+    FiringSolution firingSolution = FiringSolutionManager.getSingleton()
         .calcNewSolution(limelight.getDistance());
+    hood.setTargetPosition(firingSolution.getHoodPosition());
+    
+    if (conveyor.isLoaded()) {
       kicker.setSpeed(firingSolution.getKickerSpeed());
       shooter.setSpeed(firingSolution.getFlywheelSpeed());
-      hood.setTargetPosition(firingSolution.getHoodPosition());
       
       if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget() &&
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
