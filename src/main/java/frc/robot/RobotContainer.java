@@ -149,7 +149,7 @@ public class RobotContainer {
     coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
     coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
 
-    coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
+    //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopFiring);
 
     coPilot.rb.whileHeld(intakeIn);
@@ -190,8 +190,8 @@ public class RobotContainer {
         intake, driveunbun, limelight, Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonOne.whileHeld(intakeIn);
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
-      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69, false)); // 2 ball
-      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -21, false)); // 5 ball
+      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 21, false)); // 2 ball
+      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -69, false)); // 5 ball
     }
   }
   
@@ -212,7 +212,7 @@ public class RobotContainer {
     final double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
     final double slowApproachSec = 0.2;  // duration of slow approach
     final double rotateToShootStaticSec = 0.8;
-    final double rotateToShootLimelightSec = 1.0;
+    final double rotateToShootLimelightSec = 0.4;  // already pre-rotated
     final double oneCargoDriveBackSec = 1.0;
 
     final double ballTwoLeftAutoDriveSec = 1.5;
