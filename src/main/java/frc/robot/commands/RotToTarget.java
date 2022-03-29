@@ -56,8 +56,8 @@ public class RotToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (!lim.getTargetVisible() ||
-            Math.abs(lim.getHorizontalDegToTarget()) <= DriveConstants.limeRotNotMovingToleranceDegrees) ||
-            timeout.hasElapsed(timeoutLength);
+    return !lim.getTargetVisible() ||
+           (Math.abs(lim.getHorizontalDegToTarget()) <= DriveConstants.limeRotNotMovingToleranceDegrees) ||
+           timeout.hasElapsed(timeoutLength);
   }
 }

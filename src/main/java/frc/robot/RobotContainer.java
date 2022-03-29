@@ -203,6 +203,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     final double maxDriveSpeed = 1.0;
+    final double tightTurnDriveSpeed = 0.6;
     final double spinUpMediumSec = 1.0;
     final double shootOneCargoSec = 1.0;  // must already be spun-up
     final double shootTwoCargoSec = 2.0;  // must already be spun-up
@@ -254,7 +255,8 @@ public class RobotContainer {
     SequentialCommandGroup leftAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodReset(hood),
+        new HoodReset(hood)
+            .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
             // doesn't hurt in 1 ball mode
@@ -265,7 +267,8 @@ public class RobotContainer {
     SequentialCommandGroup rightAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodReset(hood),
+        new HoodReset(hood)
+            .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
             .alongWith(new DrivePreTurnWheels(driveunbun, ballTwoRightAutoDriveDeg)),
@@ -307,10 +310,10 @@ public class RobotContainer {
           new ParallelRaceGroup(
             new IntakeIn(intake, conveyor),
             new SequentialCommandGroup(
-              new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 0.6, 
+              new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, tightTurnDriveSpeed, 
                             ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new WaitCommand(intakeAfterArrivalSec + 1.0)
+              new WaitCommand(intakeAfterArrivalSec)
             )
           )
         );
@@ -319,7 +322,8 @@ public class RobotContainer {
             leftAuto.addCommands(
               new InstantCommand(limelight::enableLed),
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
+              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
+                  .raceWith(new IntakeIn(intake, conveyor)),
               //new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
               //new CalcFiringSolution(kicker, shooter, hood, limelight),
               new InstantCommand(limelight::disableLed),
@@ -329,7 +333,9 @@ public class RobotContainer {
             break;
           case 1:
             leftAuto.addCommands(
-              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
+              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
+              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
+                  .raceWith(new IntakeIn(intake, conveyor)),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
@@ -348,7 +354,9 @@ public class RobotContainer {
             break;
           case 2:
             leftAuto.addCommands(
-              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec),
+              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
+              new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
+                  .raceWith(new IntakeIn(intake, conveyor)),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood),
               new ParallelRaceGroup(
@@ -374,9 +382,10 @@ public class RobotContainer {
       case 3:
         rightAuto.addCommands(
           new InstantCommand(limelight::enableLed),
-          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec),
-          new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
-          new CalcFiringSolution(kicker, shooter, hood, limelight),
+          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec)
+              .raceWith(new IntakeIn(intake, conveyor)),
+          //new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
+          //new CalcFiringSolution(kicker, shooter, hood, limelight),
           new InstantCommand(limelight::disableLed),
           new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new FireStop(kicker, conveyor, shooter, hood)
@@ -385,7 +394,8 @@ public class RobotContainer {
 
       case 5:
         rightAuto.addCommands(
-          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec),
+          new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec)
+              .raceWith(new IntakeIn(intake, conveyor)),
           new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new FireStop(kicker, conveyor, shooter, hood),
           new ParallelRaceGroup(
@@ -402,7 +412,6 @@ public class RobotContainer {
           ),
           new DrivePolar(driveunbun, ballFiveShootDeg, maxDriveSpeed, 
                          ballFiveShootDeg, ballFiveShootApproachSec),
-
           new InstantCommand(limelight::enableLed),
           new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
           new CalcFiringSolution(kicker, shooter, hood, limelight),
