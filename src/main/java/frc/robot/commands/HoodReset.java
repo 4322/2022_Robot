@@ -26,8 +26,6 @@ public class HoodReset extends CommandBase {
   private resetStates currentState;
 
   public HoodReset(Hood hoodSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-
     hood = hoodSubsystem;
     addRequirements(hood);
   }
