@@ -220,7 +220,7 @@ public class RobotContainer {
 
     final double ballTwoLeftAutoDriveSec = 1.5;
     final double ballTwoLeftAutoDriveDeg = -170;
-    final double ballTwoLeftAutoApproachDeg = -180;
+    //final double ballTwoLeftAutoApproachDeg = -180;
     final double ballTwoLeftAutoShootDeg = 23;
 
     final double disposalLeft1DriveSec = 1.0;
@@ -238,12 +238,13 @@ public class RobotContainer {
     final double disposalEndRotateDeg = 0;
 
     final double ballTwoRightAutoDriveSec = 1.2;
-    final double ballTwoRightAutoDriveDeg = 62;
+    final double ballTwoRightAutoDriveDeg = 60.5;
     final double ballTwoRightAutoApproachDeg = 90;
+    final double ballTwoRightSlowApproachSec = 0.07;
 
-    final double ballThreeDriveSec = 1.8;
-    final double ballThreeDriveDeg = -142;
-    final double ballThreeShootDeg = -40;
+    final double ballThreeDriveSec = 1.9;
+    final double ballThreeDriveDeg = -151;
+    final double ballThreeShootDeg = -35;
 
     final double ballFourDriveSec = 1.5;
     final double ballFourDriveDeg = 170;
@@ -283,7 +284,7 @@ public class RobotContainer {
             new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, tightTurnDriveSpeed, 
                            ballTwoRightAutoApproachDeg - 90, ballTwoRightAutoDriveSec),
             new DrivePolar(driveunbun, ballTwoRightAutoApproachDeg, slowApproachSpeed, 
-                           ballTwoRightAutoApproachDeg - 90, slowApproachSec),
+                           ballTwoRightAutoApproachDeg - 90, ballTwoRightSlowApproachSec),
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
             new DrivePolar(driveunbun, ballThreeDriveDeg, tightTurnDriveSpeed, 
                            ballThreeDriveDeg + 90, ballThreeDriveSec),
