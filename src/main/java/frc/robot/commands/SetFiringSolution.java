@@ -14,9 +14,6 @@ import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 
 public class SetFiringSolution extends InstantCommand {
-  /**
-   * Creates a new Enable_Shooter_Power.
-   */
 
   private Shooter shooter;
   private Hood hood;

@@ -174,24 +174,24 @@ public class RobotContainer {
       rotateButtonNine = new JoystickButton(rotateStick, 9);
       rotateButtonTen = new JoystickButton(rotateStick, 10);
 
-      driveTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.fieldCentric));
-      driveBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.leftCamCentric));
-      driveBottomRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.rightCamCentric));
-      driveTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.frontCamCentric));
-      rotateTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.killFieldCentric));
-      rotateTopRightButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.sideKillFieldCentric));
-      rotateBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
-        intake, driveunbun, limelight, Driveunbun.DriveMode.limelightFieldCentric));
+      driveTopLeftButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.fieldCentric));
+      driveBottomLeftButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.leftCamCentric));
+      driveBottomRightButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.rightCamCentric));
+      driveTopRightButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.frontCamCentric));
+      rotateTopLeftButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.killFieldCentric));
+      rotateTopRightButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.sideKillFieldCentric));
+      rotateBottomLeftButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
+         driveunbun, limelight, Driveunbun.DriveMode.limelightFieldCentric));
       driveButtonOne.whileHeld(intakeIn);
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
-      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 21, false)); // 2 ball
-      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -69, false)); // 5 ball
+      rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 21, false)); // 1/2 ball
+      rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -69, false)); // 3/5 ball
     }
   }
   

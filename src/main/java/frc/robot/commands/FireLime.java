@@ -23,18 +23,17 @@ public class FireLime extends CommandBase {
   private Driveunbun driveunbun;
   private Limelight limelight;
 
-  public FireLime(Kicker kickerSubsystem, Conveyor conveyorSubsystem, 
-              Shooter shooterSubsystem, Hood hoodSubsystem, Intake intake,
-              Driveunbun driveunbun, Limelight limelight) {
+  public FireLime(Kicker kickerSubsystem, Shooter shooterSubsystem, 
+      Hood hoodSubsystem, Driveunbun driveunbun, Limelight limelight) {
     kicker = kickerSubsystem;
-    conveyor = conveyorSubsystem;
+    conveyor = Conveyor.getSingleton();
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     this.driveunbun = driveunbun;
     this.limelight = limelight;
 
     // stop updating firing solution so everything can stabilize
-    addRequirements(kicker, conveyor, shooter, hood, intake);  
+    addRequirements(kicker, conveyor, shooter, hood, Intake.getSingleton());  
   }
 
   // Called when the command is initially scheduled.
@@ -76,6 +75,9 @@ public class FireLime extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     conveyor.autoStop();
+    kicker.stop();
+    shooter.stop();
+    hood.stop();
   }
 
   // Run until time has expired or interrupted
