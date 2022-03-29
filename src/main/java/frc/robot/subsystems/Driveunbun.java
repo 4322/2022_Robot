@@ -436,9 +436,9 @@ public class Driveunbun extends SubsystemBase {
 
     if (Math.abs(error) <= toleranceDeg) {
       rotPIDSpeed = 0;
-    }
-
-    if (rotPIDSpeed > DriveConstants.autoRotationMaxSpeed) {
+    } else if (Math.abs(rotPIDSpeed) < DriveConstants.minAutoRotateSpeed) {
+      rotPIDSpeed = Math.copySign(DriveConstants.minAutoRotateSpeed, rotPIDSpeed);
+    } else if (rotPIDSpeed > DriveConstants.autoRotationMaxSpeed) {
       rotPIDSpeed = DriveConstants.autoRotationMaxSpeed;
     } else if (rotPIDSpeed < -DriveConstants.autoRotationMaxSpeed) {
       rotPIDSpeed = -DriveConstants.autoRotationMaxSpeed;
