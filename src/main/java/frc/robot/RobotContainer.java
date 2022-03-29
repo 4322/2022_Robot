@@ -215,7 +215,7 @@ public class RobotContainer {
     final double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
     final double slowApproachSec = 0.2;  // duration of slow approach
     final double rotateToShootStaticSec = 0.8;
-    final double rotateToShootLimelightSec = 0.4;  // already pre-rotated
+    final double rotateToShootLimelightSec = 0.8;  // already pre-rotated
     final double oneCargoDriveBackSec = 1.0;
 
     final double ballTwoLeftAutoDriveSec = 1.5;
@@ -236,6 +236,7 @@ public class RobotContainer {
     final double disposalEndDriveSec = 1.2;
     final double disposalEndDriveDeg = 0;
     final double disposalEndRotateDeg = 0;
+    final double disposalShootingSec = 2.5;
 
     final double ballTwoRightAutoDriveSec = 1.2;
     final double ballTwoRightAutoDriveDeg = 60.5;
@@ -244,7 +245,7 @@ public class RobotContainer {
 
     final double ballThreeDriveSec = 1.9;
     final double ballThreeDriveDeg = -151;
-    final double ballThreeShootDeg = -35;
+    final double ballThreeShootDeg = -31;
 
     final double ballFourDriveSec = 1.5;
     final double ballFourDriveDeg = 170;
@@ -286,6 +287,7 @@ public class RobotContainer {
             new DrivePolar(driveunbun, ballTwoRightAutoApproachDeg, slowApproachSpeed, 
                            ballTwoRightAutoApproachDeg - 90, ballTwoRightSlowApproachSec),
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
+            new DrivePreTurnWheels(driveunbun, ballThreeDriveDeg),
             new DrivePolar(driveunbun, ballThreeDriveDeg, tightTurnDriveSpeed, 
                            ballThreeDriveDeg + 90, ballThreeDriveSec),
             new WaitCommand(intakeAfterArrivalNoTipSec)
@@ -296,6 +298,7 @@ public class RobotContainer {
     // Reset pose after opposing alliance cargo disposal
     SequentialCommandGroup endDisposal = 
       new SequentialCommandGroup(
+        new FirePreset(kicker, conveyor, shooter, hood, disposalShootingSec),
         new FireStop(kicker, conveyor, shooter, hood),
         new DrivePolar(driveunbun, disposalEndDriveDeg, 0, 
                        disposalEndRotateDeg, disposalEndDriveSec)
@@ -331,8 +334,8 @@ public class RobotContainer {
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
               new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
                   .raceWith(new IntakeIn(intake, conveyor)),
-              //new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
-              //new CalcFiringSolution(kicker, shooter, hood, limelight),
+              new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
+              new CalcFiringSolution(kicker, shooter, hood, limelight),
               new InstantCommand(limelight::disableLed),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood)
@@ -356,7 +359,6 @@ public class RobotContainer {
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
-              new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
               endDisposal
             );
             break;
@@ -382,7 +384,6 @@ public class RobotContainer {
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
-              new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
               endDisposal
             );
             break;
@@ -394,8 +395,8 @@ public class RobotContainer {
           new InstantCommand(limelight::enableLed),
           new DrivePolar(driveunbun, 0, 0, ballThreeShootDeg, rotateToShootStaticSec)
               .raceWith(new IntakeIn(intake, conveyor)),
-          //new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
-          //new CalcFiringSolution(kicker, shooter, hood, limelight),
+          new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
+          new CalcFiringSolution(kicker, shooter, hood, limelight),
           new InstantCommand(limelight::disableLed),
           new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
           new FireStop(kicker, conveyor, shooter, hood)

@@ -7,7 +7,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Hood;
@@ -15,17 +15,13 @@ import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 
-public class CalcFiringSolution extends CommandBase {
-  /**
-   * Creates a new Enable_Shooter_Power.
-   */
+public class CalcFiringSolution extends InstantCommand {
 
   private Kicker kicker;
   private Shooter shooter;
   private Hood hood;
   private Limelight lim;
   private FiringSolutionManager manager = FiringSolutionManager.getSingleton();
-
 
   public CalcFiringSolution(Kicker kickerSubsystem, Shooter shooterSubsystem, 
                             Hood hoodSubsystem, Limelight limelight) {
@@ -39,12 +35,6 @@ public class CalcFiringSolution extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
     if (lim.getTargetVisible()) {
       FiringSolution firingSolution = manager.calcNewSolution(lim.getDistance());
       kicker.setSpeed(firingSolution.getKickerSpeed());
@@ -53,14 +43,13 @@ public class CalcFiringSolution extends CommandBase {
     }
   }
 
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }
