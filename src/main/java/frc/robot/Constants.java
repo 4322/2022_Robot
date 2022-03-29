@@ -63,7 +63,7 @@ public final class Constants {
 
     public static FiringSolution[] limelightFiringSolutions;
     static {  // limelight can't see target from the fender
-        limelightFiringSolutions = new FiringSolution[5];
+        limelightFiringSolutions = new FiringSolution[6];
         int i = 0;
         limelightFiringSolutions[i++] = FiringSolutions.middleTarmac;
         limelightFiringSolutions[i++] = FiringSolutions.insideTarmac;
