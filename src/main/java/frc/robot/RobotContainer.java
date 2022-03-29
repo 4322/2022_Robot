@@ -47,6 +47,7 @@ public class RobotContainer {
   private static JoystickButton rotateTopLeftButton;
   private static JoystickButton rotateTopRightButton;
   private static JoystickButton rotateBottomLeftButton;
+  private static JoystickButton rotateButtonSeven;
   private static JoystickButton rotateButtonNine;
   private static JoystickButton rotateButtonTen;
 
@@ -171,6 +172,7 @@ public class RobotContainer {
       rotateTopLeftButton = new JoystickButton(rotateStick, 5); 
       rotateTopRightButton = new JoystickButton(rotateStick, 6); 
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
+      rotateButtonSeven = new JoystickButton(rotateStick, 7);
       rotateButtonNine = new JoystickButton(rotateStick, 9);
       rotateButtonTen = new JoystickButton(rotateStick, 10);
 
@@ -192,6 +194,7 @@ public class RobotContainer {
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
       rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 21, false)); // 1/2 ball
       rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -69, false)); // 3/5 ball
+      rotateButtonSeven.whenPressed(driveunbun::resetDisplacement);
     }
   }
   

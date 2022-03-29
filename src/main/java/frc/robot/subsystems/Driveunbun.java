@@ -56,6 +56,8 @@ public class Driveunbun extends SubsystemBase {
   private NetworkTableEntry tipBigStickAtiveTab;
   private NetworkTableEntry driveXTab;
   private NetworkTableEntry driveYTab;
+  private NetworkTableEntry displaceXTab;
+  private NetworkTableEntry displaceYTab;
 
   public Driveunbun(Webcams webcams, Limelight limelight) {
     this.webcams = webcams;
@@ -182,6 +184,16 @@ public class Driveunbun extends SubsystemBase {
         .withPosition(1, 2)
         .withSize(1, 1)
         .getEntry();
+
+        displaceXTab = tab.add("Displacement X", 0)
+        .withPosition(3, 2)
+        .withSize(1, 1)
+        .getEntry();
+
+        displaceYTab = tab.add("Displacement Y", 0)
+        .withPosition(4, 2)
+        .withSize(1, 1)
+        .getEntry();
       }
     }
   }
@@ -267,7 +279,15 @@ public class Driveunbun extends SubsystemBase {
       if (Constants.gyroEnabled) {
         roll.setDouble(gyro.getRoll());
         pitch.setDouble(gyro.getPitch());
+        displaceXTab.setDouble(gyro.getDisplacementX());
+        displaceYTab.setDouble(gyro.getDisplacementY());
       }
+    }
+  }
+
+  public void resetDisplacement() {
+    if (Constants.gyroEnabled) {
+      gyro.resetDisplacement();
     }
   }
 
