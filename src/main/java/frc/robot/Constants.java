@@ -205,7 +205,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 1.0;  // seconds to go from stopped to full power
         public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
-        public static final double minVelErrorLime = 70;
+        public static final double minVelErrorLime = 35;
         public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
         public static final double speedSettlingLimeSec = 0;
     }
@@ -223,7 +223,7 @@ public final class Constants {
         public static final double kMaxRange = 1.0;
         public static final double rampRate = 0.4;  // seconds to go from stopped to full power
         public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
-        public static final double minVelErrorLime = 70; // allowable error to shoot (in rpm)
+        public static final double minVelErrorLime = 35; // allowable error to shoot (in rpm)
         public static final double speedSettlingPresetSec = 0.1;  // don't shoot until speed is stable
         public static final double speedSettlingLimeSec = 0;  // don't shoot until speed is stable
         public static final double minShotSec = 0.2;  // don't stop conveyor when kicker slows down as cargo enters
@@ -235,7 +235,7 @@ public final class Constants {
         public static int hoodMinPosition = 0;     //allows to be changed in demo mode
         public static final int hoodDecellerationDistance = 500; 
         public static final int hoodTolerancePreset = 20;
-        public static final int hoodToleranceLime = 40;
+        public static final int hoodToleranceLime = 20;
         public static final double homingTimeout = 6.0; 
 
         public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
