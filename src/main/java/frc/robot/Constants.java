@@ -266,7 +266,7 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double kIz = 200;
         public static final double kFF = 0.00033;
-        public static final double rampRate = 0.4;  // seconds to go from stopped to full power
+        public static final double rampRate = 0.6;  // seconds to go from stopped to full power
         public static final double intakeVelocity = 1350;
         public static final double ejectVelocity = -1350;
     }
