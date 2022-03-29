@@ -42,6 +42,7 @@ public class RobotContainer {
   private static JoystickButton driveBottomLeftButton;
   private static JoystickButton driveTopRightButton;
   private static JoystickButton driveBottomRightButton;
+  private static JoystickButton driveButtonOne;
   private static JoystickButton driveButtonSeven;
   private static JoystickButton rotateTopLeftButton;
   private static JoystickButton rotateTopRightButton;
@@ -161,6 +162,7 @@ public class RobotContainer {
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
       rotateStick = new Joystick(1);
+      driveButtonOne  = new JoystickButton(driveStick, 1);
       driveTopLeftButton = new JoystickButton(driveStick, 5);
       driveBottomLeftButton = new JoystickButton(driveStick, 3);
       driveBottomRightButton = new JoystickButton(driveStick, 4);
@@ -171,6 +173,7 @@ public class RobotContainer {
       rotateBottomLeftButton = new JoystickButton(rotateStick, 3); 
       rotateButtonNine = new JoystickButton(rotateStick, 9);
       rotateButtonTen = new JoystickButton(rotateStick, 10);
+
       driveTopLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
         intake, driveunbun, limelight, Driveunbun.DriveMode.fieldCentric));
       driveBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
@@ -185,6 +188,7 @@ public class RobotContainer {
         intake, driveunbun, limelight, Driveunbun.DriveMode.sideKillFieldCentric));
       rotateBottomLeftButton.whenPressed(new SetDriveMode(kicker, conveyor, shooter, hood,
         intake, driveunbun, limelight, Driveunbun.DriveMode.limelightFieldCentric));
+      driveButtonOne.whileHeld(intakeIn);
       driveButtonSeven.whenPressed(new ResetFieldCentric(driveunbun, 0, true));
       rotateButtonNine.whenPressed(new ResetFieldCentric(driveunbun, 69, false)); // 2 ball
       rotateButtonTen.whenPressed(new ResetFieldCentric(driveunbun, -21, false)); // 5 ball
