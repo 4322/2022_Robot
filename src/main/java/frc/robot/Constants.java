@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -52,6 +52,7 @@ public final class Constants {
     public static final class FiringSolutions {
       public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 3.0, 0);
       public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0);
+      public static final FiringSolution disposal = new FiringSolution(600, 700, 2500, 5.0, 0);
       public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 37);
       public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 41);
       public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 77);

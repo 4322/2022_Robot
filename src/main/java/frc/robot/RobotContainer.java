@@ -219,7 +219,8 @@ public class RobotContainer {
     final double oneCargoDriveBackSec = 1.0;
 
     final double ballTwoLeftAutoDriveSec = 1.5;
-    final double ballTwoLeftAutoDriveDeg = -175;
+    final double ballTwoLeftAutoDriveDeg = -170;
+    final double ballTwoLeftAutoApproachDeg = -180;
     final double ballTwoLeftAutoShootDeg = 23;
 
     final double disposalLeft1DriveSec = 1.0;
@@ -230,10 +231,10 @@ public class RobotContainer {
     final double disposalLeft2DriveSec = 1.4;
     final double disposalLeft2DriveDeg = -70.0;
 
-    final double disposalShootDeg = -180.0;
+    final double disposalShootDeg = 175.0;
 
-    final double disposalEndDriveSec = 0.8;
-    final double disposalEndDriveDeg = 130;
+    final double disposalEndDriveSec = 1.2;
+    final double disposalEndDriveDeg = 0;
     final double disposalEndRotateDeg = 0;
 
     final double ballTwoRightAutoDriveSec = 1.2;
@@ -295,7 +296,7 @@ public class RobotContainer {
     SequentialCommandGroup endDisposal = 
       new SequentialCommandGroup(
         new FireStop(kicker, conveyor, shooter, hood),
-        new DrivePolar(driveunbun, disposalEndDriveDeg, maxDriveSpeed, 
+        new DrivePolar(driveunbun, disposalEndDriveDeg, 0, 
                        disposalEndRotateDeg, disposalEndDriveSec)
       );
 
@@ -315,6 +316,8 @@ public class RobotContainer {
             new SequentialCommandGroup(
               new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, tightTurnDriveSpeed, 
                             ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
+              //new DrivePolar(driveunbun, ballTwoLeftAutoApproachDeg, slowApproachSpeed, 
+              //              ballTwoLeftAutoApproachDeg - 90, slowApproachSec),
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
               new WaitCommand(intakeAfterArrivalSec)
             )
@@ -341,17 +344,18 @@ public class RobotContainer {
                   .raceWith(new IntakeIn(intake, conveyor)),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood),
+              new DrivePreTurnWheels(driveunbun, disposalLeft1DriveDeg),
               new ParallelRaceGroup(
                 new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
                   new DrivePolar(driveunbun, disposalLeft1DriveDeg, maxDriveSpeed, 
-                                 disposalLeft1DriveDeg - 90, disposalLeft1DriveSec),
+                                 disposalLeft1DriveDeg + 90, disposalLeft1DriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
-                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow),
+                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.disposal),
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
-              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
+              new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
               endDisposal
             );
             break;
@@ -362,16 +366,18 @@ public class RobotContainer {
                   .raceWith(new IntakeIn(intake, conveyor)),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood),
+              new DrivePreTurnWheels(driveunbun, disposalRightDriveDeg),
               new ParallelRaceGroup(
                 new IntakeIn(intake, conveyor),
                 new SequentialCommandGroup(
                   new DrivePolar(driveunbun, disposalRightDriveDeg, maxDriveSpeed, 
                                 disposalRightDriveDeg - 90, disposalRightDriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
+                  new DrivePreTurnWheels(driveunbun, disposalLeft2DriveDeg),
                   new DrivePolar(driveunbun, disposalLeft2DriveDeg, maxDriveSpeed, 
                                 disposalLeft2DriveDeg - 90, disposalLeft2DriveSec),
                   new WaitCommand(intakeAfterArrivalSec),
-                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow),
+                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.disposal),
                   new DrivePolar(driveunbun, 0, 0, disposalShootDeg, rotateToShootStaticSec)
                 )
               ),
