@@ -142,8 +142,9 @@ public class Kicker extends SubsystemBase {
           if (isAtSpeed) {
             kickerMode = KickerMode.atSpeed;
             modeTimer.reset();
+            double speedSettlingLimeSec = KickerConstants.speedSettlingLimeSec;
             if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
-                (KickerConstants.speedSettlingLimeSec == 0)) {
+                (speedSettlingLimeSec == 0)) {
               kickerMode = KickerMode.stableAtSpeed;
             }
           }

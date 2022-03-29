@@ -165,8 +165,9 @@ public class Shooter extends SubsystemBase {
           if (isAtSpeed) {
             shooterMode = ShooterMode.atSpeed;
             modeTimer.reset();
+            double speedSettlingLimeSec = ShooterConstants.speedSettlingLimeSec;
             if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
-                (ShooterConstants.speedSettlingLimeSec == 0)) {
+                (speedSettlingLimeSec == 0)) {
               shooterMode = ShooterMode.stableAtSpeed;
             }
           }

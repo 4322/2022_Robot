@@ -105,8 +105,10 @@ public final class Constants {
         public static final double autoRotateToleranceDegrees = 1.0;
         public static final double limeRotNotMovingToleranceDegrees = 1.5;
         public static final double limeRotMovingToleranceDegrees = 2.0;
-        public static final double autoRotationMaxSpeed = 0.5;
+        public static final double autoRotationMaxSpeed = 0.5;  // don't change - autonomous critical!
         public static final double movingVelocityThresholdFtPerSec = 0.2;  // rotation doesn't count as movement
+        public static final double smallNonZeroSpeed = 0.001;  // not enough to move the robot
+        public static final double wheelPreRotateSec = 0.5;
 
         public static final double drivePolarDeadband = 0.06;
         public static final double rotatePolarDeadband = 0.5;

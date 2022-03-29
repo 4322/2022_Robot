@@ -202,8 +202,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    final double smallNonZeroSpeed = 0.001;  // not enough to move the robot
-    final double wheelPreRotateSec = 0.5;
     final double maxDriveSpeed = 1.0;
     final double spinUpMediumSec = 1.0;
     final double shootOneCargoSec = 1.0;  // must already be spun-up
@@ -259,8 +257,8 @@ public class RobotContainer {
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
-            //.alongWith(new DrivePolar(driveunbun, ballTwoLeftAutoDriveDeg, 
-            //smallNonZeroSpeed, 0, wheelPreRotateSec))  // doesn't hurt in 1 ball mode
+            // doesn't hurt in 1 ball mode
+            .alongWith(new DrivePreTurnWheels(driveunbun, ballTwoLeftAutoDriveDeg))
       );
 
     // Start of 3 or 5 ball auto
@@ -270,9 +268,8 @@ public class RobotContainer {
         new HoodReset(hood),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
-            //.alongWith(new DrivePolar(driveunbun, ballTwoRightAutoDriveDeg, 
-            //                         smallNonZeroSpeed, 0, wheelPreRotateSec)),
-        ,new FireStop(kicker, conveyor, shooter, hood),
+            .alongWith(new DrivePreTurnWheels(driveunbun, ballTwoRightAutoDriveDeg)),
+        new FireStop(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
           new IntakeIn(intake, conveyor),
           new SequentialCommandGroup(
