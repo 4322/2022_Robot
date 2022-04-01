@@ -60,6 +60,7 @@ public final class Constants {
       public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 1.5, 169.5);
       public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 160);  // needs calibration
       public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4100, 4300, 1.0, 233.75);
+      public static final FiringSolution new1 = new FiringSolution(2600, 3900, 4220, 1.0, 219);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
@@ -71,7 +72,7 @@ public final class Constants {
         limelightFiringSolutions[i++] = FiringSolutions.outsideTarmac;
         limelightFiringSolutions[i++] = FiringSolutions.cargoRing;
         limelightFiringSolutions[i++] = FiringSolutions.closeLaunchpad;
-        limelightFiringSolutions[i++] = FiringSolutions.farLaunchpad;
+        limelightFiringSolutions[i++] = FiringSolutions.new1;
     }
 
     public static final class DriveConstants {
