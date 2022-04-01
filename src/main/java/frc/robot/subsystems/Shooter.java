@@ -199,8 +199,12 @@ public class Shooter extends SubsystemBase {
   public void setSpeed(double rpm) {
     if (Constants.shooterEnabled && Conveyor.getSingleton().canShooterStop()) {
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+      if ((Driveunbun.getDriveMode() != Driveunbun.DriveMode.limelightFieldCentric) || 
+        (Math.abs(target - rpm) > ShooterConstants.resetSettingDelta) || 
+        (shooterMode == ShooterMode.stopped)  || (shooterMode == ShooterMode.stopping)) {
+        shooterMode = ShooterMode.started;
+      }
       target = rpm;
-      shooterMode = ShooterMode.started;
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }

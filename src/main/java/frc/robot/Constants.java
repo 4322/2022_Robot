@@ -208,11 +208,12 @@ public final class Constants {
         public static final double kFF = 0.000205;
         public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
         public static final double kMaxRange = 1.0;
-        public static final double rampRate = 1.0;  // seconds to go from stopped to full power
+        public static final double rampRate = 0.6;  // seconds to go from stopped to full power
         public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
         public static final double minVelErrorLime = 35;
         public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
-        public static final double speedSettlingLimeSec = 0;
+        public static final double speedSettlingLimeSec = 0.1;
+        public static final double resetSettingDelta = 100;
     }
 
     public static final class KickerConstants {
@@ -230,8 +231,9 @@ public final class Constants {
         public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
         public static final double minVelErrorLime = 35; // allowable error to shoot (in rpm)
         public static final double speedSettlingPresetSec = 0.1;  // don't shoot until speed is stable
-        public static final double speedSettlingLimeSec = 0;  // don't shoot until speed is stable
+        public static final double speedSettlingLimeSec = 0.1;  // don't shoot until speed is stable
         public static final double minShotSec = 0.2;  // don't stop conveyor when kicker slows down as cargo enters
+        public static final double resetSettingDelta = 100;
     }
     
     public static final class HoodConstants {
