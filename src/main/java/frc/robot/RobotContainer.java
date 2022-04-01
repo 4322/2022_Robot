@@ -343,9 +343,13 @@ public class RobotContainer {
             break;
           case 1:
             leftAuto.addCommands(
+              new InstantCommand(limelight::enableLed),
               new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
               new DrivePolar(driveunbun, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
                   .raceWith(new IntakeIn(intake, conveyor)),
+              new RotToTarget(driveunbun, limelight, rotateToShootLimelightSec),
+              new CalcFiringSolution(kicker, shooter, hood, limelight),
+              new InstantCommand(limelight::disableLed),
               new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
               new FireStop(kicker, conveyor, shooter, hood),
               new DrivePreTurnWheels(driveunbun, disposalLeft1DriveDeg),
