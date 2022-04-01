@@ -53,13 +53,13 @@ public final class Constants {
       public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 3.0, 0);
       public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0);
       public static final FiringSolution disposal = new FiringSolution(600, 700, 2500, 5.0, 0);
-      public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 37);
-      public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 41);
-      public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 77);
-      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 1.5, 97.7);
-      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 1.5, 124);
+      public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 44.6);
+      public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 53);
+      public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 96.8);
+      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 1.5, 128);
+      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 1.5, 169.5);
       public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 160);  // needs calibration
-      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4100, 4300, 1.0, 150);
+      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4100, 4300, 1.0, 233.75);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
