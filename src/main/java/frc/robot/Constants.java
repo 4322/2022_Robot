@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;   
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -56,11 +56,10 @@ public final class Constants {
       public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 44.6);
       public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 53);
       public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 96.8);
-      public static final FiringSolution cargoRing = new FiringSolution(2600, 3500, 4000, 1.5, 128);
-      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3820, 4000, 1.5, 169.5);
+      public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000, 1.5, 128);
+      public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000, 1.5, 169.5);
       public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 160);  // needs calibration
-      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4100, 4300, 1.0, 233.75);
-      public static final FiringSolution new1 = new FiringSolution(2600, 3900, 4220, 1.0, 219);
+      public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100, 1.0, 233.75);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
@@ -72,7 +71,7 @@ public final class Constants {
         limelightFiringSolutions[i++] = FiringSolutions.outsideTarmac;
         limelightFiringSolutions[i++] = FiringSolutions.cargoRing;
         limelightFiringSolutions[i++] = FiringSolutions.closeLaunchpad;
-        limelightFiringSolutions[i++] = FiringSolutions.new1;
+        limelightFiringSolutions[i++] = FiringSolutions.farLaunchpad;
     }
 
     public static final class DriveConstants {
