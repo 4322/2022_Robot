@@ -37,19 +37,18 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     if (Constants.limelightEnabled) {
       table = NetworkTableInstance.getDefault().getTable("limelight");
-      if (Constants.debug) {
-        tab = Shuffleboard.getTab("Limelight");
+      tab = Shuffleboard.getTab("SmartDashboard");
 
-        distanceToTarget = tab.add("Distance to Target", 0)
-        .withPosition(1,0)
-        .withSize(1,1)
-        .getEntry();
+      distanceToTarget = tab.add("Distance to Target", 0)
+      .withPosition(1,3)
+      .withSize(1,1)
+      .getEntry();
 
-        targetVisible = tab.add("Target Visible", false)
-        .withPosition(0,0)
-        .withSize(1,1)
-        .getEntry();
-      }
+      targetVisible = tab.add("Target Visible", false)
+      .withPosition(0,3)
+      .withSize(1,1)
+      .getEntry();
+
       tx = table.getEntry("tx");
       ty = table.getEntry("ty");
       ta = table.getEntry("ta");
