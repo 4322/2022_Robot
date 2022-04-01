@@ -296,5 +296,7 @@ public final class Constants {
         public static final double limelightAngle = 33;
         public static final double targetHeight = 103;
         public static final double limelightHeight = 38;
+        // offset for firing goahead if robot if moving
+        public static final double limeMovingFiringOffset = 1; 
     }
 }

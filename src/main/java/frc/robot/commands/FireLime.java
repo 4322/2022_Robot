@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Conveyor;
@@ -61,8 +61,9 @@ public class FireLime extends CommandBase {
       
       if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget() &&
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
-           (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
-                                      : DriveConstants.limeRotNotMovingToleranceDegrees))) {
+           (driveunbun.isRobotMoving()? firingSolution.getAimingToleranceDeg()
+                                      : firingSolution.getAimingToleranceDeg() + 
+                                        LimelightConstants.limeMovingFiringOffset))) {
         conveyor.shoot();
       } else {
         conveyor.autoStop();
