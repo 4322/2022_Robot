@@ -208,7 +208,7 @@ public class RobotContainer {
     final double maxDriveSpeed = 1.0;
     final double tightTurnDriveSpeed = 0.6;
     final double spinUpMediumSec = 0.6;
-    final double shootOneCargoSec = 1.3;  // must already be spun-up
+    final double shootOneCargoSec = 2.0;  // must already be spun-up
     final double shootTwoCargoSec = 4.0;  // must already be spun-up
     final double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
     final double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
