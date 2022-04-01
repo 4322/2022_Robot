@@ -207,8 +207,8 @@ public class RobotContainer {
 
     final double maxDriveSpeed = 1.0;
     final double tightTurnDriveSpeed = 0.6;
-    final double spinUpMediumSec = 1.0;
-    final double shootOneCargoSec = 2.0;  // must already be spun-up
+    final double spinUpMediumSec = 0.6;
+    final double shootOneCargoSec = 1.3;  // must already be spun-up
     final double shootTwoCargoSec = 4.0;  // must already be spun-up
     final double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
     final double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
@@ -219,7 +219,7 @@ public class RobotContainer {
     final double oneCargoDriveBackSec = 1.0;
 
     final double ballTwoLeftAutoDriveSec = 1.5;
-    final double ballTwoLeftAutoDriveDeg = -170;
+    final double ballTwoLeftAutoDriveDeg = -168;
     //final double ballTwoLeftAutoApproachDeg = -180;
     final double ballTwoLeftAutoShootDeg = 23;
 
@@ -261,7 +261,7 @@ public class RobotContainer {
     SequentialCommandGroup leftAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodReset(hood)
+        new HoodResetAuto(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
@@ -273,7 +273,7 @@ public class RobotContainer {
     SequentialCommandGroup rightAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodReset(hood)
+        new HoodResetAuto(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
