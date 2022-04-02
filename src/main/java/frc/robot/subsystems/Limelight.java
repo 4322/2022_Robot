@@ -13,6 +13,7 @@ import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.Driveunbun.DriveMode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -63,6 +64,7 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.limelightEnabled) {
+      SmartDashboard.putBoolean("Target Visible", getTargetVisible());
       if (Driveunbun.getDriveMode() == DriveMode.limelightFieldCentric) {
         if (Constants.debug) {
           distanceToTarget.setDouble(getDistance());
