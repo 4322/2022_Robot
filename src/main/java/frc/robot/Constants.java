@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-    public static final boolean debug = false;   
+    public static final boolean debug = false;
 
     public static final boolean driveEnabled = true;
     public static final boolean joysticksEnabled = true;
@@ -60,11 +60,12 @@ public final class Constants {
       public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000, 1.5, 169.5);
       public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 160);  // needs calibration
       public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100, 1.0, 233.75);
+      public static final FiringSolution reallyFar = new FiringSolution(2600, 4200, 4300, 1.0, 271.75);
     }
 
     public static FiringSolution[] limelightFiringSolutions;
     static {  // limelight can't see target from the fender
-        limelightFiringSolutions = new FiringSolution[6];
+        limelightFiringSolutions = new FiringSolution[7];
         int i = 0;
         limelightFiringSolutions[i++] = FiringSolutions.middleTarmac;
         limelightFiringSolutions[i++] = FiringSolutions.insideTarmac;
@@ -72,6 +73,7 @@ public final class Constants {
         limelightFiringSolutions[i++] = FiringSolutions.cargoRing;
         limelightFiringSolutions[i++] = FiringSolutions.closeLaunchpad;
         limelightFiringSolutions[i++] = FiringSolutions.farLaunchpad;
+        limelightFiringSolutions[i++] = FiringSolutions.reallyFar;
     }
 
     public static final class DriveConstants {
