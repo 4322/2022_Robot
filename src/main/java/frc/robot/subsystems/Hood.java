@@ -174,7 +174,7 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  public double getPosition() {
+  private double getPosition() {
     return hood.getSelectedSensorPosition(0);
   }
 
@@ -198,6 +198,9 @@ public class Hood extends SubsystemBase {
 
   // This is only valid following a set position command
   public boolean isAtTarget() {
+    if (!Constants.hoodEnabled) {
+      return true;
+    }
     return (hood.getClosedLoopError() <= 
       (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
         HoodConstants.hoodToleranceLime : HoodConstants.hoodTolerancePreset));
@@ -208,12 +211,16 @@ public class Hood extends SubsystemBase {
   }
 
   public void setInitiallyHomed() {
-    hood.setSelectedSensorPosition(0);
+    if (Constants.hoodEnabled) {
+      hood.setSelectedSensorPosition(0);
+    }
     initialHome = true;
   }
 
   public void setCurrentPosition(double pos) {
-    hood.setSelectedSensorPosition(pos);
+    if (Constants.hoodEnabled) {
+      hood.setSelectedSensorPosition(pos);
+    }
   }
 
   public boolean isInitialHomed() {
@@ -221,10 +228,15 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isAtHome() {
+    if (!Constants.hoodEnabled) {
+      return true;
+    }
     return hood.isRevLimitSwitchClosed() == 1 ? true : false;
   }
 
   public void stop() {
-    hood.stopMotor();
+    if (Constants.hoodEnabled) {
+      hood.stopMotor();
+    }
   } 
 }

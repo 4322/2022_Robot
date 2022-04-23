@@ -6,6 +6,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -91,8 +92,17 @@ public class DriveManual extends CommandBase {
       }
       rotate = rotate * rotate * rotate;  // increase sensitivity
 
-      // move slowly in side cam driving mode for percise cargo alignment
-      if (driveunbun.isDrivingWithSideCams()) {
+      if (Constants.demo.inDemoMode) {
+        rotate *= Constants.demo.rotationScaleFactor;
+        if (Constants.demo.driveMode == Constants.demo.DriveMode.SLOW_DRIVE) {
+          driveX *= Constants.demo.driveScaleFactor;
+          driveY *= Constants.demo.driveScaleFactor;
+        } else {
+          driveX = 0;
+          driveY = 0;
+        }
+      } else if (driveunbun.isDrivingWithSideCams()) {
+        // move slowly in side cam driving mode for percise cargo alignment
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
         rotate *= DriveConstants.sideCamRotationScaleFactor;

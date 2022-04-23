@@ -145,11 +145,26 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh));
-    coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac));
-    coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
-    coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
-
+    if (Constants.demo.inDemoMode) {
+      coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.disposal));
+      if (Constants.demo.shootingSpeed == Constants.demo.ShootingSpeed.SLOW_POP) {
+        coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.demoSlowPop));
+      }
+      if (Constants.demo.shootingSpeed == Constants.demo.ShootingSpeed.FENDER) {
+        coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.demoSlowPop));
+        coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
+      }
+      if (Constants.demo.shootingSpeed == Constants.demo.ShootingSpeed.MEDIUM) {
+        coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.demoMediumPop));
+        coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
+      }
+    } else {
+      coPilot.a.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderLow));
+      coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh));
+      coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac));
+      coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
+    }
+    
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
     coPilot.lb.whenPressed(stopFiring);
 
@@ -204,6 +219,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
+    if (Constants.demo.inDemoMode) {
+      return null;
+    }
 
     final double maxDriveSpeed = 1.0;
     final double tightTurnDriveSpeed = 0.6;

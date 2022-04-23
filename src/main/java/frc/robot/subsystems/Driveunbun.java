@@ -225,6 +225,9 @@ public class Driveunbun extends SubsystemBase {
   }
 
   public void setDriveMode(DriveMode mode) {
+    if (Constants.demo.inDemoMode && mode != DriveMode.fieldCentric) {
+      return;
+    }
     driveMode = mode;
     switch (mode) {
       case fieldCentric:
@@ -263,9 +266,11 @@ public class Driveunbun extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // acceleration must be calculated once and only once per periodic interval
-    for (TalonFXModule module : swerveModules) {
-      module.snapshotAcceleration();
+    if (Constants.driveEnabled) {
+      // acceleration must be calculated once and only once per periodic interval
+      for (TalonFXModule module : swerveModules) {
+        module.snapshotAcceleration();
+      }
     }
 
     // turn off limelight LEDs following power-up because the limelight takes longer
