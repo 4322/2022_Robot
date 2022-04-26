@@ -35,9 +35,9 @@ public final class Constants {
       FENDER,
       MEDIUM
     }
-    public static final boolean inDemoMode = false;
+    public static final boolean inDemoMode = true;
     public static final DriveMode driveMode = DriveMode.SLOW_DRIVE;
-    public static final ShootingSpeed shootingSpeed = ShootingSpeed.SLOW_POP;
+    public static final ShootingSpeed shootingSpeed = ShootingSpeed.MEDIUM;
 
     public static final double driveScaleFactor = 0.15;
     public static final double rotationScaleFactor = 0.1;
@@ -82,7 +82,7 @@ public final class Constants {
     public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100, 1.0, 233.75);
     public static final FiringSolution reallyFar = new FiringSolution(2600, 4200, 4300, 1.0, 271.75);
     public static final FiringSolution demoSlowPop = new FiringSolution(1500, 1700, 1400, 1.0, 0);
-    public static final FiringSolution demoMediumPop = new FiringSolution(1900, 2300, 1800, 1.0, 0);
+    public static final FiringSolution demoMediumPop = new FiringSolution(2200, 3000, 1800, 1.0, 0);
   }
 
   public static FiringSolution[] limelightFiringSolutions;
