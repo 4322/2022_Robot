@@ -35,7 +35,7 @@ public final class Constants {
       FENDER,
       MEDIUM
     }
-    public static final boolean inDemoMode = true;
+    public static final boolean inDemoMode = false;
     public static final DriveMode driveMode = DriveMode.SLOW_DRIVE;
     public static final ShootingSpeed shootingSpeed = ShootingSpeed.MEDIUM;
 
