@@ -187,7 +187,7 @@ public class Intake extends SubsystemBase{
   @Override
   public void periodic() {
     if (Constants.intakeEnabled) {
-      if ((intakeEncoder.getVelocity() < IntakeConstants.minRunVel) && 
+      if ((Math.abs(intakeEncoder.getVelocity()) < IntakeConstants.minRunVel) && 
         (intakeAutoMode != IntakeAutoMode.stopped) ||
         (intakeManualMode != IntakeManualMode.stopped)) {
         if (!stallTimerEnabled) {
