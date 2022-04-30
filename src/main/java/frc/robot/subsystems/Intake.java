@@ -188,7 +188,7 @@ public class Intake extends SubsystemBase{
   public void periodic() {
     if (Constants.intakeEnabled) {
       if ((intakeEncoder.getVelocity() < IntakeConstants.minRunVel) && 
-        (intakeAutoMode != IntakeAutoMode.stopped) &&
+        (intakeAutoMode != IntakeAutoMode.stopped) ||
         (intakeManualMode != IntakeManualMode.stopped)) {
         if (!stallTimerEnabled) {
           stallTimer.start();
@@ -201,6 +201,8 @@ public class Intake extends SubsystemBase{
             stalled = true;
           }
         }
+      } else {
+        resetStalled();
       }
       if (Constants.debug) {
         if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
