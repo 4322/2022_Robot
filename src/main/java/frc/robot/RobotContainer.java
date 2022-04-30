@@ -131,6 +131,7 @@ public class RobotContainer {
     kicker.setCoastMode();
     disableTimer.reset();
     disableTimer.start();
+    driveunbun.stop();
   }
 
   public void enableSubsystems() {
