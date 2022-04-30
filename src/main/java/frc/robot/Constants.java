@@ -35,7 +35,7 @@ public final class Constants {
       FENDER,
       MEDIUM
     }
-    public static final boolean inDemoMode = true;
+    public static final boolean inDemoMode = false;
     public static final DriveMode driveMode = DriveMode.SLOW_DRIVE;
     public static final ShootingSpeed shootingSpeed = ShootingSpeed.MEDIUM;
 
@@ -146,6 +146,8 @@ public final class Constants {
       public static final double sideCamDriveScaleFactor = 0.25;
       public static final double sideCamRotationScaleFactor = 0.3;
       public static final double normalRotationScaleFactor = 0.6;
+
+      public static final double disableBreakSec = 2.0;  // don't immediately coast after disabling
 
       // thresholds at which to engage anti-tipping logic
       public final static class Tip {

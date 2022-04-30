@@ -10,12 +10,14 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -32,6 +34,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private Timer disableTimer = new Timer();
 
   // Define controllers
   public static Joystick driveStick;
@@ -121,11 +125,12 @@ public class RobotContainer {
   }
 
   public void disableSubsystems() {
-    driveunbun.setCoastMode();
     hood.setCoastMode();
     conveyor.setCoastMode();
     intake.setCoastMode();
     kicker.setCoastMode();
+    disableTimer.reset();
+    disableTimer.start();
   }
 
   public void enableSubsystems() {
@@ -135,6 +140,16 @@ public class RobotContainer {
     conveyor.setBrakeMode();
     intake.setBrakeMode();
     kicker.setBrakeMode();
+    disableTimer.stop();
+    disableTimer.reset();
+  }
+
+  public void disabledPeriodic() {
+    if (disableTimer.hasElapsed(DriveConstants.disableBreakSec)) {
+      driveunbun.setCoastMode();  // robot has stopped, safe to enter coast mode
+      disableTimer.stop();
+      disableTimer.reset();
+    }
   }
 
   /**
