@@ -25,7 +25,7 @@ public class FireLime extends CommandBase {
   private Hood hood;
   private Driveunbun driveunbun;
   private Limelight limelight;
-  private double lastLogged = 0;
+  private double lastLoggedDistance = 0;
 
   public FireLime(Kicker kickerSubsystem, Shooter shooterSubsystem, 
       Hood hoodSubsystem, Driveunbun driveunbun, Limelight limelight) {
@@ -67,13 +67,14 @@ public class FireLime extends CommandBase {
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
            (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
                                       : DriveConstants.limeRotNotMovingToleranceDegrees))) {
-        if (Math.abs(shooter.getSpeed() - lastLogged) > Constants.ShooterConstants.logInterval) {
+        if (Math.abs(limelight.getDistance() - lastLoggedDistance) > Constants.ShooterConstants.logInterval) {
           DataLogManager.log("Fired Shot:\n" +
                              "Time: " + DriverStation.getMatchTime() + "\n" +
                              "Shooter Speed: " + shooter.getSpeed() + "\n" +
                              "Kicker Speed: " + kicker.getSpeed() + "\n" +
-                             "Hood Position: " + hood.getPosition());
-          lastLogged = shooter.getSpeed();
+                             "Hood Position: " + hood.getPosition() + "\n" +
+                             "Distance: " + limelight.getDistance());
+          lastLoggedDistance = limelight.getDistance();
         }
         conveyor.shoot();
       } else {

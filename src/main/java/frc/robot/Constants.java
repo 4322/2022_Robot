@@ -240,7 +240,7 @@ public final class Constants {
       public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
       public static final double speedSettlingLimeSec = 0.1;
       public static final double resetSettingDelta = 100;
-      public static final double logInterval = 100;
+      public static final double logInterval = 5;
   }
 
   public static final class KickerConstants {
