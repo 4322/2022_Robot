@@ -43,7 +43,7 @@ public final class Constants {
     public static final double rotationScaleFactor = 0.1;
   }
 
-  public static final boolean driveEnabled = !demo.inDemoMode || (demo.driveMode != demo.DriveMode.OFF);
+  public static final boolean driveEnabled = (demo.driveMode != demo.DriveMode.OFF)  || !demo.inDemoMode;
   public static final boolean joysticksEnabled = true;
   public static final boolean gyroEnabled = true;
   public static final boolean intakeEnabled = true;

@@ -225,8 +225,10 @@ public class Driveunbun extends SubsystemBase {
   }
 
   public void setDriveMode(DriveMode mode) {
-    if (Constants.demo.inDemoMode && mode != DriveMode.fieldCentric) {
-      return;
+    if (Constants.demo.inDemoMode) {
+      if (mode != DriveMode.fieldCentric) {  // split if statements to avoid deadcode warning in normal mode
+        return;
+      }
     }
     driveMode = mode;
     switch (mode) {
