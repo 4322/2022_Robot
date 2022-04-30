@@ -174,7 +174,7 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  private double getPosition() {
+  public double getPosition() {
     return hood.getSelectedSensorPosition(0);
   }
 

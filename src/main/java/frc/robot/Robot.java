@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -51,6 +52,8 @@ public class Robot extends TimedRobot {
     subsystemEnabled("Ball Sensor", 3, 1, Constants.ballSensorEnabled);
 
     m_robotContainer = new RobotContainer();
+
+    DataLogManager.start();
   }
 
   // create new shuffleboard tab to show whether or not subsystem is enabled

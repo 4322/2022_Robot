@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
@@ -22,6 +25,7 @@ public class FireLime extends CommandBase {
   private Hood hood;
   private Driveunbun driveunbun;
   private Limelight limelight;
+  private double lastLogged = 0;
 
   public FireLime(Kicker kickerSubsystem, Shooter shooterSubsystem, 
       Hood hoodSubsystem, Driveunbun driveunbun, Limelight limelight) {
@@ -63,6 +67,14 @@ public class FireLime extends CommandBase {
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
            (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
                                       : DriveConstants.limeRotNotMovingToleranceDegrees))) {
+        if (Math.abs(shooter.getSpeed() - lastLogged) > Constants.ShooterConstants.logInterval) {
+          DataLogManager.log("Fired Shot:\n" +
+                             "Time: " + DriverStation.getMatchTime() + "\n" +
+                             "Shooter Speed: " + shooter.getSpeed() + "\n" +
+                             "Kicker Speed: " + kicker.getSpeed() + "\n" +
+                             "Hood Position: " + hood.getPosition());
+          lastLogged = shooter.getSpeed();
+        }
         conveyor.shoot();
       } else {
         conveyor.autoStop();

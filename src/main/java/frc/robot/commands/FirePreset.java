@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Kicker;
@@ -14,6 +17,7 @@ public class FirePreset extends CommandBase {
   private Shooter shooter;
   private Hood hood;
   private double fireSec;
+  private double lastLogged = 0;
   private Timer firingTimer = new Timer();
 
   public FirePreset(Kicker kickerSubsystem, Conveyor conveyorSubsystem, 
@@ -40,6 +44,14 @@ public class FirePreset extends CommandBase {
   public void execute() {
     if (conveyor.isLoaded()) {
       if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget()) {
+        if (Math.abs(shooter.getSpeed() - lastLogged) > Constants.ShooterConstants.logInterval) {
+          DataLogManager.log("Fired Shot:\n" +
+                             "Time: " + DriverStation.getMatchTime() + "\n" +
+                             "Shooter Speed: " + shooter.getSpeed() + "\n" +
+                             "Kicker Speed: " + kicker.getSpeed() + "\n" +
+                             "Hood Position: " + hood.getPosition());
+          lastLogged = shooter.getSpeed();
+        }
         conveyor.shoot();
       } else {
         conveyor.autoStop();
