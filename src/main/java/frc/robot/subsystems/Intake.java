@@ -186,22 +186,22 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
-    if ((intakeEncoder.getVelocity() < IntakeConstants.minRunVel) && 
-      (intakeAutoMode != IntakeAutoMode.stopped) &&
-      (intakeManualMode != IntakeManualMode.stopped)) {
-      if (!stallTimerEnabled) {
-        stallTimer.start();
-        stallTimerEnabled = true;
-      }
-      if (stallTimer.hasElapsed(IntakeConstants.stallTimeoutSec)) {
-        if (!stalled) {
-          intakeMotor.stopMotor();
-          DriverStation.reportError("Intake Stalled! Attempt to fix in manual mode", false);
-          stalled = true;
+    if (Constants.intakeEnabled) {
+      if ((intakeEncoder.getVelocity() < IntakeConstants.minRunVel) && 
+        (intakeAutoMode != IntakeAutoMode.stopped) &&
+        (intakeManualMode != IntakeManualMode.stopped)) {
+        if (!stallTimerEnabled) {
+          stallTimer.start();
+          stallTimerEnabled = true;
+        }
+        if (stallTimer.hasElapsed(IntakeConstants.stallTimeoutSec)) {
+          if (!stalled) {
+            intakeMotor.stopMotor();
+            DriverStation.reportError("Intake Stalled! Attempt to fix in manual mode", false);
+            stalled = true;
+          }
         }
       }
-    }
-    if (Constants.intakeEnabled) {
       if (Constants.debug) {
         if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
           setSpeed(targetRPM.getDouble(0));
