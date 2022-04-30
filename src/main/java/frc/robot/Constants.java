@@ -299,6 +299,9 @@ public final class Constants {
       public static final double rampRate = 0.6;  // seconds to go from stopped to full power
       public static final double intakeVelocity = 1350;
       public static final double ejectVelocity = -1350;
+
+      public static final double minRunVel = 2000;
+      public static final double stallTimeoutSec = 1;
   }
 
   public static final class ConveyorConstants {
