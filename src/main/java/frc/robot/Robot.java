@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    DataLogManager.start();
+    DataLogManager.logNetworkTables(false);
   }
 
   // create new shuffleboard tab to show whether or not subsystem is enabled
