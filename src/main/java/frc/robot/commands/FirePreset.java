@@ -27,6 +27,7 @@ public class FirePreset extends CommandBase {
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
     this.fireSec = fireSec;
+    
 
     // stop updating firing solution so everything can stabilize
     addRequirements(kicker, conveyor, shooter, hood);  
