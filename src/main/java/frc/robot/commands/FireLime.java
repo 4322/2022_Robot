@@ -67,7 +67,7 @@ public class FireLime extends CommandBase {
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
            (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
                                       : DriveConstants.limeRotNotMovingToleranceDegrees))) {
-        if (Math.abs(limelight.getDistance() - lastLoggedDistance) > Constants.ShooterConstants.logInterval) {
+        if (Math.abs(limelight.getDistance() - lastLoggedDistance) > Constants.ShooterConstants.logIntervalDistIn) {
           DataLogManager.log("Fired Shot:\n" +
                              "Time: " + DriverStation.getMatchTime() + "\n" +
                              "Shooter Speed: " + shooter.getSpeed() + "\n" +
