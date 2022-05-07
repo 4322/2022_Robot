@@ -156,7 +156,7 @@ public class Intake extends SubsystemBase{
     if (Constants.intakeEnabled) {
       if (intakeAutoMode == IntakeAutoMode.stopped) {
         intakeMotor.stopMotor();
-      } else {
+      } else { // restart auto intake after eject
         setSpeed(IntakeConstants.intakeVelocity);
       }
       intakeManualMode = IntakeManualMode.stopped;
@@ -188,8 +188,8 @@ public class Intake extends SubsystemBase{
   public void periodic() {
     if (Constants.intakeEnabled) {
       if ((Math.abs(intakeEncoder.getVelocity()) < IntakeConstants.minRunVel) && 
-        (intakeAutoMode != IntakeAutoMode.stopped) ||
-        (intakeManualMode != IntakeManualMode.stopped)) {
+        ((intakeAutoMode != IntakeAutoMode.stopped) ||
+         (intakeManualMode != IntakeManualMode.stopped))) {
         if (!stallTimerEnabled) {
           stallTimer.start();
           stallTimerEnabled = true;

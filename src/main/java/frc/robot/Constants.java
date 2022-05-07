@@ -300,7 +300,7 @@ public final class Constants {
       public static final double intakeVelocity = 1350;
       public static final double ejectVelocity = -1350;
 
-      public static final double minRunVel = 2000;
+      public static final double minRunVel = 100;
       public static final double stallTimeoutSec = 1;
   }
 
