@@ -164,9 +164,9 @@ public class Intake extends SubsystemBase{
   }
 
   // safe to call without requiring the subsystem
+  // called periodically
   public void autoIntake() {
     if (Constants.intakeEnabled) {
-      resetStalled();
       if (intakeManualMode == IntakeManualMode.stopped) {
         setSpeed(IntakeConstants.intakeVelocity);
       }
@@ -201,7 +201,8 @@ public class Intake extends SubsystemBase{
             stalled = true;
           }
         }
-      } else {
+      // will not reset stall status when intake is stopped
+      } else if (!stalled) {
         resetStalled();
       }
       if (Constants.debug) {
