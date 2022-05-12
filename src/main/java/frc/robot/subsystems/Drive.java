@@ -20,12 +20,12 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
-import frc.robot.subsystems.SwerveDrive.TalonFXModule;
+import frc.robot.subsystems.SwerveDrive.SwerveModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
 public class Drive extends SubsystemBase {
 
-  private TalonFXModule[] swerveModules = new TalonFXModule[4];
+  private SwerveModule[] swerveModules = new SwerveModule[4];
 
   private AHRS gyro;
 
@@ -79,25 +79,25 @@ public class Drive extends SubsystemBase {
     runTime.start();
 
     if (Constants.driveEnabled) {
-      swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = new TalonFXModule(
+      swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = new SwerveModule(
           DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID,
           WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
-      swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = new TalonFXModule(DriveConstants.frontLeftRotationID,
+      swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = new SwerveModule(DriveConstants.frontLeftRotationID,
           DriveConstants.frontLeftDriveID,
           WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
-      swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = new TalonFXModule(DriveConstants.rearRightRotationID,
+      swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = new SwerveModule(DriveConstants.rearRightRotationID,
           DriveConstants.rearRightDriveID,
           WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID);
-      swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new TalonFXModule(DriveConstants.rearLeftRotationID,
+      swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new SwerveModule(DriveConstants.rearLeftRotationID,
           DriveConstants.rearLeftDriveID,
           WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
-      m_odometry = new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d());
+      m_odometry = new SwerveDriveOdometry(m_kinematics, gyro.getRotation2d());
     }
   }
 
   public void init() {
     if (Constants.driveEnabled) {
-      for (TalonFXModule module : swerveModules) {
+      for (SwerveModule module : swerveModules) {
         module.init();
       }
 
@@ -285,7 +285,7 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     if (Constants.driveEnabled) {
       // acceleration must be calculated once and only once per periodic interval
-      for (TalonFXModule module : swerveModules) {
+      for (SwerveModule module : swerveModules) {
         module.snapshotAcceleration();
       }
     }
@@ -438,7 +438,7 @@ public class Drive extends SubsystemBase {
         if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
           SwerveHelper.noSteering();
         }
-        for (TalonFXModule module : swerveModules) {
+        for (SwerveModule module : swerveModules) {
           module.setSpeedAndAngle();
         }
       }
@@ -450,7 +450,7 @@ public class Drive extends SubsystemBase {
       var swerveModuleStates =
           m_kinematics.toSwerveModuleStates(
               (fieldRelative && Constants.gyroEnabled)
-                  ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
+                  ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
                   : new ChassisSpeeds(xSpeed, ySpeed, rot));
       SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
       frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -513,7 +513,7 @@ public class Drive extends SubsystemBase {
 
   public void setCoastMode() {
     if (Constants.driveEnabled) {
-      for (TalonFXModule module : swerveModules) {
+      for (SwerveModule module : swerveModules) {
         module.setCoastMode();
       }
     }
@@ -521,14 +521,14 @@ public class Drive extends SubsystemBase {
 
   public void setBrakeMode() {
     if (Constants.driveEnabled) {
-      for (TalonFXModule module : swerveModules) {
+      for (SwerveModule module : swerveModules) {
         module.setBrakeMode();
       }
     }
   }
 
   public void stop() {
-    for (TalonFXModule module : swerveModules) {
+    for (SwerveModule module : swerveModules) {
       module.stop();
     }
   }

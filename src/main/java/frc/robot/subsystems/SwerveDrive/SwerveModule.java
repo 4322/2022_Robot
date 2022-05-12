@@ -17,33 +17,35 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
-public class TalonFXModule extends ControlModule {
+public class SwerveModule extends ControlModule {
 	
-	private WPI_TalonFX m_rotation; 
-	private WPI_TalonFX m_wheel;
-	private CANCoder m_encoder;
-	private WheelPosition m_wheelPosition;
+	private WPI_TalonFX turningMotor; 
+	private WPI_TalonFX driveMotor;
+	private CANCoder encoder;
+	private WheelPosition wheelPosition;
 	
-	public TalonFXModule(int rotationID, int wheelID, WheelPosition pos, int encoderID) {
+	public SwerveModule(int rotationID, int wheelID, WheelPosition pos, int encoderID) {
 		super(pos);
-		m_rotation = new WPI_TalonFX(rotationID);
-		m_wheel = new WPI_TalonFX(wheelID);
-		m_encoder = new CANCoder(encoderID);
-		m_wheelPosition = pos;
+		turningMotor = new WPI_TalonFX(rotationID);
+		driveMotor = new WPI_TalonFX(wheelID);
+		encoder = new CANCoder(encoderID);
+		wheelPosition = pos;
 
-		RobotContainer.staggerTalonStatusFrames(m_wheel);
-		RobotContainer.staggerTalonStatusFrames(m_rotation);
-		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+		RobotContainer.staggerTalonStatusFrames(driveMotor);
+		RobotContainer.staggerTalonStatusFrames(turningMotor);
+		encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 	}
 
 	public void init() {
-		configDrive(m_wheel, m_wheelPosition);
-		configRotation(m_rotation);
+		configDrive(driveMotor, wheelPosition);
+		configRotation(turningMotor);
 	}
 
     private void configDrive(WPI_TalonFX talon, WheelPosition pos) {
@@ -114,10 +116,10 @@ public class TalonFXModule extends ControlModule {
 		encoderConfig.sensorDirection = true;  // positive rotation is clockwise
 		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 		
-		m_encoder.configAllSettings(encoderConfig);  // factory default is the baseline
+		encoder.configAllSettings(encoderConfig);  // factory default is the baseline
 
 		// need fast initial reading from the CANCoder
-		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+		encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			10, Constants.controllerConfigTimeoutMs);
 
 		try {
@@ -126,7 +128,7 @@ public class TalonFXModule extends ControlModule {
 		catch (InterruptedException e) {}
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		double count = 	(m_encoder.getAbsolutePosition() - 
+		double count = 	(encoder.getAbsolutePosition() - 
 			DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
 			DriveConstants.Rotation.countToDegrees;
 
@@ -137,46 +139,46 @@ public class TalonFXModule extends ControlModule {
 		}
 
 		// don't need the CANCoder any longer, so a slow frame rate is OK
-		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
+		encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(),
 			Constants.controllerConfigTimeoutMs);
 
 		// need rapid position feedback for steering logic
-		m_rotation.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+		turningMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
 			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 	
 	public void setSpeedAndAngle(){
-		m_wheel.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
-		m_rotation.set(ControlMode.Position, getInternalRotationCount() + 
+		driveMotor.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
+		turningMotor.set(ControlMode.Position, getInternalRotationCount() + 
 			SwerveHelper.getAngleChange(position) / 
 			DriveConstants.Rotation.countToDegrees);
 	}	
 
 	public void setRotationPID(double kp, double ki, double kd) {
-		m_rotation.config_kP(0, kp, 0);
-		m_rotation.config_kI(1, ki, 0);
-		m_rotation.config_kD(2, kd, 0);
+		turningMotor.config_kP(0, kp, 0);
+		turningMotor.config_kI(1, ki, 0);
+		turningMotor.config_kD(2, kd, 0);
 	}
 
 	public double getRotationP(){
-		return m_rotation.configGetParameter(0, 0, 0);
+		return turningMotor.configGetParameter(0, 0, 0);
 	}
 
 	public double getRotationI(){
-		return m_rotation.configGetParameter(1, 0, 0);
+		return turningMotor.configGetParameter(1, 0, 0);
 	}
 
 	public double getRotationD(){
-		return m_rotation.configGetParameter(2, 0, 0);
+		return turningMotor.configGetParameter(2, 0, 0);
 	}
 	
 	public double getMagneticRotationAngle(){
-		return m_encoder.getAbsolutePosition();
+		return encoder.getAbsolutePosition();
 	}
 
 	public double getInternalRotationCount(){
-		return m_rotation.getSelectedSensorPosition();
+		return turningMotor.getSelectedSensorPosition();
 	}
 
 	// returns +/- 180 degrees
@@ -187,7 +189,7 @@ public class TalonFXModule extends ControlModule {
 
 	@Override
 	public double getDistance(){
-		return m_wheel.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
+		return driveMotor.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI *
 			DriveConstants.Drive.wheelDiameter / 12;
 	}
@@ -195,7 +197,7 @@ public class TalonFXModule extends ControlModule {
 	@Override
 	public double getVelocity() {
 		// feet per second
-		return m_wheel.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
+		return driveMotor.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI * 
 			Constants.DriveConstants.Drive.wheelDiameter / 12;
 	}
@@ -222,17 +224,17 @@ public void setDesiredState(SwerveModuleState desiredState) {
 }
 
 	public void setCoastMode() {
-		m_wheel.setNeutralMode(NeutralMode.Coast);
-		m_rotation.setNeutralMode(NeutralMode.Coast);
+		driveMotor.setNeutralMode(NeutralMode.Coast);
+		turningMotor.setNeutralMode(NeutralMode.Coast);
 	}
 
 	public void setBrakeMode() {
-		m_wheel.setNeutralMode(NeutralMode.Brake);
-		m_rotation.setNeutralMode(NeutralMode.Brake);
+		driveMotor.setNeutralMode(NeutralMode.Brake);
+		turningMotor.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void stop() {
-		m_wheel.stopMotor();
-		m_rotation.stopMotor();
+		driveMotor.stopMotor();
+		turningMotor.stopMotor();
 	}
 }
