@@ -127,6 +127,8 @@ public final class Constants {
       public static final double wheelBaseLengthFeet = 26.75 / 12.0;
       public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
+      public static final double maxSpeedMetersPerSecond = 15.0;  // TODO: Needs tuning
+
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
       public static final double manualRotateToleranceDegrees = 1.5;

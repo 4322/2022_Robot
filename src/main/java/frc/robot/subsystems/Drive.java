@@ -52,6 +52,8 @@ public class Drive extends SubsystemBase {
             m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
             
   private SwerveDriveOdometry m_odometry;
+  private double robotCentricOffsetRadians; // TODO: Fix this
+  private boolean fieldCentric;
   
   private ShuffleboardTab tab;
   private NetworkTableEntry errorDisplay;
@@ -101,7 +103,6 @@ public class Drive extends SubsystemBase {
       }
 
       rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
-      SwerveHelper.setReversingToSpeed();
 
       if (Constants.gyroEnabled) {
         gyro = new AHRS(SPI.Port.kMXP);
@@ -248,23 +249,23 @@ public class Drive extends SubsystemBase {
       case fieldCentric:
       case limelightFieldCentric:
       case killFieldCentric:
-        SwerveHelper.setToFieldCentric();
+        setToFieldCentric();
         webcams.resetCameras();
         break;
       case leftCamCentric:
-        SwerveHelper.setToBotCentric(90);
+        setToBotCentric(90);
         webcams.setLeft();
         break;
       case rightCamCentric:
-        SwerveHelper.setToBotCentric(-90);
+        setToBotCentric(-90);
         webcams.setRight();
         break;
       case frontCamCentric:
-        SwerveHelper.setToBotCentric(0);
+        setToBotCentric(0);
         webcams.setFront();
         break;
       case sideKillFieldCentric:
-      SwerveHelper.setToFieldCentric();
+      setToFieldCentric();
       webcams.setLeftAndRight();
       break;
     }
@@ -398,7 +399,7 @@ public class Drive extends SubsystemBase {
       double maxSteeringChangeDegrees = 0;
       for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
         double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
-        if (SwerveHelper.isFieldCentric()) {
+        if (fieldCentric) {
           steeringChangeDegrees += getGyroYawDeg();
         }
         steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
@@ -451,10 +452,10 @@ public class Drive extends SubsystemBase {
                   ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
                   : new ChassisSpeeds(xSpeed, ySpeed, rot));
       SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
-      frontLeft.setDesiredState(swerveModuleStates[0]);
-      frontRight.setDesiredState(swerveModuleStates[1]);
-      rearLeft.setDesiredState(swerveModuleStates[2]);
-      rearRight.setDesiredState(swerveModuleStates[3]);
+      swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].setDesiredState(swerveModuleStates[0]);
+      swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[1]);
+      swerveModules[WheelPosition.BACK_LEFT.wheelNumber].setDesiredState(swerveModuleStates[2]);
+      swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[3]);
     }
   }
 
@@ -504,6 +505,16 @@ public class Drive extends SubsystemBase {
             );
         }
     }    
+
+  	public static void setToFieldCentric(){
+      fieldCentric = true;
+      robotCentricOffsetRadians = 0;
+    }
+  
+    public static void setToBotCentric(double offsetDeg){
+      fieldCentric = false;
+      robotCentricOffsetRadians = Math.toRadians(offsetDeg);
+    }
 
   public boolean isDrivingWithSideCams() {
     return (driveMode == DriveMode.leftCamCentric) || (driveMode == DriveMode.rightCamCentric);
