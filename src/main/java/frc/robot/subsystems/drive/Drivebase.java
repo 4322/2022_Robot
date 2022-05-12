@@ -49,12 +49,12 @@ public class Drivebase extends SubsystemBase {
                 Constants.DriveConstants.frontLeftRotationID,
                 Constants.DriveConstants.frontLeftEncoderID);
             rearLeft = new SwerveModule(
-                Constants.DriveConstants.backRightDriveID,
-                Constants.DriveConstants.backRightRotationID,
+                Constants.DriveConstants.rearRightDriveID,
+                Constants.DriveConstants.rearRightRotationID,
                 Constants.DriveConstants.backRightEncoderID);
             rearRight = new SwerveModule(
-                Constants.DriveConstants.backLeftDriveID,
-                Constants.DriveConstants.backLeftRotationID,
+                Constants.DriveConstants.rearLeftDriveID,
+                Constants.DriveConstants.rearLeftRotationID,
                 Constants.DriveConstants.backLeftEncoderID); 
             if (Constants.gyroEnabled) {
                 m_gyro = new AHRS(SerialPort.Port.kUSB1);
