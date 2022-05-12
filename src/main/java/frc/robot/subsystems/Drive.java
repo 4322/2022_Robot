@@ -506,12 +506,12 @@ public class Drive extends SubsystemBase {
         }
     }    
 
-  	public static void setToFieldCentric(){
+  	public void setToFieldCentric(){
       fieldCentric = true;
       robotCentricOffsetRadians = 0;
     }
   
-    public static void setToBotCentric(double offsetDeg){
+    public void setToBotCentric(double offsetDeg){
       fieldCentric = false;
       robotCentricOffsetRadians = Math.toRadians(offsetDeg);
     }
