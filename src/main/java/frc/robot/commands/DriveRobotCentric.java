@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -14,36 +14,36 @@ public class DriveRobotCentric extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
 
-  private final Driveunbun driveunbun;
+  private final Drive drive;
   private final double x;
   private final double y;
   private final double rotate;
   private final double seconds;
-  private Driveunbun.DriveMode previousDriveMode;
-  private Driveunbun.DriveMode driveMode;
+  private Drive.DriveMode previousDriveMode;
+  private Drive.DriveMode driveMode;
 
   private Timer timer = new Timer();
 
-  public DriveRobotCentric(Driveunbun drivesubsystem, double x, double y, double rotate, 
-          double seconds, Driveunbun.DriveMode driveMode) {
-    driveunbun = drivesubsystem;
+  public DriveRobotCentric(Drive drivesubsystem, double x, double y, double rotate, 
+          double seconds, Drive.DriveMode driveMode) {
+    drive = drivesubsystem;
     this.x = x;
     this.y = y;
     this.rotate = rotate;
     this.driveMode = driveMode;
     this.seconds = seconds;
-    addRequirements(driveunbun);
+    addRequirements(drive);
   }
 
-  public DriveRobotCentric(Driveunbun drivesubsystem, double x, double y, double rotate, double seconds) {
-    this(drivesubsystem, x, y, rotate, seconds, Driveunbun.DriveMode.frontCamCentric);
+  public DriveRobotCentric(Drive drivesubsystem, double x, double y, double rotate, double seconds) {
+    this(drivesubsystem, x, y, rotate, seconds, Drive.DriveMode.frontCamCentric);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    previousDriveMode = Driveunbun.getDriveMode();
-    driveunbun.setDriveMode(driveMode);
+    previousDriveMode = Drive.getDriveMode();
+    drive.setDriveMode(driveMode);
     timer.reset();
     timer.start();
   }
@@ -51,14 +51,14 @@ public class DriveRobotCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveunbun.drive(x, y, rotate);
+    drive.drive(x, y, rotate);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveunbun.stop();
-    driveunbun.setDriveMode(previousDriveMode);
+    drive.stop();
+    drive.setDriveMode(previousDriveMode);
   }
 
   // Returns true when the command should end.

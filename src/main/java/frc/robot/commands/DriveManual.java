@@ -3,7 +3,7 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,15 +18,15 @@ public class DriveManual extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
 
-  private final Driveunbun driveunbun;
+  private final Drive drive;
   private final Limelight limelight;
 
-  public DriveManual(Driveunbun drivesubsystem, Limelight limelightsubsystem) {
-    driveunbun = drivesubsystem;
+  public DriveManual(Drive drivesubsystem, Limelight limelightsubsystem) {
+    drive = drivesubsystem;
     limelight = limelightsubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveunbun);
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
@@ -100,7 +100,7 @@ public class DriveManual extends CommandBase {
           driveX = 0;
           driveY = 0;
         }
-      } else if (driveunbun.isDrivingWithSideCams()) {
+      } else if (drive.isDrivingWithSideCams()) {
         // move slowly in side cam driving mode for percise cargo alignment
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
@@ -111,38 +111,38 @@ public class DriveManual extends CommandBase {
 
       // determine drive mode
       // Kill, Limelight, Polar, Normal
-      if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.killFieldCentric) ||
-          (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric)) {
+      if ((Drive.getDriveMode() == Drive.DriveMode.killFieldCentric) ||
+          (Drive.getDriveMode() == Drive.DriveMode.sideKillFieldCentric)) {
           rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
-          if (Driveunbun.getDriveMode() == Driveunbun.DriveMode.sideKillFieldCentric) {
+          if (Drive.getDriveMode() == Drive.DriveMode.sideKillFieldCentric) {
             rotate += 90;
           }
-          double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
+          double error = SwerveHelper.boundDegrees(rotate - drive.getAngle());
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation
             error = SwerveHelper.boundDegrees(error + 180);
           }
           if (driveRawR < DriveConstants.drivePolarDeadband) {
-            driveunbun.stop();
-            driveunbun.resetRotatePID();
+            drive.stop();
+            drive.resetRotatePID();
           } else {
-            driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
+            drive.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
           }
       }
-      else if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+      else if ((Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()) {
         double error = limelight.getHorizontalDegToTarget();
-        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.limeRotNotMovingToleranceDegrees);
+        drive.driveAutoRotate(-driveX, driveY, error, DriveConstants.limeRotNotMovingToleranceDegrees);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        double error = SwerveHelper.boundDegrees(rotate - driveunbun.getAngle());
-        driveunbun.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
+        double error = SwerveHelper.boundDegrees(rotate - drive.getAngle());
+        drive.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
       } else {
         // normal drive
-        driveunbun.resetRotatePID();
-        driveunbun.drive(-driveX, driveY, -rotate);
+        drive.resetRotatePID();
+        drive.drive(-driveX, driveY, -rotate);
       }
     }
   }

@@ -132,7 +132,7 @@ public class Kicker extends SubsystemBase {
         currentRPM.setDouble(getSpeed());
       }
       boolean isAtSpeed = Math.abs(target - getSpeed()) <= 
-        (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+        (Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric?
         KickerConstants.minVelErrorLime : KickerConstants.minVelErrorPreset);
 
       switch (kickerMode) {
@@ -143,7 +143,7 @@ public class Kicker extends SubsystemBase {
             kickerMode = KickerMode.atSpeed;
             modeTimer.reset();
             double speedSettlingLimeSec = KickerConstants.speedSettlingLimeSec;
-            if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+            if ((Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric) &&
                 (speedSettlingLimeSec == 0)) {
               kickerMode = KickerMode.stableAtSpeed;
             }
@@ -151,7 +151,7 @@ public class Kicker extends SubsystemBase {
           break;
         case atSpeed:
           if (isAtSpeed && modeTimer.hasElapsed(
-            (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+            (Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric?
             KickerConstants.speedSettlingLimeSec : KickerConstants.speedSettlingPresetSec))) {
 
             kickerMode = KickerMode.stableAtSpeed;
@@ -176,7 +176,7 @@ public class Kicker extends SubsystemBase {
   public void setSpeed(double rpm) {
     if (Constants.kickerEnabled && Conveyor.getSingleton().canKickerStop()) {
       kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-      if ((Driveunbun.getDriveMode() != Driveunbun.DriveMode.limelightFieldCentric) || 
+      if ((Drive.getDriveMode() != Drive.DriveMode.limelightFieldCentric) || 
         (Math.abs(target - rpm) > KickerConstants.resetSettingDelta) || 
         (kickerMode == KickerMode.stopped)  || (kickerMode == KickerMode.stopping)) {
         kickerMode = KickerMode.started;

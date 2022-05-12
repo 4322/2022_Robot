@@ -5,7 +5,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.FiringSolution.FiringSolutionManager;
 import frc.robot.subsystems.Conveyor;
-import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Kicker;
@@ -20,16 +20,16 @@ public class FireLime extends CommandBase {
   private Conveyor conveyor;
   private Shooter shooter;
   private Hood hood;
-  private Driveunbun driveunbun;
+  private Drive drive;
   private Limelight limelight;
 
   public FireLime(Kicker kickerSubsystem, Shooter shooterSubsystem, 
-      Hood hoodSubsystem, Driveunbun driveunbun, Limelight limelight) {
+      Hood hoodSubsystem, Drive drive, Limelight limelight) {
     kicker = kickerSubsystem;
     conveyor = Conveyor.getSingleton();
     shooter = shooterSubsystem;
     hood = hoodSubsystem;
-    this.driveunbun = driveunbun;
+    this.drive = drive;
     this.limelight = limelight;
 
     // stop updating firing solution so everything can stabilize
@@ -61,7 +61,7 @@ public class FireLime extends CommandBase {
       
       if (shooter.isAtSpeed() && kicker.isAtSpeed() && hood.isAtTarget() &&
           (Math.abs(limelight.getHorizontalDegToTarget()) <= 
-           (driveunbun.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
+           (drive.isRobotMoving()? DriveConstants.limeRotMovingToleranceDegrees
                                       : DriveConstants.limeRotNotMovingToleranceDegrees))) {
         conveyor.shoot();
       } else {

@@ -200,6 +200,27 @@ public class TalonFXModule extends ControlModule {
 			Constants.DriveConstants.Drive.wheelDiameter / 12;
 	}
 
+  public SwerveModuleState getState() {
+    return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), 
+        Rotation2d.fromDegrees(
+            turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees));
+}
+
+public void setDesiredState(SwerveModuleState desiredState) {
+    // Optimize the reference state to avoid spinning further than 90 degrees
+    SwerveModuleState state =
+        SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(
+            turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees));
+
+    driveMotor.set(ControlMode.Velocity, 
+        state.speedMetersPerSecond / 
+        (DriveConstants.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
+        * DriveConstants.driveGearRatio * DriveConstants.encoderResolution
+        / 10); // every 100 ms
+    turningMotor.set(ControlMode.Position, 
+        state.angle.getDegrees() / DriveConstants.Rotation.countToDegrees);
+}
+
 	public void setCoastMode() {
 		m_wheel.setNeutralMode(NeutralMode.Coast);
 		m_rotation.setNeutralMode(NeutralMode.Coast);

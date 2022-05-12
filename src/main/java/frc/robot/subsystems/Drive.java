@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,7 +23,7 @@ import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import frc.robot.subsystems.SwerveDrive.TalonFXModule;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
-public class Driveunbun extends SubsystemBase {
+public class Drive extends SubsystemBase {
 
   private TalonFXModule[] swerveModules = new TalonFXModule[4];
 
@@ -40,6 +43,17 @@ public class Driveunbun extends SubsystemBase {
 
   private ArrayList<SnapshotVectorXY> velocityHistory = new ArrayList<SnapshotVectorXY>();
 
+  private final Translation2d m_frontLeftLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d m_frontRightLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d m_backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d m_backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
+
+  private final SwerveDriveKinematics m_kinematics =
+        new SwerveDriveKinematics(
+            m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+            
+  private SwerveDriveOdometry m_odometry;
+  
   private ShuffleboardTab tab;
   private NetworkTableEntry errorDisplay;
   private NetworkTableEntry rotSpeedDisplay;
@@ -59,7 +73,7 @@ public class Driveunbun extends SubsystemBase {
   private NetworkTableEntry displaceXTab;
   private NetworkTableEntry displaceYTab;
 
-  public Driveunbun(Webcams webcams, Limelight limelight) {
+  public Drive(Webcams webcams, Limelight limelight) {
     this.webcams = webcams;
     this.limelight = limelight;
     runTime.start();
@@ -77,6 +91,7 @@ public class Driveunbun extends SubsystemBase {
       swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new TalonFXModule(DriveConstants.rearLeftRotationID,
           DriveConstants.rearLeftDriveID,
           WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
+      m_odometry = new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d());
     }
   }
 
@@ -427,6 +442,21 @@ public class Driveunbun extends SubsystemBase {
           module.setSpeedAndAngle();
         }
       }
+
+      // convert to rad from degrees b/c rotation2ds are typically created from rad
+      double rot = rot_ * (Math.PI/180);
+
+      // create SwerveModuleStates inversely from the kinematics
+      var swerveModuleStates =
+          m_kinematics.toSwerveModuleStates(
+              (fieldRelative && Constants.gyroEnabled)
+                  ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
+                  : new ChassisSpeeds(xSpeed, ySpeed, rot));
+      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
+      frontLeft.setDesiredState(swerveModuleStates[0]);
+      frontRight.setDesiredState(swerveModuleStates[1]);
+      rearLeft.setDesiredState(swerveModuleStates[2]);
+      rearRight.setDesiredState(swerveModuleStates[3]);
     }
   }
 
@@ -464,6 +494,18 @@ public class Driveunbun extends SubsystemBase {
   public void resetRotatePID() {
     rotPID.reset();
   }
+
+  public void updateOdometry() {
+    if (Constants.gyroEnabled) {
+        m_odometry.update(
+            gyro.getRotation2d(),
+            frontLeft.getState(),
+            frontRight.getState(),
+            rearLeft.getState(),
+            rearRight.getState()
+            );
+        }
+    }    
 
   public boolean isDrivingWithSideCams() {
     return (driveMode == DriveMode.leftCamCentric) || (driveMode == DriveMode.rightCamCentric);
@@ -536,4 +578,22 @@ public class Driveunbun extends SubsystemBase {
       return time;
     }
   }
+
+  public double getGyroYawDeg(){
+		if (gyro != null && gyro.isConnected() && !gyro.isCalibrating()) {
+			return gyro.getAngle();
+		}
+		else {
+			return 0;
+		}
+	}
+
+	// convert angle to range of +/- 180 degrees
+	public static double boundDegrees(double angleDegrees) {
+		double x = ((angleDegrees + 180) % 360) - 180;
+		if (x < -180) {
+			x += 360;
+		}
+		return x;
+	}
 }

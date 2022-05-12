@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Driveunbun;
+import frc.robot.subsystems.Drive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -16,29 +16,29 @@ public class DrivePreTurnWheels extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
 
-  private final Driveunbun driveunbun;
+  private final Drive drive;
   private final double driveDeg;
 
   private Timer timer = new Timer();
 
-  public DrivePreTurnWheels(Driveunbun drivesubsystem, double driveDeg) {
-    driveunbun = drivesubsystem;
+  public DrivePreTurnWheels(Drive drivesubsystem, double driveDeg) {
+    drive = drivesubsystem;
     this.driveDeg = driveDeg;
-    addRequirements(driveunbun);
+    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (Driveunbun.getDriveMode() != Driveunbun.DriveMode.fieldCentric) {
+    if (Drive.getDriveMode() != Drive.DriveMode.fieldCentric) {
 
       // This command is only used in auto, so it's OK to not restore the 
       // previous drive mode.
-      driveunbun.setDriveMode(Driveunbun.DriveMode.fieldCentric);
+      drive.setDriveMode(Drive.DriveMode.fieldCentric);
     }
     timer.reset();
     timer.start();
-    driveunbun.resetRotatePID();
+    drive.resetRotatePID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,13 +49,13 @@ public class DrivePreTurnWheels extends CommandBase {
     
     double x = Constants.DriveConstants.smallNonZeroSpeed * Math.cos(driveRad);
     double y = Constants.DriveConstants.smallNonZeroSpeed * Math.sin(driveRad);
-    driveunbun.driveAutoRotate(-x, -y, 0, DriveConstants.autoRotateToleranceDegrees);
+    drive.driveAutoRotate(-x, -y, 0, DriveConstants.autoRotateToleranceDegrees);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveunbun.stop();
+    drive.stop();
   }
 
   // Returns true when the command should end.

@@ -155,7 +155,7 @@ public class Shooter extends SubsystemBase {
         currentRPM.setDouble(getSpeed());
       }
       boolean isAtSpeed = Math.abs(target - getSpeed()) <= 
-        (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+        (Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric?
         ShooterConstants.minVelErrorLime : ShooterConstants.minVelErrorPreset);
 
       switch (shooterMode) {
@@ -166,7 +166,7 @@ public class Shooter extends SubsystemBase {
             shooterMode = ShooterMode.atSpeed;
             modeTimer.reset();
             double speedSettlingLimeSec = ShooterConstants.speedSettlingLimeSec;
-            if ((Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric) &&
+            if ((Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric) &&
                 (speedSettlingLimeSec == 0)) {
               shooterMode = ShooterMode.stableAtSpeed;
             }
@@ -174,7 +174,7 @@ public class Shooter extends SubsystemBase {
           break;
         case atSpeed:
           if (isAtSpeed && modeTimer.hasElapsed(
-            (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
+            (Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric?
             ShooterConstants.speedSettlingLimeSec : ShooterConstants.speedSettlingPresetSec))) {
               
             shooterMode = ShooterMode.stableAtSpeed;
@@ -199,7 +199,7 @@ public class Shooter extends SubsystemBase {
   public void setSpeed(double rpm) {
     if (Constants.shooterEnabled && Conveyor.getSingleton().canShooterStop()) {
       flywheelPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-      if ((Driveunbun.getDriveMode() != Driveunbun.DriveMode.limelightFieldCentric) || 
+      if ((Drive.getDriveMode() != Drive.DriveMode.limelightFieldCentric) || 
         (Math.abs(target - rpm) > ShooterConstants.resetSettingDelta) || 
         (shooterMode == ShooterMode.stopped)  || (shooterMode == ShooterMode.stopping)) {
         shooterMode = ShooterMode.started;
