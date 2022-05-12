@@ -55,6 +55,8 @@ public final class Constants {
   public static final boolean ballSensorEnabled = true;
   public static final boolean limelightEnabled = true;
 
+  public static final double inchesToMeters = 0.0254;
+
   // configuration values common to all motor controllers
   public static final int controllerConfigTimeoutMs = 50;
   public static final int fastStatusPeriodBaseMs = 13;
@@ -215,7 +217,7 @@ public final class Constants {
           public static final double supplyThreshold = 45;
           public static final double supplyTime = 0.5;
 
-          public static final double wheelDiameter = 4.0;
+          public static final double wheelDiameterInches = 4.0;
           public static final double gearRatio = 6.55;
       }
 

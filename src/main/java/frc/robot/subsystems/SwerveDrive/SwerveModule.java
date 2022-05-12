@@ -191,7 +191,7 @@ public class SwerveModule extends ControlModule {
 	public double getDistance(){
 		return driveMotor.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI *
-			DriveConstants.Drive.wheelDiameter / 12;
+			DriveConstants.Drive.wheelDiameterInches / 12;
 	}
 
 	@Override
@@ -199,7 +199,7 @@ public class SwerveModule extends ControlModule {
 		// feet per second
 		return driveMotor.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI * 
-			Constants.DriveConstants.Drive.wheelDiameter / 12;
+			Constants.DriveConstants.Drive.wheelDiameterInches / 12;
 	}
 
   public SwerveModuleState getState() {
@@ -216,8 +216,8 @@ public void setDesiredState(SwerveModuleState desiredState) {
 
     driveMotor.set(ControlMode.Velocity, 
         state.speedMetersPerSecond / 
-        (DriveConstants.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
-        * DriveConstants.driveGearRatio * DriveConstants.encoderResolution
+        (DriveConstants.Drive.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
+        * DriveConstants.Drive.gearRatio * DriveConstants.encoderResolution
         / 10); // every 100 ms
     turningMotor.set(ControlMode.Position, 
         state.angle.getDegrees() / DriveConstants.Rotation.countToDegrees);
