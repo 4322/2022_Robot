@@ -119,8 +119,8 @@ public final class Constants {
       public static final double kMaxAngularSpeed = Math.PI;
       public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
 
-      public static final double distWheelX = 0.339725;
-      public static final double distWheelY = 0.244475;
+      public static final double distWheelMetersX = 0.339725;
+      public static final double distWheelMetersY = 0.244475;
 
       public static final double wheelBaseLengthFeet = 26.75 / 12.0;
       public static final double wheelBaseWidthFeet = 19.25 / 12.0;
