@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.SwerveDrive.SwerveHelper;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -56,7 +55,7 @@ public class DrivePolar extends CommandBase {
     
     double x = speed * Math.cos(driveRad);
     double y = speed * Math.sin(driveRad);
-    double error = SwerveHelper.boundDegrees(rotationDeg - drive.getAngle());
+    double error = Drive.boundDegrees(rotationDeg - drive.getAngle());
     drive.driveAutoRotate(-x, -y, error, DriveConstants.autoRotateToleranceDegrees);
   }
 

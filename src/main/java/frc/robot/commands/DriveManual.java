@@ -116,10 +116,10 @@ public class DriveManual extends CommandBase {
           if (Drive.getDriveMode() == Drive.DriveMode.sideKillFieldCentric) {
             rotate += 90;
           }
-          double error = SwerveHelper.boundDegrees(rotate - drive.getAngle());
+          double error = Drive.boundDegrees(rotate - drive.getAngle());
           if (Math.abs(error) > 90) {
             //Drive other way to minimize rotation
-            error = SwerveHelper.boundDegrees(error + 180);
+            error = Drive.boundDegrees(error + 180);
           }
           if (driveRawR < DriveConstants.drivePolarDeadband) {
             drive.stop();
@@ -136,7 +136,7 @@ public class DriveManual extends CommandBase {
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
         // Get angle of joystick as desired rotation target
         rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        double error = SwerveHelper.boundDegrees(rotate - drive.getAngle());
+        double error = Drive.boundDegrees(rotate - drive.getAngle());
         drive.driveAutoRotate(-driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
       } else {
         // normal drive

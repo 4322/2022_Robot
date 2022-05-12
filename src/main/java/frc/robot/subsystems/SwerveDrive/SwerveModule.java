@@ -3,6 +3,7 @@ package frc.robot.subsystems.SwerveDrive;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Drive;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -50,8 +51,13 @@ public class SwerveModule extends ControlModule {
 
     private void configDrive(WPI_TalonFX talon, WheelPosition pos) {
        
-        TalonFXConfiguration config = new TalonFXConfiguration();
-		config.openloopRamp = DriveConstants.Drive.configOpenLoopRamp;
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    config.slot0.kP = DriveConstants.Drive.kP;
+    config.slot0.kI = DriveConstants.Drive.kI;
+    config.slot0.kD = DriveConstants.Drive.kD;
+    config.slot0.integralZone = DriveConstants.Drive.kIz;
+    config.slot0.kF = DriveConstants.Drive.kFF;
+		config.closedloopRamp = DriveConstants.Drive.configClosedLoopRamp;
 		config.neutralDeadband = DriveConstants.Drive.brakeModeDeadband; // delay brake mode activation for tipping
 
 		talon.configAllSettings(config);
@@ -148,31 +154,6 @@ public class SwerveModule extends ControlModule {
 			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     }
 	
-	public void setSpeedAndAngle(){
-		driveMotor.set(ControlMode.PercentOutput, SwerveHelper.getSpeed(position));
-		turningMotor.set(ControlMode.Position, getInternalRotationCount() + 
-			SwerveHelper.getAngleChange(position) / 
-			DriveConstants.Rotation.countToDegrees);
-	}	
-
-	public void setRotationPID(double kp, double ki, double kd) {
-		turningMotor.config_kP(0, kp, 0);
-		turningMotor.config_kI(1, ki, 0);
-		turningMotor.config_kD(2, kd, 0);
-	}
-
-	public double getRotationP(){
-		return turningMotor.configGetParameter(0, 0, 0);
-	}
-
-	public double getRotationI(){
-		return turningMotor.configGetParameter(1, 0, 0);
-	}
-
-	public double getRotationD(){
-		return turningMotor.configGetParameter(2, 0, 0);
-	}
-	
 	public double getMagneticRotationAngle(){
 		return encoder.getAbsolutePosition();
 	}
@@ -183,7 +164,7 @@ public class SwerveModule extends ControlModule {
 
 	// returns +/- 180 degrees
 	public double getInternalRotationDegrees(){
-		return SwerveHelper.boundDegrees(getInternalRotationCount() * 
+		return Drive.boundDegrees(getInternalRotationCount() * 
 			   DriveConstants.Rotation.countToDegrees);
 	}
 

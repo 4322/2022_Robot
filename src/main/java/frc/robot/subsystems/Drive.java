@@ -113,7 +113,6 @@ public class Drive extends SubsystemBase {
         }
 
         resetFieldCentric(0);
-        SwerveHelper.setGyro(gyro);
       } else {
         setDriveMode(DriveMode.frontCamCentric);
       }
@@ -369,7 +368,7 @@ public class Drive extends SubsystemBase {
           latestAcceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
                                                : DriveConstants.Tip.highAccFtPerSec2) &&
           // check if decelerating
-          Math.abs(SwerveHelper.boundDegrees(180 +
+          Math.abs(boundDegrees(180 +
               velocityXY.degrees() - accelerationXY.degrees())) <= DriveConstants.Tip.velAccDiffMaxDeg) {
         rotate = 0; // don't tip over our own wheels while declerating
         tipDecelerateActive = true;
@@ -400,9 +399,9 @@ public class Drive extends SubsystemBase {
       for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
         double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
         if (SwerveHelper.isFieldCentric()) {
-          steeringChangeDegrees += SwerveHelper.getGyroYawDeg();
+          steeringChangeDegrees += getGyroYawDeg();
         }
-        steeringChangeDegrees = Math.abs(SwerveHelper.boundDegrees(steeringChangeDegrees));
+        steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
         maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
       }
 
@@ -498,10 +497,10 @@ public class Drive extends SubsystemBase {
     if (Constants.gyroEnabled) {
         m_odometry.update(
             gyro.getRotation2d(),
-            frontLeft.getState(),
-            frontRight.getState(),
-            rearLeft.getState(),
-            rearRight.getState()
+            swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].getState(),
+            swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getState(),
+            swerveModules[WheelPosition.BACK_LEFT.wheelNumber].getState(),
+            swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].getState()
             );
         }
     }    

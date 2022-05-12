@@ -200,7 +200,7 @@ public final class Constants {
       }
 
       public static final class Drive {
-          public static final double configOpenLoopRamp = 0.08;
+          public static final double configClosedLoopRamp = 0.08;
 
           public static final double voltageCompSaturation = 11.5;
           public static final boolean enableVoltageCompensation = true;
@@ -219,6 +219,13 @@ public final class Constants {
 
           public static final double wheelDiameterInches = 4.0;
           public static final double gearRatio = 6.55;
+
+          // TODO: Needs tuning
+          public static final double kP = .00025;
+          public static final double kI = 0.000001;
+          public static final double kD = 0.008;
+          public static final double kIz = 200;
+          public static final double kFF = 0.000205;
       }
 
   }
