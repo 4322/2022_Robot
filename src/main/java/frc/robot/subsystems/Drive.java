@@ -429,14 +429,9 @@ public class Drive extends SubsystemBase {
         tipBigStickAtiveTab.setBoolean(!tipBigStickActive);
       }
 
-      // ready to drive!
-      if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
-        // don't rotate wheels such that we trip over them when decelerating
-        stop();
-      } else {
-        if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
-          rotate = 0; // don't allow the wheels to rotate back to 45 deg angle
-        }
+      // don't allow the wheels to rotate back to 45 deg angle
+      if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
+        rotate = 0;
       }
 
       // convert to proper units
@@ -444,17 +439,23 @@ public class Drive extends SubsystemBase {
       driveX = driveX * DriveConstants.maxSpeedMetersPerSecond;
       driveY = driveY * DriveConstants.maxSpeedMetersPerSecond;
 
-      // create SwerveModuleStates inversely from the kinematics
-      var swerveModuleStates =
-          m_kinematics.toSwerveModuleStates(
-              (fieldRelative && Constants.gyroEnabled)
-                  ? ChassisSpeeds.fromFieldRelativeSpeeds(driveX, driveY, rotate, gyro.getRotation2d())
-                  : new ChassisSpeeds(driveX, driveY, rotate));
-      SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
-      swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].setDesiredState(swerveModuleStates[0]);
-      swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[1]);
-      swerveModules[WheelPosition.BACK_LEFT.wheelNumber].setDesiredState(swerveModuleStates[2]);
-      swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[3]);
+      // ready to drive!
+      if ((driveX == 0) && (driveY == 0) && (rotate == 0)) {
+        // don't rotate wheels such that we trip over them when decelerating
+        stop();
+      } else {
+        // create SwerveModuleStates inversely from the kinematics
+        var swerveModuleStates =
+            m_kinematics.toSwerveModuleStates(
+                (fieldRelative && Constants.gyroEnabled)
+                    ? ChassisSpeeds.fromFieldRelativeSpeeds(driveX, driveY, rotate, gyro.getRotation2d())
+                    : new ChassisSpeeds(driveX, driveY, rotate));
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
+        swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].setDesiredState(swerveModuleStates[0]);
+        swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[1]);
+        swerveModules[WheelPosition.BACK_LEFT.wheelNumber].setDesiredState(swerveModuleStates[2]);
+        swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[3]);
+      }
     }
   }
 
