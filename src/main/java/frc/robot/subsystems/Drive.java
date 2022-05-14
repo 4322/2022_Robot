@@ -435,7 +435,7 @@ public class Drive extends SubsystemBase {
         stop();
       } else {
         if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
-          rotate = 0; // don't allow the wheels to rotate
+          rotate = 0; // don't allow the wheels to rotate back to 45 deg angle
         }
       }
 
