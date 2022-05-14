@@ -220,10 +220,10 @@ public final class Constants {
           public static final double gearRatio = 6.55;
 
           // TODO: Needs tuning
-          public static final double kP = .0;
-          public static final double kI = 0.0;
+          public static final double kP = 0.025;
+          public static final double kI = 0.00008;
           public static final double kD = 0.0;
-          public static final double kIz = 0;
+          public static final double kIz = 500;
           public static final double kFF = 0.06655;
       }
 
