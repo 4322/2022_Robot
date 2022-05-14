@@ -117,10 +117,6 @@ public final class Constants {
 
       public static final int encoderResolution = 2048;
 
-      public static final double kMaxSpeed = 3.0;
-      public static final double kMaxAngularSpeed = Math.PI;
-      public static final double kModuleMaxAngularAcceleration = 2 * Math.PI;
-
       public static final double distWheelMetersX = 0.339725;
       public static final double distWheelMetersY = 0.244475;
 
@@ -128,6 +124,7 @@ public final class Constants {
       public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
       public static final double maxSpeedMetersPerSecond = 15.0;  // TODO: Needs tuning
+      public static final double maxRotationSpeedRadSecond = 4 * Math.PI; // TODO: Needs tuning
 
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;

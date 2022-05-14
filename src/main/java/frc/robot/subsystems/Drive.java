@@ -6,6 +6,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -53,7 +54,7 @@ public class Drive extends SubsystemBase {
             
   private SwerveDriveOdometry m_odometry;
   private double robotCentricOffsetRadians; // TODO: Fix this
-  private boolean fieldCentric;
+  private boolean fieldRelative;
   
   private ShuffleboardTab tab;
   private NetworkTableEntry errorDisplay;
@@ -399,7 +400,7 @@ public class Drive extends SubsystemBase {
       double maxSteeringChangeDegrees = 0;
       for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
         double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
-        if (fieldCentric) {
+        if (fieldRelative) {
           steeringChangeDegrees += getGyroYawDeg();
         }
         steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
@@ -442,15 +443,17 @@ public class Drive extends SubsystemBase {
         }
       }
 
-      // convert to rad from degrees b/c rotation2ds are typically created from rad
-      double rot = rot_ * (Math.PI/180);
+      // convert to proper units
+      rotate = rotate * DriveConstants.maxRotationSpeedRadSecond;
+      driveX = driveX * DriveConstants.maxSpeedMetersPerSecond;
+      driveY = driveY * DriveConstants.maxSpeedMetersPerSecond;
 
       // create SwerveModuleStates inversely from the kinematics
       var swerveModuleStates =
           m_kinematics.toSwerveModuleStates(
               (fieldRelative && Constants.gyroEnabled)
-                  ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d())
-                  : new ChassisSpeeds(xSpeed, ySpeed, rot));
+                  ? ChassisSpeeds.fromFieldRelativeSpeeds(driveX, driveY, rotate, gyro.getRotation2d())
+                  : new ChassisSpeeds(driveX, driveY, rotate));
       SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
       swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].setDesiredState(swerveModuleStates[0]);
       swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[1]);
@@ -507,12 +510,12 @@ public class Drive extends SubsystemBase {
     }    
 
   	public void setToFieldCentric(){
-      fieldCentric = true;
+      fieldRelative = true;
       robotCentricOffsetRadians = 0;
     }
   
     public void setToBotCentric(double offsetDeg){
-      fieldCentric = false;
+      fieldRelative = false;
       robotCentricOffsetRadians = Math.toRadians(offsetDeg);
     }
 
