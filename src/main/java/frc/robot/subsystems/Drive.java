@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -43,17 +44,18 @@ public class Drive extends SubsystemBase {
 
   private ArrayList<SnapshotVectorXY> velocityHistory = new ArrayList<SnapshotVectorXY>();
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
-  private final Translation2d m_frontRightLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
-  private final Translation2d m_backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
-  private final Translation2d m_backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d frontLeftLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d frontRightLocation = new Translation2d(Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d backLeftLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, Constants.DriveConstants.distWheelMetersY);
+  private final Translation2d backRightLocation = new Translation2d(-Constants.DriveConstants.distWheelMetersX, -Constants.DriveConstants.distWheelMetersY);
 
-  private final SwerveDriveKinematics m_kinematics =
+  private final SwerveDriveKinematics kinematics =
         new SwerveDriveKinematics(
-            m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+            // wheel locations must be in the same order as the WheelPosition enum values
+            frontRightLocation, frontLeftLocation, backLeftLocation, backRightLocation);
             
-  private SwerveDriveOdometry m_odometry;
-  private double robotCentricOffsetRadians; // TODO: Fix this
+  private SwerveDriveOdometry odometry;
+  private double robotCentricOffsetDegrees;
   private boolean fieldRelative;
   
   private ShuffleboardTab tab;
@@ -93,7 +95,7 @@ public class Drive extends SubsystemBase {
       swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new SwerveModule(DriveConstants.rearLeftRotationID,
           DriveConstants.rearLeftDriveID,
           WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
-      m_odometry = new SwerveDriveOdometry(m_kinematics, gyro.getRotation2d());
+      odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d());
     }
   }
 
@@ -444,17 +446,20 @@ public class Drive extends SubsystemBase {
         // don't rotate wheels such that we trip over them when decelerating
         stop();
       } else {
+        Rotation2d robotAngle;
+        if (fieldRelative && Constants.gyroEnabled) {
+          robotAngle = gyro.getRotation2d();
+        } else {
+          robotAngle = Rotation2d.fromDegrees(robotCentricOffsetDegrees);
+        }
         // create SwerveModuleStates inversely from the kinematics
         var swerveModuleStates =
-            m_kinematics.toSwerveModuleStates(
-                (fieldRelative && Constants.gyroEnabled)
-                    ? ChassisSpeeds.fromFieldRelativeSpeeds(driveX, driveY, rotate, gyro.getRotation2d())
-                    : new ChassisSpeeds(driveX, driveY, rotate));
+            kinematics.toSwerveModuleStates(
+              ChassisSpeeds.fromFieldRelativeSpeeds(driveX, driveY, rotate, robotAngle));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
-        swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].setDesiredState(swerveModuleStates[0]);
-        swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[1]);
-        swerveModules[WheelPosition.BACK_LEFT.wheelNumber].setDesiredState(swerveModuleStates[2]);
-        swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].setDesiredState(swerveModuleStates[3]);
+        for (int i = 0; i < swerveModules.length; i++) {
+          swerveModules[i].setDesiredState(swerveModuleStates[i]);
+        }
       }
     }
   }
@@ -496,7 +501,7 @@ public class Drive extends SubsystemBase {
 
   public void updateOdometry() {
     if (Constants.gyroEnabled) {
-        m_odometry.update(
+        odometry.update(
             gyro.getRotation2d(),
             swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].getState(),
             swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getState(),
@@ -508,12 +513,12 @@ public class Drive extends SubsystemBase {
 
   	public void setToFieldCentric(){
       fieldRelative = true;
-      robotCentricOffsetRadians = 0;
+      robotCentricOffsetDegrees = 0;
     }
   
     public void setToBotCentric(double offsetDeg){
       fieldRelative = false;
-      robotCentricOffsetRadians = Math.toRadians(offsetDeg);
+      robotCentricOffsetDegrees = offsetDeg;
     }
 
   public boolean isDrivingWithSideCams() {

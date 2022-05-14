@@ -98,6 +98,7 @@ public class ControlModule{
 	}
 
 	public enum WheelPosition{
+    // construction of SwerveDriveKinematics is dependent on the values of this enum
 		FRONT_RIGHT(0), FRONT_LEFT(1), BACK_LEFT(2), BACK_RIGHT(3);
 
 		public int wheelNumber;
