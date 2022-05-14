@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -81,29 +82,10 @@ public class Drive extends SubsystemBase {
     this.webcams = webcams;
     this.limelight = limelight;
     runTime.start();
-
-    if (Constants.driveEnabled) {
-      swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = new SwerveModule(
-          DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID,
-          WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
-      swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = new SwerveModule(DriveConstants.frontLeftRotationID,
-          DriveConstants.frontLeftDriveID,
-          WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
-      swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = new SwerveModule(DriveConstants.rearRightRotationID,
-          DriveConstants.rearRightDriveID,
-          WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID);
-      swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new SwerveModule(DriveConstants.rearLeftRotationID,
-          DriveConstants.rearLeftDriveID,
-          WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
-      odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d());
-    }
   }
 
   public void init() {
     if (Constants.driveEnabled) {
-      for (SwerveModule module : swerveModules) {
-        module.init();
-      }
 
       rotPID = new PIDController(DriveConstants.autoRotkP, 0, DriveConstants.autoRotkD);
 
@@ -119,6 +101,26 @@ public class Drive extends SubsystemBase {
         resetFieldCentric(0);
       } else {
         setDriveMode(DriveMode.frontCamCentric);
+      }
+
+      if (Constants.driveEnabled) {
+        swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber] = new SwerveModule(
+            DriveConstants.frontRightRotationID, DriveConstants.frontRightDriveID,
+            WheelPosition.FRONT_RIGHT, DriveConstants.frontRightEncoderID);
+        swerveModules[WheelPosition.FRONT_LEFT.wheelNumber] = new SwerveModule(DriveConstants.frontLeftRotationID,
+            DriveConstants.frontLeftDriveID,
+            WheelPosition.FRONT_LEFT, DriveConstants.frontLeftEncoderID);
+        swerveModules[WheelPosition.BACK_RIGHT.wheelNumber] = new SwerveModule(DriveConstants.rearRightRotationID,
+            DriveConstants.rearRightDriveID,
+            WheelPosition.BACK_RIGHT, DriveConstants.rearRightEncoderID);
+        swerveModules[WheelPosition.BACK_LEFT.wheelNumber] = new SwerveModule(DriveConstants.rearLeftRotationID,
+            DriveConstants.rearLeftDriveID,
+            WheelPosition.BACK_LEFT, DriveConstants.rearLeftEncoderID);
+        odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d());
+
+        for (SwerveModule module : swerveModules) {
+          module.init();
+        }
       }
 
       if (Constants.debug) {
