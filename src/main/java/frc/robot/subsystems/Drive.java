@@ -434,12 +434,8 @@ public class Drive extends SubsystemBase {
         // don't rotate wheels such that we trip over them when decelerating
         stop();
       } else {
-        SwerveHelper.calculate(driveX, driveY, rotate, currentAngle);
         if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
-          SwerveHelper.noSteering();
-        }
-        for (SwerveModule module : swerveModules) {
-          module.setSpeedAndAngle();
+          rotate = 0; // don't allow the wheels to rotate
         }
       }
 
