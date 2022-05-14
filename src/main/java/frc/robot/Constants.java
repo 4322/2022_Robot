@@ -123,8 +123,8 @@ public final class Constants {
       public static final double wheelBaseLengthFeet = 26.75 / 12.0;
       public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
-      public static final double maxSpeedMetersPerSecond = 3.6576;  // TODO: Needs tuning
-      public static final double maxRotationSpeedRadSecond = 12.2718; // TODO: Needs tuning
+      public static final double maxSpeedMetersPerSecond = 3.6576;
+      public static final double maxRotationSpeedRadSecond = 12.2718;
 
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
@@ -220,11 +220,11 @@ public final class Constants {
           public static final double gearRatio = 6.55;
 
           // TODO: Needs tuning
-          public static final double kP = .00025;
-          public static final double kI = 0.000001;
-          public static final double kD = 0.008;
-          public static final double kIz = 200;
-          public static final double kFF = 0.000205;
+          public static final double kP = .0;
+          public static final double kI = 0.0;
+          public static final double kD = 0.0;
+          public static final double kIz = 0;
+          public static final double kFF = 0.06655;
       }
 
   }
