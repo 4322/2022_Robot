@@ -123,8 +123,8 @@ public final class Constants {
       public static final double wheelBaseLengthFeet = 26.75 / 12.0;
       public static final double wheelBaseWidthFeet = 19.25 / 12.0;
 
-      public static final double maxSpeedMetersPerSecond = 15.0;  // TODO: Needs tuning
-      public static final double maxRotationSpeedRadSecond = 4 * Math.PI; // TODO: Needs tuning
+      public static final double maxSpeedMetersPerSecond = 3.6576;  // TODO: Needs tuning
+      public static final double maxRotationSpeedRadSecond = 12.2718; // TODO: Needs tuning
 
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
