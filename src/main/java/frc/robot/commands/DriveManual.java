@@ -35,29 +35,28 @@ public class DriveManual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double driveX;
-    double driveY;
-    double rotate;
-
     if (Constants.joysticksEnabled) {
-      //
       
       // Joystick polarity:
       // Positive X is to the right
       // Positive Y is down
       // Positive Z is CW
 
-      // cache hardware status for consistency in logic
-      // X axis is horizontal for joysticks, but represents the front of the robot
-      // (forward/reverse) for WPILib's calculations, so the values for Y and 
-      // X are substituted to correct for this (90 degree rotation)
-      final double driveRawX = driveX = -RobotContainer.driveStick.getY();
-      final double driveRawY = driveY = -RobotContainer.driveStick.getX();
+      // WPI uses a trigonometric coordinate system with the front of the robot
+      // pointing toward positive X. Thus:
+      // Positive X is forward
+      // Positive Y is to the left
+      // Positive angles are CCW
+      // Angles have a range of +/- 180 degrees (need to verify this)
+
+      // All variables in this program use WPI coordinates
+
+      // Cache hardware status for consistency in logic and convert
+      // joystick coordinates to WPI coordinates.
+      final double driveRawX = -RobotContainer.driveStick.getY();
+      final double driveRawY = -RobotContainer.driveStick.getX();
       final double rotateRawX = -RobotContainer.rotateStick.getY();
       final double rotateRawY = -RobotContainer.rotateStick.getX();
-
-      // joystick rotation is inverted to account for counter-clockwise being positive
-      // in WPILib calculations
       final double rotateRawZ = -RobotContainer.rotateStick.getZ();
 
       // calculate distance from center of joysticks
@@ -70,6 +69,8 @@ public class DriveManual extends CommandBase {
         y = greater value
         x = (y^3 / y) * x 
       */
+      double driveX;
+      double driveY;
       if (Math.abs(driveRawX) >= Math.abs(driveRawY)) {
         driveX = driveRawX * driveRawX * driveRawX;
         driveY = driveRawX * driveRawX * driveRawY;
@@ -87,22 +88,23 @@ public class DriveManual extends CommandBase {
       }
 
       // adjust for twist deadband
+      double rotatePower;
       final double twistDeadband = DriveConstants.twistDeadband;
       if (Math.abs(rotateRawZ) < twistDeadband) {
-        rotate = 0;
+        rotatePower = 0;
       }
       else if (rotateRawZ > 0) {
         // rescale to full positive range
-        rotate = (rotateRawZ - twistDeadband) / (1 - twistDeadband);
+        rotatePower = (rotateRawZ - twistDeadband) / (1 - twistDeadband);
       }
       else {
         // rescale to full negative range
-        rotate = (rotateRawZ + twistDeadband) / (1 - twistDeadband);
+        rotatePower = (rotateRawZ + twistDeadband) / (1 - twistDeadband);
       }
-      rotate = rotate * rotate * rotate;  // increase sensitivity
+      rotatePower = rotatePower * rotatePower * rotatePower;  // increase sensitivity
 
       if (Constants.demo.inDemoMode) {
-        rotate *= Constants.demo.rotationScaleFactor;
+        rotatePower *= Constants.demo.rotationScaleFactor;
         if (Constants.demo.driveMode == Constants.demo.DriveMode.SLOW_DRIVE) {
           driveX *= Constants.demo.driveScaleFactor;
           driveY *= Constants.demo.driveScaleFactor;
@@ -114,45 +116,46 @@ public class DriveManual extends CommandBase {
         // move slowly in side cam driving mode for percise cargo alignment
         driveX *= DriveConstants.sideCamDriveScaleFactor;
         driveY *= DriveConstants.sideCamDriveScaleFactor;
-        rotate *= DriveConstants.sideCamRotationScaleFactor;
+        rotatePower *= DriveConstants.sideCamRotationScaleFactor;
       } else {
-        rotate *= DriveConstants.normalRotationScaleFactor;        
+        rotatePower *= DriveConstants.normalRotationScaleFactor;        
       }
 
       // determine drive mode
       // Kill, Limelight, Polar, Normal
+      double headingDeg;
+      double headingChangeDeg;
       if ((Drive.getDriveMode() == Drive.DriveMode.killFieldCentric) ||
           (Drive.getDriveMode() == Drive.DriveMode.sideKillFieldCentric)) {
-          rotate =  90 - Math.toDegrees(Math.atan2(-driveRawY, driveRawX));
+          headingDeg =  Math.toDegrees(Math.atan2(driveRawY, driveRawX));
           if (Drive.getDriveMode() == Drive.DriveMode.sideKillFieldCentric) {
-            rotate += 90;
+            headingDeg += 90;
           }
-          double error = Drive.boundDegrees(rotate - drive.getAngle());
-          if (Math.abs(error) > 90) {
+          headingChangeDeg = Drive.boundDegrees(headingDeg - drive.getAngle());
+          if (Math.abs(headingChangeDeg) > 90) {
             //Drive other way to minimize rotation
-            error = Drive.boundDegrees(error + 180);
+            headingChangeDeg = Drive.boundDegrees(headingChangeDeg + 180);
           }
           if (driveRawR < DriveConstants.drivePolarDeadband) {
             drive.stop();
             drive.resetRotatePID();
           } else {
-            drive.driveAutoRotate(driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
+            drive.driveAutoRotate(driveX, driveY, headingChangeDeg, DriveConstants.manualRotateToleranceDegrees);
           }
       }
       else if ((Drive.getDriveMode() == Drive.DriveMode.limelightFieldCentric) &&
                 limelight.getTargetVisible()) {
-        double error = limelight.getHorizontalDegToTarget();
-        drive.driveAutoRotate(driveX, driveY, error, DriveConstants.limeRotNotMovingToleranceDegrees);
+        headingChangeDeg = limelight.getHorizontalDegToTarget();
+        drive.driveAutoRotate(driveX, driveY, headingChangeDeg, DriveConstants.limeRotNotMovingToleranceDegrees);
       }
       else if (rotateRawR >= DriveConstants.rotatePolarDeadband) {
-        // Get angle of joystick as desired rotation target
-        rotate =  90 - Math.toDegrees(Math.atan2(-rotateRawY, rotateRawX));
-        double error = Drive.boundDegrees(rotate - drive.getAngle());
-        drive.driveAutoRotate(driveX, driveY, error, DriveConstants.manualRotateToleranceDegrees);
+        // Use angle of joystick as desired rotation target
+        headingChangeDeg = Drive.boundDegrees(Math.toDegrees(Math.atan2(rotateRawY, rotateRawX)) - drive.getAngle());
+        drive.driveAutoRotate(driveX, driveY, headingChangeDeg, DriveConstants.manualRotateToleranceDegrees);
       } else {
         // normal drive
         drive.resetRotatePID();
-        drive.drive(driveX, driveY, -rotate);
+        drive.drive(driveX, driveY, rotatePower);
       }
     }
   }

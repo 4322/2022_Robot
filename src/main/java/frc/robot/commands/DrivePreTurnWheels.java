@@ -44,12 +44,10 @@ public class DrivePreTurnWheels extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // adjust for front of robot as 0 and clockwise rotation
-    double driveRad = Math.toRadians(90 - driveDeg); 
-    
+    double driveRad = Math.toRadians(driveDeg); 
     double x = Constants.DriveConstants.smallNonZeroSpeed * Math.cos(driveRad);
     double y = Constants.DriveConstants.smallNonZeroSpeed * Math.sin(driveRad);
-    drive.driveAutoRotate(-x, -y, 0, DriveConstants.autoRotateToleranceDegrees);
+    drive.driveAutoRotate(x, y, 0, DriveConstants.autoRotateToleranceDegrees);
   }
 
   // Called once the command ends or is interrupted.

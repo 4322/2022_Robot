@@ -50,13 +50,11 @@ public class DrivePolar extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // adjust for front of robot as 0 and clockwise rotation
-    double driveRad = Math.toRadians(90 - driveDeg); 
-    
+    double driveRad = Math.toRadians(driveDeg); 
     double x = speed * Math.cos(driveRad);
     double y = speed * Math.sin(driveRad);
-    double error = Drive.boundDegrees(rotationDeg - drive.getAngle());
-    drive.driveAutoRotate(-x, -y, error, DriveConstants.autoRotateToleranceDegrees);
+    double headingErrorDeg = Drive.boundDegrees(rotationDeg - drive.getAngle());
+    drive.driveAutoRotate(x, y, headingErrorDeg, DriveConstants.autoRotateToleranceDegrees);
   }
 
   // Called once the command ends or is interrupted.

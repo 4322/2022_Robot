@@ -280,9 +280,15 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public double getAngle() {
-    return gyro.getAngle();
-  }
+  // Positive gyro angle is CW
+  public double getAngle(){
+		if (gyro != null && gyro.isConnected() && !gyro.isCalibrating()) {
+			return -gyro.getAngle();
+		}
+		else {
+			return 0;
+		}
+	}
 
   @Override
   public void periodic() {
@@ -344,7 +350,7 @@ public class Drive extends SubsystemBase {
 
       // sum wheel velocity and acceleration vectors
       for (int i = 0; i < swerveModules.length; i++) {
-        double wheelAngleDegrees = 90 - currentAngle[i];
+        double wheelAngleDegrees = currentAngle[i];
         velocityXY.add(new VectorPolarDegrees(
             swerveModules[i].getVelocity(),
             wheelAngleDegrees));
@@ -361,8 +367,8 @@ public class Drive extends SubsystemBase {
       if (Constants.debug) {
         botVelocityMag.setDouble(latestVelocity);
         botAccelerationMag.setDouble(latestAcceleration);
-        botVelocityAngle.setDouble(90 - velocityXY.degrees());
-        botAccelerationAngle.setDouble(90 - accelerationXY.degrees());
+        botVelocityAngle.setDouble(velocityXY.degrees());
+        botAccelerationAngle.setDouble(accelerationXY.degrees());
         driveXTab.setDouble(driveX);
         driveYTab.setDouble(driveY);
       }
@@ -404,7 +410,7 @@ public class Drive extends SubsystemBase {
       for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
         double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
         if (fieldRelative) {
-          steeringChangeDegrees += getGyroYawDeg();
+          steeringChangeDegrees += getAngle();
         }
         steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
         maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
@@ -593,15 +599,6 @@ public class Drive extends SubsystemBase {
       return time;
     }
   }
-
-  public double getGyroYawDeg(){
-		if (gyro != null && gyro.isConnected() && !gyro.isCalibrating()) {
-			return gyro.getAngle();
-		}
-		else {
-			return 0;
-		}
-	}
 
 	// convert angle to range of +/- 180 degrees
 	public static double boundDegrees(double angleDegrees) {
