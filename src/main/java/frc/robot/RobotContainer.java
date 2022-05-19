@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.DriveConstants;
@@ -150,6 +151,13 @@ public class RobotContainer {
       drive.setCoastMode();  // robot has stopped, safe to enter coast mode
       disableTimer.stop();
       disableTimer.reset();
+    }
+    if (Constants.joysticksEnabled) {
+      if (Constants.debug) {
+        SmartDashboard.putNumber("Drive Stick X", driveStick.getX());
+        SmartDashboard.putNumber("Drive Stick Y", driveStick.getY());
+        SmartDashboard.putNumber("Drive Stick Z", driveStick.getZ());
+      }
     }
   }
 
