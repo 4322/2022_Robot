@@ -188,13 +188,14 @@ public final class Constants {
           public static final double allowableClosedloopError = 0.35 / countToDegrees;
 
           // values obtained from swerve module zeroing procedure
+          // positive angles are CCW rotation from forward
           public static final double[] CANCoderOffsetDegrees;
           static {
               CANCoderOffsetDegrees = new double[4];
-              CANCoderOffsetDegrees[WheelPosition.FRONT_RIGHT.wheelNumber] = 78.311;
-              CANCoderOffsetDegrees[WheelPosition.FRONT_LEFT.wheelNumber] = 169.365;
-              CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = 106.787;
-              CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = -104.678;
+              CANCoderOffsetDegrees[WheelPosition.FRONT_RIGHT.wheelNumber] = -78.311;
+              CANCoderOffsetDegrees[WheelPosition.FRONT_LEFT.wheelNumber] = -169.365;
+              CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = -106.787;
+              CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = 104.678;
           }
       }
 
