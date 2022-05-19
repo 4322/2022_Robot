@@ -43,11 +43,17 @@ public class DriveManual extends CommandBase {
       //
       
       // cache hardware status for consistency in logic
-      final double driveRawX = driveX = RobotContainer.driveStick.getX();
-      final double driveRawY = driveY = RobotContainer.driveStick.getY();
-      final double rotateRawX = RobotContainer.rotateStick.getX();
-      final double rotateRawY = RobotContainer.rotateStick.getY();
-      final double rotateRawZ = RobotContainer.rotateStick.getZ();
+      // X axis is horizontal for joysticks, but represents the front of the robot
+      // (forward/reverse) for WPILib's calculations, so the values for Y and 
+      // X are substituted to correct for this (90 degree rotation)
+      final double driveRawX = driveX = RobotContainer.driveStick.getY();
+      final double driveRawY = driveY = RobotContainer.driveStick.getX();
+      final double rotateRawX = RobotContainer.rotateStick.getY();
+      final double rotateRawY = RobotContainer.rotateStick.getX();
+
+      // joystick rotation is inverted to account for counter-clockwise being positive
+      // in WPILib calculations
+      final double rotateRawZ = -RobotContainer.rotateStick.getZ();
 
       // calculate distance from center of joysticks
       final double driveRawR = Math.sqrt(driveRawX * driveRawX + driveRawY * driveRawY);
