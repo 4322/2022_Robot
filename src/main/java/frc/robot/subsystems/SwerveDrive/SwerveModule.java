@@ -100,7 +100,7 @@ public class SwerveModule extends ControlModule {
 
 		talon.configAllSettings(config);	// factory default is the baseline
         talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
-        talon.setInverted(false);
+        talon.setInverted(true);
         talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(DriveConstants.Rotation.configVoltageCompSaturation);
@@ -119,7 +119,7 @@ public class SwerveModule extends ControlModule {
 
 		CANCoderConfiguration encoderConfig = new CANCoderConfiguration();
 		encoderConfig.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
-		encoderConfig.sensorDirection = true;  // positive rotation is clockwise
+		encoderConfig.sensorDirection = false;  // positive rotation is CCW
 		encoderConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 		
 		encoder.configAllSettings(encoderConfig);  // factory default is the baseline
@@ -134,9 +134,8 @@ public class SwerveModule extends ControlModule {
 		catch (InterruptedException e) {}
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		double count = 	(encoder.getAbsolutePosition() - 
-			DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
-			DriveConstants.Rotation.countToDegrees;
+		double count = 	(DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber] -
+                     encoder.getAbsolutePosition()) / DriveConstants.Rotation.countToDegrees;
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {
