@@ -3,7 +3,6 @@ package frc.robot.subsystems.SwerveDrive;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Drive;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -163,8 +162,8 @@ public class SwerveModule extends ControlModule {
 
 	// returns +/- 180 degrees
 	public double getInternalRotationDegrees(){
-		return Drive.boundDegrees(getInternalRotationCount() * 
-			   DriveConstants.Rotation.countToDegrees);
+		return getInternalRotationCount() * 
+			   DriveConstants.Rotation.countToDegrees;
 	}
 
 	@Override
