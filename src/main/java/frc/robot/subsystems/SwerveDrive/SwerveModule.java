@@ -134,8 +134,9 @@ public class SwerveModule extends ControlModule {
 		catch (InterruptedException e) {}
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		double count = 	(DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber] -
-                     encoder.getAbsolutePosition()) / DriveConstants.Rotation.countToDegrees;
+		double count = 	(encoder.getAbsolutePosition() - 
+                     DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
+                       DriveConstants.Rotation.countToDegrees;
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {
