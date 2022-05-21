@@ -412,7 +412,7 @@ public class Drive extends SubsystemBase {
         if (fieldRelative) {
           steeringChangeDegrees += getAngle();
         }
-        steeringChangeDegrees = Math.abs(steeringChangeDegrees);
+        steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
         maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
       }
 
