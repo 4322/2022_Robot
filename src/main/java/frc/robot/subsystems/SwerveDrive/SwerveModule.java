@@ -202,18 +202,44 @@ public void setDesiredState(SwerveModuleState desiredState) {
         state.angle.getDegrees() / DriveConstants.Rotation.countToDegrees);
 }
 
-	public void setCoastMode() {
-		driveMotor.setNeutralMode(NeutralMode.Coast);
-		turningMotor.setNeutralMode(NeutralMode.Coast);
+public SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentPos) {
+	double targetAng = desiredState.angle.getDegrees();
+	double currentAng = currentPos.getDegrees();
+
+	// bound to 0 - 360
+	if (targetAng < 0) {
+		targetAng = -targetAng + 180;
 	}
 
-	public void setBrakeMode() {
-		driveMotor.setNeutralMode(NeutralMode.Brake);
-		turningMotor.setNeutralMode(NeutralMode.Brake);
+	if (currentAng < 0) {
+		currentAng = -currentAng + 180;
 	}
 
-	public void stop() {
-		driveMotor.stopMotor();
-		turningMotor.stopMotor();
+	double diff = Math.abs(targetAng - currentAng);
+
+	if (diff <= 90) {
+		return desiredState;
+	} else {
+		return new SwerveModuleState(
+			-desiredState.speedMetersPerSecond,
+			desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0))
+		);
 	}
+
+}
+
+public void setCoastMode() {
+	driveMotor.setNeutralMode(NeutralMode.Coast);
+	turningMotor.setNeutralMode(NeutralMode.Coast);
+}
+
+public void setBrakeMode() {
+	driveMotor.setNeutralMode(NeutralMode.Brake);
+	turningMotor.setNeutralMode(NeutralMode.Brake);
+}
+
+public void stop() {
+	driveMotor.stopMotor();
+	turningMotor.stopMotor();
+}
 }
