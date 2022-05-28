@@ -190,44 +190,22 @@ public class SwerveModule extends ControlModule {
 }
 
 public void setDesiredState(SwerveModuleState desiredState) {
+	double currentDeg = turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees;
+
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(
-            turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees));
+        SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(currentDeg));
 
     driveMotor.set(ControlMode.Velocity, 
         state.speedMetersPerSecond / 
         (DriveConstants.Drive.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
         * DriveConstants.Drive.gearRatio * DriveConstants.encoderResolution
         / 10); // every 100 ms
+
+	// Calculate the change in degrees and add that to the current position
     turningMotor.set(ControlMode.Position, 
-        state.angle.getDegrees() / DriveConstants.Rotation.countToDegrees);
-}
-
-public SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentPos) {
-	double targetAng = desiredState.angle.getDegrees();
-	double currentAng = currentPos.getDegrees();
-
-	// bound to 0 - 360
-	if (targetAng < 0) {
-		targetAng = -targetAng + 180;
-	}
-
-	if (currentAng < 0) {
-		currentAng = -currentAng + 180;
-	}
-
-	double diff = Math.abs(targetAng - currentAng);
-
-	if (diff <= 90) {
-		return desiredState;
-	} else {
-		return new SwerveModuleState(
-			-desiredState.speedMetersPerSecond,
-			desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0))
-		);
-	}
-
+        (currentDeg + Drive.boundDegrees(state.angle.getDegrees() - currentDeg))
+		/ DriveConstants.Rotation.countToDegrees);
 }
 
 public void setCoastMode() {
