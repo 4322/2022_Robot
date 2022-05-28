@@ -53,7 +53,7 @@ public class DrivePolar extends CommandBase {
     double driveRad = Math.toRadians(driveDeg); 
     double x = speed * Math.cos(driveRad);
     double y = speed * Math.sin(driveRad);
-    double headingErrorDeg = rotationDeg - drive.getAngle();
+    double headingErrorDeg = Drive.boundDegrees(rotationDeg - drive.getAngle());
     drive.driveAutoRotate(x, y, headingErrorDeg, DriveConstants.autoRotateToleranceDegrees);
   }
 

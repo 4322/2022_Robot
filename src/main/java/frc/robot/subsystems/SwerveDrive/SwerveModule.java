@@ -3,6 +3,7 @@ package frc.robot.subsystems.SwerveDrive;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Drive;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -133,8 +134,9 @@ public class SwerveModule extends ControlModule {
 		catch (InterruptedException e) {}
 
 		// initialize internal Falcon encoder to absolute wheel position from CANCoder
-		double count = 	(DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber] -
-                     encoder.getAbsolutePosition()) / DriveConstants.Rotation.countToDegrees;
+		double count = 	(encoder.getAbsolutePosition() - 
+                     DriveConstants.Rotation.CANCoderOffsetDegrees[position.wheelNumber]) / 
+                       DriveConstants.Rotation.countToDegrees;
 
 		ErrorCode error = talon.setSelectedSensorPosition(count, 0, Constants.controllerConfigTimeoutMs);
 		if (error != ErrorCode.OK) {
@@ -162,8 +164,8 @@ public class SwerveModule extends ControlModule {
 
 	// returns +/- 180 degrees
 	public double getInternalRotationDegrees(){
-		return getInternalRotationCount() * 
-			   DriveConstants.Rotation.countToDegrees;
+		return Drive.boundDegrees(getInternalRotationCount() * 
+			   DriveConstants.Rotation.countToDegrees);
 	}
 
 	@Override

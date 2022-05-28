@@ -379,8 +379,8 @@ public class Drive extends SubsystemBase {
           latestAcceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
                                                : DriveConstants.Tip.highAccFtPerSec2) &&
           // check if decelerating
-          Math.abs(180 +
-              velocityXY.degrees() - accelerationXY.degrees()) <= DriveConstants.Tip.velAccDiffMaxDeg) {
+          Math.abs(boundDegrees(180 +
+              velocityXY.degrees() - accelerationXY.degrees())) <= DriveConstants.Tip.velAccDiffMaxDeg) {
         rotate = 0; // don't tip over our own wheels while declerating
         tipDecelerateActive = true;
       } else {
@@ -412,7 +412,7 @@ public class Drive extends SubsystemBase {
         if (fieldRelative) {
           steeringChangeDegrees += getAngle();
         }
-        steeringChangeDegrees = Math.abs(steeringChangeDegrees);
+        steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
         maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
       }
 
@@ -599,4 +599,13 @@ public class Drive extends SubsystemBase {
       return time;
     }
   }
+
+	// convert angle to range of +/- 180 degrees
+	public static double boundDegrees(double angleDegrees) {
+		double x = ((angleDegrees + 180) % 360) - 180;
+		if (x < -180) {
+			x += 360;
+		}
+		return x;
+	}
 }
