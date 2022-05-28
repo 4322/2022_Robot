@@ -62,10 +62,10 @@ public class SwerveModule extends ControlModule {
 
 		talon.configAllSettings(config);
 
-        talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
+    talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
 		boolean isRightSide = pos == WheelPosition.FRONT_RIGHT || pos == WheelPosition.BACK_RIGHT;
-        talon.setInverted(isRightSide);
-        talon.setSensorPhase(false);
+    talon.setInverted(!isRightSide);
+    talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(DriveConstants.Drive.voltageCompSaturation);
 		talon.enableVoltageCompensation(DriveConstants.Drive.enableVoltageCompensation);
@@ -88,20 +88,20 @@ public class SwerveModule extends ControlModule {
 
 	private void configRotation(WPI_TalonFX talon) {
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = DriveConstants.Rotation.kP;
-        config.slot0.kD = DriveConstants.Rotation.kD;
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    config.slot0.kP = DriveConstants.Rotation.kP;
+    config.slot0.kD = DriveConstants.Rotation.kD;
 		config.closedloopRamp = DriveConstants.Rotation.configCLosedLoopRamp;
-        config.slot0.allowableClosedloopError = DriveConstants.Rotation.allowableClosedloopError;  
+    config.slot0.allowableClosedloopError = DriveConstants.Rotation.allowableClosedloopError;  
 		config.nominalOutputForward = DriveConstants.Rotation.minPower;
 		config.nominalOutputReverse = -DriveConstants.Rotation.minPower;
 		config.peakOutputForward = DriveConstants.Rotation.maxPower;
 		config.peakOutputReverse = -DriveConstants.Rotation.maxPower;
 
 		talon.configAllSettings(config);	// factory default is the baseline
-        talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
-        talon.setInverted(true);
-        talon.setSensorPhase(false);
+    talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
+    talon.setInverted(true);
+    talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(DriveConstants.Rotation.configVoltageCompSaturation);
 		talon.enableVoltageCompensation(DriveConstants.Rotation.enableVoltageCompensation);

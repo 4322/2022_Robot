@@ -59,8 +59,8 @@ public class Drive extends SubsystemBase {
   private boolean fieldRelative;
   
   private ShuffleboardTab tab;
-  private NetworkTableEntry errorDisplay;
-  private NetworkTableEntry rotSpeedDisplay;
+  private NetworkTableEntry rotErrorTab;
+  private NetworkTableEntry rotSpeedTab;
   private NetworkTableEntry rotkP;
   private NetworkTableEntry rotkD;
   private NetworkTableEntry roll;
@@ -74,6 +74,7 @@ public class Drive extends SubsystemBase {
   private NetworkTableEntry tipBigStickAtiveTab;
   private NetworkTableEntry driveXTab;
   private NetworkTableEntry driveYTab;
+  private NetworkTableEntry rotateTab;
   private NetworkTableEntry displaceXTab;
   private NetworkTableEntry displaceYTab;
 
@@ -125,12 +126,12 @@ public class Drive extends SubsystemBase {
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Drivebase");
 
-        errorDisplay = tab.add("Rot Error", 0)
+        rotErrorTab = tab.add("Rot Error", 0)
             .withPosition(0, 0)
             .withSize(1, 1)
             .getEntry();
 
-        rotSpeedDisplay = tab.add("Rotation Speed", 0)
+        rotSpeedTab = tab.add("Rotation Speed", 0)
             .withPosition(0, 1)
             .withSize(1, 1)
             .getEntry();
@@ -200,6 +201,11 @@ public class Drive extends SubsystemBase {
 
         driveYTab = tab.add("Drive Y", 0)
         .withPosition(1, 2)
+        .withSize(1, 1)
+        .getEntry();
+
+        rotateTab = tab.add("Rotate", 0)
+        .withPosition(1, 3)
         .withSize(1, 1)
         .getEntry();
 
@@ -371,6 +377,7 @@ public class Drive extends SubsystemBase {
         botAccelerationAngle.setDouble(accelerationXY.degrees());
         driveXTab.setDouble(driveX);
         driveYTab.setDouble(driveY);
+        rotateTab.setDouble(rotate);
       }
 
       // anti-tipping logic
@@ -457,7 +464,7 @@ public class Drive extends SubsystemBase {
         if (fieldRelative && Constants.gyroEnabled) {
           robotAngle = gyro.getRotation2d();
         } else {
-          robotAngle = Rotation2d.fromDegrees(robotCentricOffsetDegrees);
+          robotAngle = Rotation2d.fromDegrees(-robotCentricOffsetDegrees);
         }
         // create SwerveModuleStates inversely from the kinematics
         var swerveModuleStates =
@@ -473,30 +480,30 @@ public class Drive extends SubsystemBase {
 
   // Uses a PID Controller to rotate the robot to a certain degree
   // Must be periodically updated to work
-  public void driveAutoRotate(double driveX, double driveY, double error, double toleranceDeg) {
+  public void driveAutoRotate(double driveX, double driveY, double rotateDeg, double toleranceDeg) {
 
     if (Constants.debug) {
       rotPID.setP(rotkP.getDouble(DriveConstants.autoRotkP));
       rotPID.setD(rotkD.getDouble(DriveConstants.autoRotkD));
     }
 
-    double rotPIDSpeed = rotPID.calculate(error, 0);
+    double rotPIDSpeed = rotPID.calculate(0, rotateDeg);
 
-    if (Math.abs(error) <= toleranceDeg) {
+    if (Math.abs(rotateDeg) <= toleranceDeg) {
       rotPIDSpeed = 0;
     } else if (Math.abs(rotPIDSpeed) < DriveConstants.minAutoRotateSpeed) {
       rotPIDSpeed = Math.copySign(DriveConstants.minAutoRotateSpeed, rotPIDSpeed);
-    } else if (rotPIDSpeed > DriveConstants.autoRotationMaxSpeed) {
-      rotPIDSpeed = DriveConstants.autoRotationMaxSpeed;
-    } else if (rotPIDSpeed < -DriveConstants.autoRotationMaxSpeed) {
-      rotPIDSpeed = -DriveConstants.autoRotationMaxSpeed;
+    } else if (rotPIDSpeed > DriveConstants.maxAutoRotateSpeed) {
+      rotPIDSpeed = DriveConstants.maxAutoRotateSpeed;
+    } else if (rotPIDSpeed < -DriveConstants.maxAutoRotateSpeed) {
+      rotPIDSpeed = -DriveConstants.maxAutoRotateSpeed;
     }
 
     drive(driveX, driveY, rotPIDSpeed);
 
     if (Constants.debug) {
-      errorDisplay.setDouble(error);
-      rotSpeedDisplay.setDouble(rotPIDSpeed);
+      rotErrorTab.setDouble(rotateDeg);
+      rotSpeedTab.setDouble(rotPIDSpeed);
     }
   }
 
