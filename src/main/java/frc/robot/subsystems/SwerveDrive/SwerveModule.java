@@ -196,11 +196,11 @@ public void setDesiredState(SwerveModuleState desiredState) {
     SwerveModuleState state =
         SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(currentDeg));
 
-    driveMotor.set(ControlMode.Velocity, 
-        state.speedMetersPerSecond / 
-        (DriveConstants.Drive.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
-        * DriveConstants.Drive.gearRatio * DriveConstants.encoderResolution
-        / 10); // every 100 ms
+    // driveMotor.set(ControlMode.Velocity, 
+    //     state.speedMetersPerSecond / 
+    //     (DriveConstants.Drive.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
+    //     * DriveConstants.Drive.gearRatio * DriveConstants.encoderResolution
+    //     / 10); // every 100 ms
 
 	// Calculate the change in degrees and add that to the current position
     turningMotor.set(ControlMode.Position, 
@@ -219,7 +219,16 @@ public void setBrakeMode() {
 }
 
 public void stop() {
-	driveMotor.stopMotor();
+	// driveMotor.stopMotor();
 	turningMotor.stopMotor();
+}
+
+public WPI_TalonFX getDrive() {
+	return driveMotor;
+}
+
+public void follow(WPI_TalonFX toFollow, String errorMessage) {
+	driveMotor.follow(toFollow);
+	DriverStation.reportError(errorMessage, false);
 }
 }
