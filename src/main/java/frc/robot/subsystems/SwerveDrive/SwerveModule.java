@@ -7,6 +7,7 @@ import frc.robot.subsystems.Drive;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -64,7 +65,9 @@ public class SwerveModule extends ControlModule {
 
     talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
 		boolean isRightSide = pos == WheelPosition.FRONT_RIGHT || pos == WheelPosition.BACK_RIGHT;
-    talon.setInverted(!isRightSide);
+    if (!isRightSide) {
+		talon.setInverted(InvertType.FollowMaster);
+	}
     talon.setSensorPhase(false);
 		
 		talon.configVoltageCompSaturation(DriveConstants.Drive.voltageCompSaturation);
