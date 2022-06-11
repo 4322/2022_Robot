@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
 import frc.robot.subsystems.SwerveDrive.SwerveModule;
@@ -134,6 +136,11 @@ public class Drive extends SubsystemBase {
           swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getDrive(),
           "Back Right Following"
         );
+
+        // need rapid applied output from master for the followers
+        swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getDrive()
+          .setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+            RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       }
 
       if (Constants.debug) {
