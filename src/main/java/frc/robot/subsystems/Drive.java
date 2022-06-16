@@ -419,7 +419,7 @@ public class Drive extends SubsystemBase {
       for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
         double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
         if (fieldRelative) {
-          steeringChangeDegrees += getAngle();
+          steeringChangeDegrees -= getAngle();
         }
         steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
         maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
