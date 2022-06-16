@@ -187,10 +187,10 @@ public class SwerveModule extends ControlModule {
     return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), 
         Rotation2d.fromDegrees(
             turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees));
-}
+  }
 
-public void setDesiredState(SwerveModuleState desiredState) {
-	double currentDeg = turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees;
+  public void setDesiredState(SwerveModuleState desiredState) {
+    double currentDeg = turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees;
 
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
@@ -206,20 +206,20 @@ public void setDesiredState(SwerveModuleState desiredState) {
     turningMotor.set(ControlMode.Position, 
         (currentDeg + Drive.boundDegrees(state.angle.getDegrees() - currentDeg))
 		/ DriveConstants.Rotation.countToDegrees);
-}
+  }
 
-public void setCoastMode() {
-	driveMotor.setNeutralMode(NeutralMode.Coast);
-	turningMotor.setNeutralMode(NeutralMode.Coast);
-}
+  public void setCoastMode() {
+    driveMotor.setNeutralMode(NeutralMode.Coast);
+    turningMotor.setNeutralMode(NeutralMode.Coast);
+  }
 
-public void setBrakeMode() {
-	driveMotor.setNeutralMode(NeutralMode.Brake);
-	turningMotor.setNeutralMode(NeutralMode.Brake);
-}
+  public void setBrakeMode() {
+    driveMotor.setNeutralMode(NeutralMode.Brake);
+    turningMotor.setNeutralMode(NeutralMode.Brake);
+  }
 
-public void stop() {
-	driveMotor.stopMotor();
-	turningMotor.stopMotor();
-}
+  public void stop() {
+    driveMotor.stopMotor();
+    turningMotor.stopMotor();
+  }
 }
