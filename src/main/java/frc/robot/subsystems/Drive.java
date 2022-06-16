@@ -303,6 +303,8 @@ public class Drive extends SubsystemBase {
       for (SwerveModule module : swerveModules) {
         module.snapshotAcceleration();
       }
+
+      updateOdometry();
     }
 
     // turn off limelight LEDs following power-up because the limelight takes longer
@@ -517,8 +519,9 @@ public class Drive extends SubsystemBase {
     if (Constants.gyroEnabled) {
         odometry.update(
             gyro.getRotation2d(),
-            swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].getState(),
+            // wheel locations must be in the same order as the WheelPosition enum values
             swerveModules[WheelPosition.FRONT_RIGHT.wheelNumber].getState(),
+            swerveModules[WheelPosition.FRONT_LEFT.wheelNumber].getState(),
             swerveModules[WheelPosition.BACK_LEFT.wheelNumber].getState(),
             swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].getState()
             );
