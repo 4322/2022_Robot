@@ -66,7 +66,7 @@ public class SwerveModule extends ControlModule {
     talon.setNeutralMode(NeutralMode.Coast); //Allow robot to be moved prior to enabling
 		boolean isRightSide = pos == WheelPosition.FRONT_RIGHT || pos == WheelPosition.BACK_RIGHT;
     if (!isRightSide) {
-		talon.setInverted(InvertType.FollowMaster);
+		talon.setInverted(InvertType.OpposeMaster);
 	}
     talon.setSensorPhase(false);
 		
@@ -196,8 +196,8 @@ public void setDesiredState(SwerveModuleState desiredState) {
 	double currentDeg = turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees;
 
     // Optimize the reference state to avoid spinning further than 90 degrees
-    SwerveModuleState state =
-        SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(currentDeg));
+    // SwerveModuleState state =
+    //     SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(currentDeg));
 
     // driveMotor.set(ControlMode.Velocity, 
     //     state.speedMetersPerSecond / 
@@ -207,7 +207,7 @@ public void setDesiredState(SwerveModuleState desiredState) {
 
 	// Calculate the change in degrees and add that to the current position
     turningMotor.set(ControlMode.Position, 
-        (currentDeg + Drive.boundDegrees(state.angle.getDegrees() - currentDeg))
+        (currentDeg + Drive.boundDegrees(desiredState.angle.getDegrees() - currentDeg))
 		/ DriveConstants.Rotation.countToDegrees);
 }
 
