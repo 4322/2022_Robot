@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.FiringSolution.FiringSolution;
 import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
 
@@ -149,6 +152,9 @@ public final class Constants {
       public static final double normalRotationScaleFactor = 0.6;
 
       public static final double disableBreakSec = 2.0;  // don't immediately coast after disabling
+
+      // 1 degree
+      public static final Pose2d poseError = new Pose2d(new Translation2d(0.1, 0.1), new Rotation2d(0.0174533));
 
       // thresholds at which to engage anti-tipping logic
       public final static class Tip {

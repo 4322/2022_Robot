@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -53,6 +55,8 @@ public class Drive extends SubsystemBase {
         new SwerveDriveKinematics(
             // wheel locations must be in the same order as the WheelPosition enum values
             frontRightLocation, frontLeftLocation, backLeftLocation, backRightLocation);
+
+  private RamseteController ram = new RamseteController();
             
   private SwerveDriveOdometry odometry;
   private double robotCentricOffsetDegrees;
@@ -122,6 +126,8 @@ public class Drive extends SubsystemBase {
           module.init();
         }
       }
+
+      ram.setTolerance(DriveConstants.poseError);
 
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Drivebase");
@@ -480,6 +486,19 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  // Drive using State object
+  public void drive(State trajectoryState) {
+    var swerveModuleStates = kinematics.toSwerveModuleStates(ram.calculate(odometry.getPoseMeters(), trajectoryState));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
+    for (int i = 0; i < swerveModules.length; i++) {
+      swerveModules[i].setDesiredState(swerveModuleStates[i]);
+    }
+  }
+
+  public boolean isAtTarget() {
+    return ram.atReference();
+  }
+
   // Uses a PID Controller to rotate the robot to a certain degree
   // Must be periodically updated to work
   public void driveAutoRotate(double driveX, double driveY, double rotateDeg, double toleranceDeg) {
@@ -526,7 +545,7 @@ public class Drive extends SubsystemBase {
             swerveModules[WheelPosition.BACK_RIGHT.wheelNumber].getState()
             );
         }
-    }    
+    }
 
   	public void setToFieldCentric(){
       fieldRelative = true;
