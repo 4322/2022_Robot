@@ -1,0 +1,181 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.ClimberConstants;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Climber extends SubsystemBase {
+
+  private CANSparkMax climberLeft;
+  private CANSparkMax climberRight;
+
+  private double target;
+
+  private RelativeEncoder climberEncoder;
+  private SparkMaxPIDController climberPID;
+
+  // to be enabled if debug mode is on
+  private ShuffleboardTab tab;
+  
+  private NetworkTableEntry power;
+  private NetworkTableEntry currentRPM;
+  private NetworkTableEntry targetRPM;
+  private NetworkTableEntry override;
+
+  private Timer modeTimer = new Timer();
+
+  public Climber() {
+    if (Constants.climberEnabled) {
+      climberLeft = new CANSparkMax(ClimberConstants.climberLeftID, MotorType.kBrushless);
+      climberRight = new CANSparkMax(ClimberConstants.climberRightID, MotorType.kBrushless);
+
+      modeTimer.start();
+
+      // increase status reporting periods to reduce CAN bus utilization
+      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextShuffleboardStatusPeriodMs());  
+      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextFastStatusPeriodMs());  // to detect when we can shoot
+      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
+      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
+        RobotContainer.nextSlowStatusPeriodMs());
+      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());
+      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
+        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
+    }
+  }
+
+  public void init() {
+    if (Constants.climberEnabled) {
+      climberLeft.restoreFactoryDefaults();
+      climberLeft.setInverted(false);
+      climberRight.restoreFactoryDefaults();
+      climberRight.follow(climberLeft, true);
+      climberLeft.setIdleMode(IdleMode.kCoast);
+      climberRight.setIdleMode(IdleMode.kCoast);
+      climberLeft.setClosedLoopRampRate(ClimberConstants.rampRate);  // don't eject the shooter
+      climberLeft.setOpenLoopRampRate(ClimberConstants.rampRate);    // for PID tuning
+      climberLeft.enableVoltageCompensation(ClimberConstants.voltageCompSaturation);
+
+      climberEncoder = climberLeft.getEncoder();
+      climberPID = climberLeft.getPIDController();
+
+      climberPID.setP(ClimberConstants.kP);
+      climberPID.setI(ClimberConstants.kI);
+      climberPID.setD(ClimberConstants.kD);
+      climberPID.setIZone(ClimberConstants.kIz);
+      climberPID.setFF(ClimberConstants.kFF);
+      climberPID.setOutputRange(ClimberConstants.kMinRange, ClimberConstants.kMaxRange);
+
+      climberLeft.burnFlash();
+      climberRight.burnFlash();
+
+      // DEBUG
+      if (Constants.debug) {
+        tab = Shuffleboard.getTab("Climber");
+      
+        power =
+          tab.add("Power", 0)
+          .withPosition(0,0)
+          .withSize(1,1)
+          .getEntry();
+
+        currentRPM =
+          tab.add("Current RPM", 0)
+          .withPosition(1,0)
+          .withSize(1,1)
+          .getEntry();
+
+        targetRPM =
+          tab.add("Target RPM", 0)
+          .withPosition(2,0)
+          .withSize(1,1)
+          .getEntry();
+
+        override = 
+          tab.add("Override", false)
+          .withWidget(BuiltInWidgets.kToggleButton)
+          .withPosition(0,1)
+          .withSize(1,1)
+          .getEntry();
+      }
+    }
+  }
+
+  // no need for shooting state as in Kicker because the conveyor 
+  // isn't needed once cargo enters the shooter
+  public enum ClimberMode {
+    stopped(0),
+    started(1),
+    atSpeed(2),
+    stableAtSpeed(3),
+    stopping(4);
+
+    private int value;
+
+    ClimberMode(int value) {
+      this.value = value;
+    }
+
+    public int get() {
+      return value;
+    }
+  }
+
+  private ClimberMode climberMode = ClimberMode.stopped;
+
+  @Override
+  public void periodic() {
+
+  }
+
+
+  public double getSpeed() {
+    if (Constants.climberEnabled) {
+      return climberEncoder.getVelocity();
+    } else {
+      return -1;
+    }
+  }
+
+  // don't let balls get stuck in the shooter
+  public boolean isAtSpeed() {
+    return climberMode == ClimberMode.stableAtSpeed;
+  }
+
+  public boolean isRunning() {
+    return (climberMode != ClimberMode.stopped) && (climberMode != ClimberMode.stopping);
+  }
+  
+  public void stop() {
+    climberMode = ClimberMode.stopping;
+  }
+
+  public void spinForward(){
+    climberLeft.set(ClimberConstants.speed);
+  }
+  
+  public void spinBackward(){
+    climberLeft.set(-ClimberConstants.speed);
+  }
+}

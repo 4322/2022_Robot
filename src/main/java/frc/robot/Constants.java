@@ -244,6 +244,8 @@ public final class Constants {
       public static final double resetSettingDelta = 100;
   }
 
+
+
   public static final class KickerConstants {
       public static final int kickerID = 16;
       public static final double voltageCompSaturation = 11.0;
@@ -326,5 +328,29 @@ public final class Constants {
       public static final double limelightAngle = 33;
       public static final double targetHeight = 103;
       public static final double limelightHeight = 38;
+  }
+
+  public static final class ClimberConstants {
+
+    public static final boolean climberEnabled = true;
+
+    public static final int climberLeftID = 20;
+    public static final int climberRightID = 21;
+    public static final double voltageCompSaturation = 11.0;
+
+    public static final double kP = .00025;
+    public static final double kI = 0.000001;
+    public static final double kD = 0.008;
+    public static final double kIz = 200;
+    public static final double kFF = 0.000205;
+    public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
+    public static final double kMaxRange = 1.0;
+    public static final double rampRate = 0.6;  // seconds to go from stopped to full power
+    public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
+    public static final double minVelErrorLime = 35;
+    public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
+    public static final double speedSettlingLimeSec = 0.1;
+    public static final double resetSettingDelta = 100;
+    public static final double speed = 0.6;
   }
 }
