@@ -6,8 +6,17 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -248,238 +257,24 @@ public class RobotContainer {
       return null;
     }
 
-    final double maxDriveSpeed = 1.0;
-    final double tightTurnDriveSpeed = 0.6;
-    final double spinUpMediumSec = 0.6;
-    final double shootOneCargoSec = 2.0;  // must already be spun-up
-    final double shootTwoCargoSec = 4.0;  // must already be spun-up
-    final double intakeAfterArrivalSec = 0.1;  // time to pull cargo in securely
-    final double intakeAfterArrivalNoTipSec = 0.3;  // delay for no tipping logic to activate
-    final double slowApproachSpeed = 0.3;  // intake without slamming into the side rail / terminal
-    final double slowApproachSec = 0.2;  // duration of slow approach
-    final double rotateToShootStaticSec = 0.8;
-    final double rotateToShootLimelightSec = 0.8;  // already pre-rotated
-    final double oneCargoDriveBackSec = 1.0;
-
-    final double ballTwoLeftAutoDriveSec = 1.5;
-    final double ballTwoLeftAutoDriveDeg = -168;
-    //final double ballTwoLeftAutoApproachDeg = -180;
-    final double ballTwoLeftAutoShootDeg = 23;
-
-    final double disposalLeft1DriveSec = 1.0;
-    final double disposalLeft1DriveDeg = -55.0;
-
-    final double disposalRightDriveSec = 1.0;
-    final double disposalRightDriveDeg = 110;
-    final double disposalLeft2DriveSec = 1.4;
-    final double disposalLeft2DriveDeg = -70.0;
-
-    final double disposalShootDeg = 175.0;
-
-    final double disposalEndDriveSec = 1.2;
-    final double disposalEndDriveDeg = 0;
-    final double disposalEndRotateDeg = 0;
-    final double disposalShootingSec = 2.5;
-
-    final double ballTwoRightAutoDriveSec = 1.2;
-    final double ballTwoRightAutoDriveDeg = 60.5;
-    final double ballTwoRightAutoApproachDeg = 90;
-    final double ballTwoRightSlowApproachSec = 0.07;
-
-    final double ballThreeDriveSec = 1.9;
-    final double ballThreeDriveDeg = -151;
-    final double ballThreeShootDeg = -31;
-
-    final double ballFourDriveSec = 1.5;
-    final double ballFourDriveDeg = 170;
-    final double ballFourApproachDeg = 135;
+    TrajectoryConfig config = new TrajectoryConfig(
+      DriveConstants.autoMaxSpeedMetersPerSecond,
+      DriveConstants.autoMaxAccelerationMetersPerSecond)
+      .setKinematics(drive.getKinematics());
     
-    final double ballFiveDriveSec = 0.4;
-    final double ballFiveDriveDeg = -45;
-    final double ballFiveWaitSec = 1.0;  // time for human player to roll ball into intake
-    final double ballFiveShootApproachSec = 1.0;
-    final double ballFiveShootDeg = -30;
+    Trajectory exampleTrajectory =
+      TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          new Pose2d(0, 0, new Rotation2d(0)),
+          // Pass through these two interior waypoints, making an 's' curve path
+          List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+          // End 3 meters straight ahead of where we started, facing forward
+          new Pose2d(3, 0, new Rotation2d(0)),
+          // Pass config
+          config);
+    
+    return new DriveTrajectory(drive, exampleTrajectory, true);
 
-    // Start of 1 or 2 ball auto
-    SequentialCommandGroup leftAuto = 
-      new SequentialCommandGroup(
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodResetAuto(hood)
-            .raceWith(new IntakeIn(intake, conveyor)),
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
-            // doesn't hurt in 1 ball mode
-            .alongWith(new DrivePreTurnWheels(drive, ballTwoLeftAutoDriveDeg))
-      );
-
-    // Start of 3 or 5 ball auto
-    SequentialCommandGroup rightAuto = 
-      new SequentialCommandGroup(
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodResetAuto(hood)
-            .raceWith(new IntakeIn(intake, conveyor)),
-        new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
-            .alongWith(new DrivePreTurnWheels(drive, ballTwoRightAutoDriveDeg)),
-        new FireStop(kicker, conveyor, shooter, hood),
-        new ParallelRaceGroup(
-          new IntakeIn(intake, conveyor),
-          new SequentialCommandGroup(
-            new DrivePolar(drive, ballTwoRightAutoDriveDeg, tightTurnDriveSpeed, 
-                           ballTwoRightAutoApproachDeg - 90, ballTwoRightAutoDriveSec),
-            new DrivePolar(drive, ballTwoRightAutoApproachDeg, slowApproachSpeed, 
-                           ballTwoRightAutoApproachDeg - 90, ballTwoRightSlowApproachSec),
-            new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-            new DrivePreTurnWheels(drive, ballThreeDriveDeg),
-            new DrivePolar(drive, ballThreeDriveDeg, tightTurnDriveSpeed, 
-                           ballThreeDriveDeg + 90, ballThreeDriveSec),
-            new WaitCommand(intakeAfterArrivalNoTipSec)
-          )
-        )
-      );
-
-    // Reset pose after opposing alliance cargo disposal
-    SequentialCommandGroup endDisposal = 
-      new SequentialCommandGroup(
-        new FirePreset(kicker, conveyor, shooter, hood, disposalShootingSec),
-        new FireStop(kicker, conveyor, shooter, hood),
-        new DrivePolar(drive, disposalEndDriveDeg, 0, 
-                       disposalEndRotateDeg, disposalEndDriveSec)
-      );
-
-    switch(autoModeChooser.getSelected()) {
-
-      case 1:
-        leftAuto.addCommands(
-          new FireStop(kicker, conveyor, shooter, hood),
-          new DriveRobotCentric(drive, 0, 0.7, 0, oneCargoDriveBackSec)
-        );
-        return leftAuto;
-
-      case 2:
-        leftAuto.addCommands(
-          new ParallelRaceGroup(
-            new IntakeIn(intake, conveyor),
-            new SequentialCommandGroup(
-              new DrivePolar(drive, ballTwoLeftAutoDriveDeg, tightTurnDriveSpeed, 
-                            ballTwoLeftAutoDriveDeg + 90, ballTwoLeftAutoDriveSec),
-              //new DrivePolar(drive, ballTwoLeftAutoApproachDeg, slowApproachSpeed, 
-              //              ballTwoLeftAutoApproachDeg - 90, slowApproachSec),
-              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new WaitCommand(intakeAfterArrivalSec)
-            )
-          )
-        );
-        switch (autoSubModeChooser.getSelected()) {
-          case 0:
-            leftAuto.addCommands(
-              new InstantCommand(limelight::enableLed),
-              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new DrivePolar(drive, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
-                  .raceWith(new IntakeIn(intake, conveyor)),
-              new RotToTarget(drive, limelight, rotateToShootLimelightSec),
-              new CalcFiringSolution(kicker, shooter, hood, limelight),
-              new InstantCommand(limelight::disableLed),
-              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new FireStop(kicker, conveyor, shooter, hood)
-            );
-            break;
-          case 1:
-            leftAuto.addCommands(
-              new InstantCommand(limelight::enableLed),
-              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new DrivePolar(drive, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
-                  .raceWith(new IntakeIn(intake, conveyor)),
-              new RotToTarget(drive, limelight, rotateToShootLimelightSec),
-              new CalcFiringSolution(kicker, shooter, hood, limelight),
-              new InstantCommand(limelight::disableLed),
-              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new FireStop(kicker, conveyor, shooter, hood),
-              new DrivePreTurnWheels(drive, disposalLeft1DriveDeg),
-              new ParallelRaceGroup(
-                new IntakeIn(intake, conveyor),
-                new SequentialCommandGroup(
-                  new DrivePolar(drive, disposalLeft1DriveDeg, maxDriveSpeed, 
-                                 disposalLeft1DriveDeg + 90, disposalLeft1DriveSec),
-                  new WaitCommand(intakeAfterArrivalSec),
-                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.disposal),
-                  new DrivePolar(drive, 0, 0, disposalShootDeg, rotateToShootStaticSec)
-                )
-              ),
-              endDisposal
-            );
-            break;
-          case 2:
-            leftAuto.addCommands(
-              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-              new DrivePolar(drive, 0, 0, ballTwoLeftAutoShootDeg, rotateToShootStaticSec)
-                  .raceWith(new IntakeIn(intake, conveyor)),
-              new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
-              new FireStop(kicker, conveyor, shooter, hood),
-              new DrivePreTurnWheels(drive, disposalRightDriveDeg),
-              new ParallelRaceGroup(
-                new IntakeIn(intake, conveyor),
-                new SequentialCommandGroup(
-                  new DrivePolar(drive, disposalRightDriveDeg, maxDriveSpeed, 
-                                disposalRightDriveDeg - 90, disposalRightDriveSec),
-                  new WaitCommand(intakeAfterArrivalSec),
-                  new DrivePreTurnWheels(drive, disposalLeft2DriveDeg),
-                  new DrivePolar(drive, disposalLeft2DriveDeg, maxDriveSpeed, 
-                                disposalLeft2DriveDeg - 90, disposalLeft2DriveSec),
-                  new WaitCommand(intakeAfterArrivalSec),
-                  new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.disposal),
-                  new DrivePolar(drive, 0, 0, disposalShootDeg, rotateToShootStaticSec)
-                )
-              ),
-              endDisposal
-            );
-            break;
-        }
-        return leftAuto;
-
-      case 3:
-        rightAuto.addCommands(
-          new InstantCommand(limelight::enableLed),
-          new DrivePolar(drive, 0, 0, ballThreeShootDeg, rotateToShootStaticSec)
-              .raceWith(new IntakeIn(intake, conveyor)),
-          new RotToTarget(drive, limelight, rotateToShootLimelightSec),
-          new CalcFiringSolution(kicker, shooter, hood, limelight),
-          new InstantCommand(limelight::disableLed),
-          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new FireStop(kicker, conveyor, shooter, hood)
-        );
-        return rightAuto;
-
-      case 5:
-        rightAuto.addCommands(
-          new DrivePolar(drive, 0, 0, ballThreeShootDeg, rotateToShootStaticSec)
-              .raceWith(new IntakeIn(intake, conveyor)),
-          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new FireStop(kicker, conveyor, shooter, hood),
-          new ParallelRaceGroup(
-            new IntakeIn(intake, conveyor),
-            new SequentialCommandGroup(
-              new DrivePolar(drive, ballFourDriveDeg, maxDriveSpeed, 
-                             ballFourApproachDeg - 90, ballFourDriveSec),
-              new DrivePolar(drive, ballFourApproachDeg, slowApproachSpeed, 
-                             ballFourApproachDeg - 90, slowApproachSec),
-              new DrivePolar(drive, ballFiveDriveDeg, maxDriveSpeed, ballFiveDriveDeg + 90, ballFiveDriveSec),
-              new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.autoBall5),
-              new DrivePolar(drive, 0, 0, ballFiveDriveDeg + 90, ballFiveWaitSec)
-            )
-          ),
-          new DrivePolar(drive, ballFiveShootDeg, maxDriveSpeed, 
-                         ballFiveShootDeg, ballFiveShootApproachSec),
-          new InstantCommand(limelight::enableLed),
-          new RotToTarget(drive, limelight, rotateToShootLimelightSec),
-          new CalcFiringSolution(kicker, shooter, hood, limelight),
-          new InstantCommand(limelight::disableLed),
-          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-          new FireStop(kicker, conveyor, shooter, hood)
-        );
-        return rightAuto;
-    }
-    return null;
   }
 
   public void hoodReset() {

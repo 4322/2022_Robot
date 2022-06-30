@@ -129,6 +129,9 @@ public final class Constants {
       public static final double maxSpeedMetersPerSecond = 3.6576;
       public static final double maxRotationSpeedRadSecond = 12.2718;
 
+      public static final double autoMaxSpeedMetersPerSecond = 2;
+      public static final double autoMaxAccelerationMetersPerSecond = 1;
+
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
       public static final double manualRotateToleranceDegrees = 1.5;

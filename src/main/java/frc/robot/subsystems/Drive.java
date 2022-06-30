@@ -583,6 +583,11 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  //TODO: do this in a way that doesnt break encapsulation
+  public SwerveDriveKinematics getKinematics() {
+    return kinematics;
+  }
+
   public class VectorXY extends Vector2d {
 
     public VectorXY() {
