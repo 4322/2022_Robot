@@ -8,6 +8,8 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -24,8 +26,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
 
-  private CANSparkMax climberLeft;
-  private CANSparkMax climberRight;
+  private WPI_TalonFX climberLeft;
+  private WPI_TalonFX climberRight;
 
   private double target;
 
@@ -44,26 +46,14 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
     if (Constants.climberEnabled) {
-      climberLeft = new CANSparkMax(ClimberConstants.climberLeftID, MotorType.kBrushless);
-      climberRight = new CANSparkMax(ClimberConstants.climberRightID, MotorType.kBrushless);
-
-      modeTimer.start();
-
-      // increase status reporting periods to reduce CAN bus utilization
-      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
-        RobotContainer.nextShuffleboardStatusPeriodMs());  
-      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextFastStatusPeriodMs());  // to detect when we can shoot
-      climberLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
-      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
-        RobotContainer.nextSlowStatusPeriodMs());
-      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 
-        RobotContainer.nextVerySlowStatusPeriodSparkMs());
-      climberRight.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 
-        RobotContainer.nextVerySlowStatusPeriodSparkMs());  
+      climberLeft = new WPI_TalonFX(ClimberConstants.climberLeftID);
+      climberRight = new WPI_TalonFX(ClimberConstants.climberRightID);
+      RobotContainer.staggerTalonStatusFrames(climberLeft);
+      RobotContainer.staggerTalonStatusFrames(climberRight);
     }
-  }
+      modeTimer.start();
+ 
+    }
 
   public void init() {
     if (Constants.climberEnabled) {
@@ -146,7 +136,6 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-
   }
 
 
