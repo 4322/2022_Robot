@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -57,14 +58,14 @@ public class Climber extends SubsystemBase {
 
   public void init() {
     if (Constants.climberEnabled) {
-      climberLeft.restoreFactoryDefaults();
+      climberLeft.configFactoryDefault();
       climberLeft.setInverted(false);
-      climberRight.restoreFactoryDefaults();
-      climberRight.follow(climberLeft, true);
-      climberLeft.setIdleMode(IdleMode.kCoast);
-      climberRight.setIdleMode(IdleMode.kCoast);
-      climberLeft.setClosedLoopRampRate(ClimberConstants.rampRate);  // don't eject the shooter
-      climberLeft.setOpenLoopRampRate(ClimberConstants.rampRate);    // for PID tuning
+      climberRight.configFactoryDefault();
+      climberRight.follow(climberLeft);
+      climberLeft.setNeutralMode(NeutralMode.Coast);
+      climberRight.setNeutralMode(NeutralMode.Coast);
+      climberLeft.configClosedloopRamp(ClimberConstants.rampRate);  // don't eject the shooter
+      climberLeft.configOpenloopRamp(ClimberConstants.rampRate);    // for PID tuning
       climberLeft.enableVoltageCompensation(ClimberConstants.voltageCompSaturation);
 
       climberEncoder = climberLeft.getEncoder();
@@ -160,11 +161,6 @@ public class Climber extends SubsystemBase {
     climberMode = ClimberMode.stopping;
   }
 
-  public void spinForward(){
-    climberLeft.set(ClimberConstants.speed);
+  private double getPosition() {
+    return climberLeft.getSelectedSensorPosition(0);
   }
-  
-  public void spinBackward(){
-    climberLeft.set(-ClimberConstants.speed);
-  }
-}
