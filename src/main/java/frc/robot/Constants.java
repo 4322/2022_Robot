@@ -336,7 +336,18 @@ public final class Constants {
 
     public static final int climberLeftID = 20;
     public static final int climberRightID = 21;
-    public static final double voltageCompSaturation = 11.0;
+    public static final double configVoltageCompSaturation = 11.5;
+    public static final boolean enableVoltageCompensation = true;
+
+    public static final boolean statorEnabled = true;
+    public static final double statorLimit = 0;
+    public static final double statorThreshold = 0;
+    public static final double statorTime = 0;
+
+    public static final boolean supplyEnabled = true;
+    public static final double supplyLimit = 0;
+    public static final double supplyThreshold = 0;
+    public static final double supplyTime = 0;
 
     public static final double kP = .00025;
     public static final double kI = 0.000001;
@@ -346,11 +357,5 @@ public final class Constants {
     public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
     public static final double kMaxRange = 1.0;
     public static final double rampRate = 0.6;  // seconds to go from stopped to full power
-    public static final double minVelErrorPreset = 35; // allowable error to shoot (in rpm)
-    public static final double minVelErrorLime = 35;
-    public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
-    public static final double speedSettlingLimeSec = 0.1;
-    public static final double resetSettingDelta = 100;
-    public static final double speed = 0.6;
   }
 }
