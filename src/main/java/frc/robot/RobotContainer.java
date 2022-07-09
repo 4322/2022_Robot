@@ -68,6 +68,7 @@ public class RobotContainer {
   private final Intake intake = Intake.getSingleton();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = Conveyor.getSingleton();
+  private final Climber climber = new Climber();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
@@ -95,6 +96,7 @@ public class RobotContainer {
     intake.init();
     hood.init();
     conveyor.init();
+    climber.init();
 
     // Configure the button bindings
     configureButtonBindings();

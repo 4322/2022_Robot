@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -48,16 +49,16 @@ public class Climber extends SubsystemBase {
       config.peakOutputForward = ClimberConstants.kMaxRange;
       config.peakOutputReverse = -ClimberConstants.kMaxRange;
       climberLeft.configAllSettings(config);
+      climberLeft.configClosedloopRamp(ClimberConstants.rampRate);  
+      climberLeft.configOpenloopRamp(ClimberConstants.rampRate);    // for PID tuning
       configCurrentLimit(climberLeft);
-      climberLeft.setInverted(false);
       configCurrentLimit(climberRight);
       climberRight.follow(climberLeft);
+      climberLeft.setInverted(false);
+      climberRight.setInverted(true);
       climberLeft.setNeutralMode(NeutralMode.Coast);
       climberRight.setNeutralMode(NeutralMode.Coast);
-      climberLeft.configClosedloopRamp(ClimberConstants.rampRate);  // don't eject the shooter 
-      climberLeft.configOpenloopRamp(ClimberConstants.rampRate);    // for PID tuning
-      climberLeft.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
-		  climberLeft.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
+
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Climber");
         positionDisplay = tab.add("Position", 0)
@@ -69,24 +70,14 @@ public class Climber extends SubsystemBase {
   }
 
       private void configCurrentLimit(WPI_TalonFX talon) {
-      
-      climberLeft.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+      talon.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
+      talon.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
+      talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
 			  ClimberConstants.statorEnabled, 
 			  ClimberConstants.statorLimit, 
 			  ClimberConstants.statorThreshold, 
 			  ClimberConstants.statorTime));
-		  climberLeft.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-			  ClimberConstants.supplyEnabled, 
-			  ClimberConstants.supplyLimit, 
-			  ClimberConstants.supplyThreshold, 
-			  ClimberConstants.supplyTime));
-
-      climberRight.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			  ClimberConstants.statorEnabled, 
-			  ClimberConstants.statorLimit, 
-			  ClimberConstants.statorThreshold, 
-			  ClimberConstants.statorTime));
-		  climberRight.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+		  talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
 			  ClimberConstants.supplyEnabled, 
 			  ClimberConstants.supplyLimit, 
 			  ClimberConstants.supplyThreshold, 
@@ -140,6 +131,17 @@ public class Climber extends SubsystemBase {
   }
 
   private double getPosition() {
-    return climberLeft.getSelectedSensorPosition(0);
+    if (Constants.climberEnabled) {
+      return climberLeft.getSelectedSensorPosition(0);
+    } else {
+      return -1;
+    }
+  }
+
+  
+  private void moveToPosition(double pos) {
+    if (Constants.climberEnabled){
+      climberLeft.set(ControlMode.Position, pos);
+    }
   }
 }
