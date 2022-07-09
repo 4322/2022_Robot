@@ -11,15 +11,10 @@ import frc.robot.Constants.ClimberConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,18 +23,11 @@ public class Climber extends SubsystemBase {
 
   private WPI_TalonFX climberLeft;
   private WPI_TalonFX climberRight;
-
-  private double target;
-
+  
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
+  private NetworkTableEntry positionDisplay;
   
-  private NetworkTableEntry power;
-  private NetworkTableEntry currentRPM;
-  private NetworkTableEntry targetRPM;
-  private NetworkTableEntry override;
-
-  private Timer modeTimer = new Timer();
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -48,16 +36,21 @@ public class Climber extends SubsystemBase {
       RobotContainer.staggerTalonStatusFrames(climberLeft);
       RobotContainer.staggerTalonStatusFrames(climberRight);
     }
-      modeTimer.start();
- 
-    }
+  }
 
   public void init() {
     if (Constants.climberEnabled) {
-      TalonFXConfiguration config = new TalonFXConfiguration();
+      TalonFXConfiguration config = new TalonFXConfiguration();    
+      config.slot0.kP = ClimberConstants.kP;
+      config.slot0.kD = ClimberConstants.kD;
+      config.nominalOutputForward = ClimberConstants.kMinRange;
+      config.nominalOutputReverse = -ClimberConstants.kMinRange;
+      config.peakOutputForward = ClimberConstants.kMaxRange;
+      config.peakOutputReverse = -ClimberConstants.kMaxRange;
       climberLeft.configAllSettings(config);
+      configCurrentLimit(climberLeft);
       climberLeft.setInverted(false);
-      climberRight.configAllSettings(config);
+      configCurrentLimit(climberRight);
       climberRight.follow(climberLeft);
       climberLeft.setNeutralMode(NeutralMode.Coast);
       climberRight.setNeutralMode(NeutralMode.Coast);
@@ -65,19 +58,18 @@ public class Climber extends SubsystemBase {
       climberLeft.configOpenloopRamp(ClimberConstants.rampRate);    // for PID tuning
       climberLeft.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
 		  climberLeft.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
-
-
-      private void configRotation(WPI_TalonFX talon) {
-
-        TalonFXConfiguration configClimber = new TalonFXConfiguration();    
-        config.slot0.kP = ClimberConstants.kP;
-        config.slot0.kD = ClimberConstants.kD;
-        config.nominalOutputForward = ClimberConstants.kMinRange;
-		    config.nominalOutputReverse = -ClimberConstants.kMinRange;
-		    config.peakOutputForward = ClimberConstants.kMaxRange;
-		    config.peakOutputReverse = -ClimberConstants.kMaxRange;
+      if (Constants.debug) {
+        tab = Shuffleboard.getTab("Climber");
+        positionDisplay = tab.add("Position", 0)
+            .withPosition(0, 0)
+            .withSize(1, 1)
+            .getEntry();
       }
+    }
+  }
 
+      private void configCurrentLimit(WPI_TalonFX talon) {
+      
       climberLeft.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
 			  ClimberConstants.statorEnabled, 
 			  ClimberConstants.statorLimit, 
@@ -99,47 +91,14 @@ public class Climber extends SubsystemBase {
 			  ClimberConstants.supplyLimit, 
 			  ClimberConstants.supplyThreshold, 
 			  ClimberConstants.supplyTime));
-    
-      // DEBUG
-      if (Constants.debug) {
-        tab = Shuffleboard.getTab("Climber");
-      
-        power =
-          tab.add("Power", 0)
-          .withPosition(0,0)
-          .withSize(1,1)
-          .getEntry();
-
-        currentRPM =
-          tab.add("Current RPM", 0)
-          .withPosition(1,0)
-          .withSize(1,1)
-          .getEntry();
-
-        targetRPM =
-          tab.add("Target RPM", 0)
-          .withPosition(2,0)
-          .withSize(1,1)
-          .getEntry();
-
-        override = 
-          tab.add("Override", false)
-          .withWidget(BuiltInWidgets.kToggleButton)
-          .withPosition(0,1)
-          .withSize(1,1)
-          .getEntry();
-      }
     }
-  }
 
-  // no need for shooting state as in Kicker because the conveyor 
-  // isn't needed once cargo enters the shooter
   public enum ClimberMode {
     stopped(0),
-    started(1),
-    atSpeed(2),
-    stableAtSpeed(3),
-    stopping(4);
+    forward1(1),
+    backward1(2),
+    forward2(3),
+    done(4);
 
     private int value;
 
@@ -156,23 +115,28 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (Constants.climberEnabled) {
+      if (Constants.debug) {
+        positionDisplay.setDouble(getPosition());
+      }
+    }
   }
 
 
   public double getSpeed() {
     if (Constants.climberEnabled) {
-      return climberEncoder.getVelocity();
+      return climberLeft.getSelectedSensorVelocity();
     } else {
       return -1;
     }
   }
 
   public boolean isRunning() {
-    return (climberMode != ClimberMode.stopped) && (climberMode != ClimberMode.stopping);
+    return (climberMode != ClimberMode.stopped) && (climberMode != ClimberMode.done);
   }
   
   public void stop() {
-    climberMode = ClimberMode.stopping;
+    climberMode = ClimberMode.done;
   }
 
   private double getPosition() {
