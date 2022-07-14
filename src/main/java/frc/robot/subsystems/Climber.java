@@ -91,8 +91,8 @@ public class Climber extends SubsystemBase {
       climberRight.follow(climberLeft);
       climberLeft.setInverted(false);
       climberRight.setInverted(true);
-      climberLeft.setNeutralMode(NeutralMode.Coast);
-      climberRight.setNeutralMode(NeutralMode.Coast);
+      climberLeft.setNeutralMode(NeutralMode.Brake);
+      climberRight.setNeutralMode(NeutralMode.Brake);
 
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Climber");
