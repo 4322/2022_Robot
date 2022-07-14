@@ -339,6 +339,11 @@ public final class Constants {
     public static final double configVoltageCompSaturation = 11.5;
     public static final boolean enableVoltageCompensation = true;
 
+    public static final double position1 = 6.5;
+    public static final double position2 = 6.5;
+    public static final double position3 = 6.5;
+    public static final double position4 = 6.5;  
+
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 0;
     public static final double statorThreshold = 0;
