@@ -174,8 +174,12 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  private double getPosition() {
-    return hood.getSelectedSensorPosition(0);
+  public double getPosition() {
+    if (Constants.hoodEnabled) {
+      return hood.getSelectedSensorPosition(0);
+    } else {
+      return 0;
+    }
   }
 
   public void moveHome() {
