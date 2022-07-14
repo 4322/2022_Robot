@@ -84,6 +84,9 @@ public class RobotContainer {
   // Hood Commands
   private final HoodReset hoodReset = new HoodReset(hood);
 
+  //Climber Commands
+  private final ClimbAuto climbAuto = new ClimbAuto(climber);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
   public RobotContainer() {
@@ -192,6 +195,8 @@ public class RobotContainer {
     coPilot.lt.whileHeld(startFiring);
 
     coPilot.back.whenPressed(hoodReset, false);  // non-interruptable
+
+    coPilot.start.whenPressed(climbAuto);
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
