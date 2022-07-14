@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,6 +32,10 @@ public class Intake extends SubsystemBase{
   private NetworkTableEntry targetRPM;
   private NetworkTableEntry override;
   private RelativeEncoder intakeEncoder;
+
+  private boolean stalled = false;
+  private boolean stallTimerEnabled = false;
+  private Timer stallTimer = new Timer();
 
   private static Intake singleton;
 
@@ -132,6 +138,7 @@ public class Intake extends SubsystemBase{
 
   public void manualIntake() {
     if (Constants.intakeEnabled) {
+      resetStalled();
       setSpeed(IntakeConstants.intakeVelocity);
       intakeManualMode = IntakeManualMode.intaking;
     }
@@ -139,6 +146,7 @@ public class Intake extends SubsystemBase{
 
   public void manualEject() {
     if (Constants.intakeEnabled) {
+      resetStalled();
       setSpeed(IntakeConstants.ejectVelocity);
       intakeManualMode = IntakeManualMode.ejecting;
     }
@@ -148,7 +156,7 @@ public class Intake extends SubsystemBase{
     if (Constants.intakeEnabled) {
       if (intakeAutoMode == IntakeAutoMode.stopped) {
         intakeMotor.stopMotor();
-      } else {
+      } else { // restart auto intake after eject
         setSpeed(IntakeConstants.intakeVelocity);
       }
       intakeManualMode = IntakeManualMode.stopped;
@@ -156,6 +164,7 @@ public class Intake extends SubsystemBase{
   }
 
   // safe to call without requiring the subsystem
+  // called periodically
   public void autoIntake() {
     if (Constants.intakeEnabled) {
       if (intakeManualMode == IntakeManualMode.stopped) {
@@ -178,6 +187,24 @@ public class Intake extends SubsystemBase{
   @Override
   public void periodic() {
     if (Constants.intakeEnabled) {
+      if ((Math.abs(intakeEncoder.getVelocity()) < IntakeConstants.minRunVel) && 
+        ((intakeAutoMode != IntakeAutoMode.stopped) ||
+         (intakeManualMode != IntakeManualMode.stopped))) {
+        if (!stallTimerEnabled) {
+          stallTimer.start();
+          stallTimerEnabled = true;
+        }
+        if (stallTimer.hasElapsed(IntakeConstants.stallTimeoutSec)) {
+          if (!stalled) {
+            intakeMotor.stopMotor();
+            DriverStation.reportError("Intake Stalled! Attempt to fix in manual mode", false);
+            stalled = true;
+          }
+        }
+      // will not reset stall status when intake is stopped
+      } else if (!stalled) {
+        resetStalled();
+      }
       if (Constants.debug) {
         if (override.getBoolean(false) && (target != targetRPM.getDouble(0))) {
           setSpeed(targetRPM.getDouble(0));
@@ -190,8 +217,10 @@ public class Intake extends SubsystemBase{
 
   private void setSpeed(double rpm) {
     if (Constants.intakeEnabled) {
-      intakePID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-      target = rpm;
+      if (!stalled) {
+        intakePID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+        target = rpm;
+      }
       if (Constants.debug) {
         targetRPM.setDouble(rpm);
       }
@@ -204,6 +233,13 @@ public class Intake extends SubsystemBase{
     } else {
       return -1;
     }
+  }
+
+  private void resetStalled() {
+    stallTimer.stop();
+    stallTimer.reset();
+    stallTimerEnabled = false;
+    stalled = false;
   }
   
   public void setCoastMode() {
