@@ -119,25 +119,7 @@ public class Climber extends SubsystemBase {
 			  ClimberConstants.supplyTime));
     }
 
-  public enum ClimberMode {
-    stopped(0),
-    forward1(1),
-    backward1(2),
-    forward2(3),
-    done(4);
 
-    private int value;
-
-    ClimberMode(int value) {
-      this.value = value;
-    }
-
-    public int get() {
-      return value;
-    }
-  }
-
-  private ClimberMode climberMode = ClimberMode.stopped;
 
   @Override
   public void periodic() {
@@ -156,13 +138,9 @@ public class Climber extends SubsystemBase {
       return -1;
     }
   }
-
-  public boolean isRunning() {
-    return (climberMode != ClimberMode.stopped) && (climberMode != ClimberMode.done);
-  }
   
   public void stop() {
-    climberMode = ClimberMode.done;
+    climberLeft.stopMotor();
   }
 
   private double getPosition() {

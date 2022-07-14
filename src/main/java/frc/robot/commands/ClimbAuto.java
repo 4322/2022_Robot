@@ -30,4 +30,22 @@ public void initialize() {}
 @Override
 public void execute() {
     }
+
+public enum ClimberMode {
+    stopped(0),
+    forward1(1),
+    backward1(2),
+    forward2(3),
+    done(4);
+
+    private int value;
+
+    ClimberMode(int value) {
+        this.value = value;
+    }
+
+    public int get() {
+        return value;
+    }
+}
 }
