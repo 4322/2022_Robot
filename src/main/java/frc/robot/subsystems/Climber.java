@@ -157,4 +157,10 @@ public class Climber extends SubsystemBase {
       climberLeft.set(ControlMode.Position, pos);
     }
   }
+
+  public void setBrakeMode() {
+  }
+
+  public void setCoastMode() {
+  }
 }

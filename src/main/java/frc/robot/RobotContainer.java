@@ -137,6 +137,7 @@ public class RobotContainer {
     disableTimer.reset();
     disableTimer.start();
     driveunbun.stop();
+    climber.setCoastMode();
   }
 
   public void enableSubsystems() {
@@ -146,6 +147,7 @@ public class RobotContainer {
     conveyor.setBrakeMode();
     intake.setBrakeMode();
     kicker.setBrakeMode();
+    climber.setBrakeMode();
     disableTimer.stop();
     disableTimer.reset();
   }
