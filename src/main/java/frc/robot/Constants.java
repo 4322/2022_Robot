@@ -49,7 +49,7 @@ public final class Constants {
   public static final boolean intakeEnabled = true;
   public static final boolean shooterEnabled = true;
   public static final boolean kickerEnabled = true;
-  public static final boolean climberEnabled = false;
+  public static final boolean climberEnabled = true;
   public static final boolean hoodEnabled = true;
   public static final boolean conveyorEnabled = true;
   public static final boolean ballSensorEnabled = true;

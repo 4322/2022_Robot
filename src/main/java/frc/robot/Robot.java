@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     subsystemEnabled("Intake", 4, 0, Constants.intakeEnabled);
     subsystemEnabled("Kicker", 5, 0, Constants.kickerEnabled);
     subsystemEnabled("Conveyor", 6, 0, Constants.conveyorEnabled);
-    // subsystemEnabled("Climber", 7, 0, Constants.climberEnabled);
+    subsystemEnabled("Climber", 7, 0, Constants.climberEnabled);
 
     subsystemEnabled("Joysticks", 0, 1, Constants.joysticksEnabled);
     subsystemEnabled("Gyro", 1, 1, Constants.gyroEnabled);

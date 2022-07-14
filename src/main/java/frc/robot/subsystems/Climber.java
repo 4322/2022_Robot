@@ -1,19 +1,11 @@
 /* Code review comments (delete as each is resolved):
-	1.	Update Robot.java line 46.
-	2.	Update Constants.java line 52.
 	3.	In Climber.init(), configure the master Talon FX as shown in TalonFXModule.java lines 145-146.
-	7.	Create Climber.isAtTarget() following the example in HoodReset.java. Use a single constant in place of lines 205-206.
-
-Change Climber.init() to initialize the motors to brake mode. This is different from what we do for all 
-other subsystems because we want the climber to hold position while we are placing it on the field in competition, 
-which is always preceded by a power cycle. When we disable during shop testing, the motors will switch to coast mode 
-so we can manually reset the climber. The robot never transitions from enabled to disabled in competition until the 
-end of the match, so the climber will stay locked in its starting position from the power cycle until we start the climb.
+	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
 
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
   1. Command the Climber subsystem to set the Talon FX position to 0.
-  2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.
-  3. Move sequentially from positions 1 to 4. Update the ClimberMode states as needed.
+  2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.       Should be done if what I
+  3. Move sequentially from positions 1 to 4. Update the ClimberMode states as needed.                  wrote actually works
   4. If the command is interrupted, stop the climber.
 
 No loops are allowed in any of the climber code. All methods must return with no delay. 
@@ -35,6 +27,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.commands.ClimbAuto;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -144,8 +137,16 @@ public class Climber extends SubsystemBase {
     }
   }
 
+  public boolean isAtTarget() {
+    if (!Constants.climberEnabled) {
+      return true;
+    }
+    return (climberLeft.getClosedLoopError() <=
+      (0));
+  }
+
   
-  private void moveToPosition(double pos) {
+  public void moveToPosition(double pos) {
     if (Constants.climberEnabled){
       climberLeft.set(ControlMode.Position, pos);
     }
