@@ -2,14 +2,7 @@
 	1.	Update Robot.java line 46.
 	2.	Update Constants.java line 52.
 	3.	In Climber.init(), configure the master Talon FX as shown in TalonFXModule.java lines 145-146.
-	4.	Rename Climb.java to ClimbAuto.java in case we decide to add a manual mode.
-	5.	In RobotContainer.configureButtonBindings(), add a binding to the Xbox controller start button to invoke ClimbAuto(). 
-      This button binding should only be performed if the robot is not in demo mode.
-	6.	Define Constants.ClimberConstants.position1, position2, position3 and position4 (we will determine the right values later)
 	7.	Create Climber.isAtTarget() following the example in HoodReset.java. Use a single constant in place of lines 205-206.
-	8.	Move ClimberMode from Climber.java to ClimbAuto.java.
-  9.  Create Climber.setCoastMode() and Climber.setBrakeMode() following the examples in TalonFXModule.java.
- 10.  Add the climber to RobotContainer.disableSubsystems() and RobotContainer.enableSubsystems().
 
 Change Climber.init() to initialize the motors to brake mode. This is different from what we do for all 
 other subsystems because we want the climber to hold position while we are placing it on the field in competition, 
@@ -158,9 +151,13 @@ public class Climber extends SubsystemBase {
     }
   }
 
-  public void setBrakeMode() {
-  }
-
   public void setCoastMode() {
-  }
+		climberLeft.setNeutralMode(NeutralMode.Coast);
+		climberRight.setNeutralMode(NeutralMode.Coast);
+	}
+
+	public void setBrakeMode() {
+		climberLeft.setNeutralMode(NeutralMode.Brake);
+		climberRight.setNeutralMode(NeutralMode.Brake);
+	}
 }
