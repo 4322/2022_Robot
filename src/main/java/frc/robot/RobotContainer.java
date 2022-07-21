@@ -198,9 +198,7 @@ public class RobotContainer {
 
     coPilot.lt.whileHeld(startFiring);
 
-    coPilot.back.whenPressed(hoodReset, false);  // non-interruptable
-
-    coPilot.start.whenPressed(climbAuto);
+    coPilot.back.whenPressed(hoodReset, false);  // non-interruptables
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);

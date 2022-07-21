@@ -43,26 +43,23 @@ public class ClimbAuto extends CommandBase {
         if (climber.isAtTarget()) {
           currentPosTimer.reset(); // clear accumulated time from prior hood reset
           currentPosTimer.start();
-          currentMode = climberMode.stopped;
+          currentMode = climberMode.forward1;
         }
         break;
       case forward1:
         if (currentPosTimer.hasElapsed(0.025)) {
-          currentMode = climberMode.forward1;
-        } else
-          currentMode = climberMode.done;
+          currentMode = climberMode.backward1;
+        }
         break;
       case backward1:
         if (climber.isAtTarget()) {
-          currentMode = climberMode.backward1;
-        } else
-          currentMode = climberMode.done;
+          currentMode = climberMode.forward2;
+        }
         break;
       case forward2:
         if (climber.isAtTarget()) {
-          currentMode = climberMode.forward2;
-        } else
           currentMode = climberMode.done;
+        }
         break;
       case done:
         break;

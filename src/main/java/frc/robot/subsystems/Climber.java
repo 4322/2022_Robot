@@ -1,10 +1,4 @@
 /* 
-Code review comments from 7/20/22 (delete as each is resolved):
-1. In RobotContainer.configureButtonBindings(), only bind the ClimbAuto command 
-   if the robot is not in demo mode.
-2. In ClimbAuto.java, add end() and isFinished() methods similar to HoodReset.java.
-   The end() method should call climber.stop().
-
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
   2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.       Should be done if what I
   3. Move sequentially from positions 1 to 4. Update the ClimberMode states as needed.                  wrote actually works
@@ -140,7 +134,7 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (climberLeft.getClosedLoopError() <= (0));
+    return (climberLeft.getClosedLoopError() <= ClimberConstants.positionTolerance);
   }
 
   public void moveToPosition(double pos) {
