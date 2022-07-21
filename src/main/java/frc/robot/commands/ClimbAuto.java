@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 
 public class ClimbAuto extends CommandBase {
@@ -40,24 +41,28 @@ public class ClimbAuto extends CommandBase {
   public void execute() {
     switch (currentMode) {
       case stopped:
-        if (climber.isAtTarget()) {
+        if (currentPosTimer.hasElapsed(0.025)) {
           currentPosTimer.reset(); // clear accumulated time from prior hood reset
           currentPosTimer.start();
+          climber.moveToPosition(ClimberConstants.forward1);
           currentMode = climberMode.forward1;
         }
         break;
       case forward1:
-        if (currentPosTimer.hasElapsed(0.025)) {
+        if (climber.isAtTarget()) {
+          climber.moveToPosition(ClimberConstants.backward1);
           currentMode = climberMode.backward1;
         }
         break;
       case backward1:
         if (climber.isAtTarget()) {
+          climber.moveToPosition(ClimberConstants.forward2);
           currentMode = climberMode.forward2;
         }
         break;
       case forward2:
         if (climber.isAtTarget()) {
+          climber.stop();
           currentMode = climberMode.done;
         }
         break;

@@ -339,10 +339,9 @@ public final class Constants {
     public static final double configVoltageCompSaturation = 11.5;
     public static final boolean enableVoltageCompensation = true;
 
-    public static final double position1 = 2000;
-    public static final double position2 = 4000;
-    public static final double position3 = 6000;
-    public static final double position4 = 8000;
+    public static final double forward1 = 3000;
+    public static final double backward1 = 1000;
+    public static final double forward2 = 6000;
     public static final int positionTolerance = 20;
 
     public static final boolean statorEnabled = true;
