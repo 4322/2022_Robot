@@ -5,9 +5,6 @@ Code review comments from 7/20/22 (delete as each is resolved):
 2. In ClimbAuto.java, add end() and isFinished() methods similar to HoodReset.java.
    The end() method should call climber.stop().
 
-Code review comments from 7/9/22 (delete as each is resolved):
-	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
-
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
   1. Command the Climber subsystem to set the Talon FX position to 0.
   2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.       Should be done if what I
@@ -151,7 +148,7 @@ public class Climber extends SubsystemBase {
       return true;
     }
     return (climberLeft.getClosedLoopError() <=
-      (0));
+      ClimberConstants.positionTolerance);
   }
 
   
