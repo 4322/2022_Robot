@@ -1,4 +1,11 @@
-/* Code review comments (delete as each is resolved):
+/* 
+Code review comments from 7/20/22 (delete as each is resolved):
+1. In RobotContainer.configureButtonBindings(), only bind the ClimbAuto command 
+   if the robot is not in demo mode.
+2. In ClimbAuto.java, add end() and isFinished() methods similar to HoodReset.java.
+   The end() method should call climber.stop().
+
+Code review comments from 7/9/22 (delete as each is resolved):
 	3.	In Climber.init(), configure the master Talon FX as shown in TalonFXModule.java lines 145-146.
 	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
 
