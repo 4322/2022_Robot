@@ -1,11 +1,5 @@
 /* 
-Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
-  2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.       Should be done if what I
-  3. Move sequentially from positions 1 to 4. Update the ClimberMode states as needed.                  wrote actually works
-
-No loops are allowed in any of the climber code. All methods must return with no delay. 
-We instead use the state machine to keep track of where we left off on the previous iteration.
-
+Code review comment:
 Determine how you want to abort a climb. We could only continue while the start button is held down, 
 but we can't restart the entire sequence if the operator accidentally releases the button because the 
 climber would no longer be in initial position. The other buttons aren't needed once we start climbing, 
