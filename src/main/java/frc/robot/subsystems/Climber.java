@@ -6,7 +6,6 @@ Code review comments from 7/20/22 (delete as each is resolved):
    The end() method should call climber.stop().
 
 Code review comments from 7/9/22 (delete as each is resolved):
-	3.	In Climber.init(), configure the master Talon FX as shown in TalonFXModule.java lines 145-146.
 	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
 
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
@@ -38,6 +37,7 @@ import frc.robot.commands.ClimbAuto;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -56,6 +56,7 @@ public class Climber extends SubsystemBase {
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
   private NetworkTableEntry positionDisplay;
+
   
 
   public Climber() {
@@ -97,20 +98,22 @@ public class Climber extends SubsystemBase {
     }
   }
 
-      private void configCurrentLimit(WPI_TalonFX talon) {
-      talon.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
-      talon.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
-      talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			  ClimberConstants.statorEnabled, 
-			  ClimberConstants.statorLimit, 
-			  ClimberConstants.statorThreshold, 
-			  ClimberConstants.statorTime));
-		  talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-			  ClimberConstants.supplyEnabled, 
-			  ClimberConstants.supplyLimit, 
-			  ClimberConstants.supplyThreshold, 
-			  ClimberConstants.supplyTime));
-    }
+  private void configCurrentLimit(WPI_TalonFX talon) {
+    talon.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
+    talon.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
+    talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
+			ClimberConstants.statorEnabled, 
+      ClimberConstants.statorLimit, 
+      ClimberConstants.statorThreshold, 
+      ClimberConstants.statorTime));
+    talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+      ClimberConstants.supplyEnabled, 
+      ClimberConstants.supplyLimit, 
+      ClimberConstants.supplyThreshold, 
+      ClimberConstants.supplyTime));
+    climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+  }
 
 
 
