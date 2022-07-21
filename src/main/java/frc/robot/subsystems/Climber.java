@@ -1,4 +1,11 @@
-/* Code review comments (delete as each is resolved):
+/* 
+Code review comments from 7/20/22 (delete as each is resolved):
+1. In RobotContainer.configureButtonBindings(), only bind the ClimbAuto command 
+   if the robot is not in demo mode.
+2. In ClimbAuto.java, add end() and isFinished() methods similar to HoodReset.java.
+   The end() method should call climber.stop().
+
+Code review comments from 7/9/22 (delete as each is resolved):
 	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
 
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
