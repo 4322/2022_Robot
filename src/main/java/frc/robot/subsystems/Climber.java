@@ -26,7 +26,6 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.commands.ClimbAuto;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

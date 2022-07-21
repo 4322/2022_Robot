@@ -271,8 +271,8 @@ public final class Constants {
       public static final int hoodMaxPosition = 7388; 
       public static int hoodMinPosition = 0;     //allows to be changed in demo mode
       public static final int hoodDecellerationDistance = 500; 
-      public static final int hoodTolerancePreset = 20;
-      public static final int hoodToleranceLime = 20;
+      public static final int tolerancePreset = 20;
+      public static final int toleranceLime = 20;
       public static final double homingTimeout = 6.0; 
 
       public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
