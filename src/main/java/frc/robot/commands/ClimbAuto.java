@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 
 public class ClimbAuto extends CommandBase {
@@ -30,6 +29,7 @@ public class ClimbAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    climber.setCurrentPosition(0);
     currentMode = climberMode.stopped;
     overrideTimer.reset();
     overrideTimer.start();

@@ -1,18 +1,7 @@
 /* 
-Code review comments from 7/20/22 (delete as each is resolved):
-1. In RobotContainer.configureButtonBindings(), only bind the ClimbAuto command 
-   if the robot is not in demo mode.
-2. In ClimbAuto.java, add end() and isFinished() methods similar to HoodReset.java.
-   The end() method should call climber.stop().
-
-Code review comments from 7/9/22 (delete as each is resolved):
-	7.	Create Climber.isAtTarget() following the example in Hood.java. Use a single constant in place of lines 205-206. (Don't know what constant to use)
-
 Start updating ClimbAuto.java to execute a state machine similar to HoodReset.java using the ClimberMode state as follows:
-  1. Command the Climber subsystem to set the Talon FX position to 0.
   2. Wait 25ms for the position update command to take effect as shown in HoodReset.java line 56.       Should be done if what I
   3. Move sequentially from positions 1 to 4. Update the ClimberMode states as needed.                  wrote actually works
-  4. If the command is interrupted, stop the climber.
 
 No loops are allowed in any of the climber code. All methods must return with no delay. 
 We instead use the state machine to keep track of where we left off on the previous iteration.
@@ -28,7 +17,7 @@ such as a motor stall or robot tilt, with Torsten on Wednesday.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems; 
+package frc.robot.subsystems;
 
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -51,12 +40,10 @@ public class Climber extends SubsystemBase {
 
   private WPI_TalonFX climberLeft;
   private WPI_TalonFX climberRight;
-  
+
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
   private NetworkTableEntry positionDisplay;
-
-  
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -69,7 +56,7 @@ public class Climber extends SubsystemBase {
 
   public void init() {
     if (Constants.climberEnabled) {
-      TalonFXConfiguration config = new TalonFXConfiguration();    
+      TalonFXConfiguration config = new TalonFXConfiguration();
       config.slot0.kP = ClimberConstants.kP;
       config.slot0.kD = ClimberConstants.kD;
       config.nominalOutputForward = ClimberConstants.kMinRange;
@@ -77,8 +64,8 @@ public class Climber extends SubsystemBase {
       config.peakOutputForward = ClimberConstants.kMaxRange;
       config.peakOutputReverse = -ClimberConstants.kMaxRange;
       climberLeft.configAllSettings(config);
-      climberLeft.configClosedloopRamp(ClimberConstants.rampRate);  
-      climberLeft.configOpenloopRamp(ClimberConstants.rampRate);    // for PID tuning
+      climberLeft.configClosedloopRamp(ClimberConstants.rampRate);
+      climberLeft.configOpenloopRamp(ClimberConstants.rampRate); // for PID tuning
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
       climberRight.follow(climberLeft);
@@ -101,20 +88,18 @@ public class Climber extends SubsystemBase {
     talon.configVoltageCompSaturation(ClimberConstants.configVoltageCompSaturation);
     talon.enableVoltageCompensation(ClimberConstants.enableVoltageCompensation);
     talon.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(
-			ClimberConstants.statorEnabled, 
-      ClimberConstants.statorLimit, 
-      ClimberConstants.statorThreshold, 
-      ClimberConstants.statorTime));
+        ClimberConstants.statorEnabled,
+        ClimberConstants.statorLimit,
+        ClimberConstants.statorThreshold,
+        ClimberConstants.statorTime));
     talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-      ClimberConstants.supplyEnabled, 
-      ClimberConstants.supplyLimit, 
-      ClimberConstants.supplyThreshold, 
-      ClimberConstants.supplyTime));
-    climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
-			RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+        ClimberConstants.supplyEnabled,
+        ClimberConstants.supplyLimit,
+        ClimberConstants.supplyThreshold,
+        ClimberConstants.supplyTime));
+    climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
-
-
 
   @Override
   public void periodic() {
@@ -125,7 +110,6 @@ public class Climber extends SubsystemBase {
     }
   }
 
-
   public double getSpeed() {
     if (Constants.climberEnabled) {
       return climberLeft.getSelectedSensorVelocity();
@@ -133,7 +117,7 @@ public class Climber extends SubsystemBase {
       return -1;
     }
   }
-  
+
   public void stop() {
     climberLeft.stopMotor();
   }
@@ -150,24 +134,28 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (climberLeft.getClosedLoopError() <=
-      (0));
+    return (climberLeft.getClosedLoopError() <= (0));
   }
 
-  
   public void moveToPosition(double pos) {
-    if (Constants.climberEnabled){
+    if (Constants.climberEnabled) {
       climberLeft.set(ControlMode.Position, pos);
     }
   }
 
-  public void setCoastMode() {
-		climberLeft.setNeutralMode(NeutralMode.Coast);
-		climberRight.setNeutralMode(NeutralMode.Coast);
-	}
+  public void setCurrentPosition(double pos) {
+    if (Constants.hoodEnabled) {
+      climberLeft.setSelectedSensorPosition(pos);
+    }
+  }
 
-	public void setBrakeMode() {
-		climberLeft.setNeutralMode(NeutralMode.Brake);
-		climberRight.setNeutralMode(NeutralMode.Brake);
-	}
+  public void setCoastMode() {
+    climberLeft.setNeutralMode(NeutralMode.Coast);
+    climberRight.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setBrakeMode() {
+    climberLeft.setNeutralMode(NeutralMode.Brake);
+    climberRight.setNeutralMode(NeutralMode.Brake);
+  }
 }
