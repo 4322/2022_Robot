@@ -10,7 +10,6 @@ public class ClimbAuto extends CommandBase {
   private climberMode currentMode;
   private final Climber climber;
   private Timer overrideTimer = new Timer();
-  private Timer currentPosTimer = new Timer();
 
   public enum climberMode {
     stopped,
@@ -41,12 +40,8 @@ public class ClimbAuto extends CommandBase {
   public void execute() {
     switch (currentMode) {
       case stopped:
-        if (currentPosTimer.hasElapsed(0.025)) {
-          currentPosTimer.reset(); // clear accumulated time from prior hood reset
-          currentPosTimer.start();
-          climber.moveToPosition(ClimberConstants.forward1);
-          currentMode = climberMode.forward1;
-        }
+        climber.moveToPosition(ClimberConstants.forward1);
+        currentMode = climberMode.forward1;
         break;
       case forward1:
         if (climber.isAtTarget()) {
@@ -80,7 +75,7 @@ public class ClimbAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (currentMode == climberMode.done);
+    return ((currentMode == climberMode.done) || (overrideTimer.hasElapsed(ClimberConstants.overrideTime)));
   }
 
 }

@@ -18,6 +18,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -63,8 +64,7 @@ public class Climber extends SubsystemBase {
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
       climberRight.follow(climberLeft);
-      climberLeft.setInverted(false);
-      climberRight.setInverted(true);
+      climberRight.setInverted(InvertType.OpposeMaster);
       climberLeft.setNeutralMode(NeutralMode.Brake);
       climberRight.setNeutralMode(NeutralMode.Brake);
 

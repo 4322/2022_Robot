@@ -331,9 +331,6 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-
-    public static final boolean climberEnabled = true;
-
     public static final int climberLeftID = 20;
     public static final int climberRightID = 21;
     public static final double configVoltageCompSaturation = 11.5;
@@ -343,6 +340,7 @@ public final class Constants {
     public static final double backward1 = 1000;
     public static final double forward2 = 6000;
     public static final int positionTolerance = 20;
+    public static final double overrideTime = 15;
 
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 0;
@@ -354,13 +352,10 @@ public final class Constants {
     public static final double supplyThreshold = 0;
     public static final double supplyTime = 0;
 
-    public static final double kP = .00025;
-    public static final double kI = 0.000001;
-    public static final double kD = 0.008;
-    public static final double kIz = 200;
-    public static final double kFF = 0.000205;
-    public static final double kMinRange = 0;   // let flywheel coast down, don't apply power to slow it
+    public static final double kP = 1;
+    public static final double kD = 0;
+    public static final double kMinRange = 0;
     public static final double kMaxRange = 1.0;
-    public static final double rampRate = 0.6;  // seconds to go from stopped to full power
+    public static final double rampRate = 0.6;
   }
 }
