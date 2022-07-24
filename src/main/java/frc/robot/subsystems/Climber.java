@@ -137,7 +137,7 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (climberLeft.getClosedLoopError() <= ClimberConstants.positionTolerance);
+    return (Math.abs(climberLeft.getClosedLoopError()) <= ClimberConstants.positionTolerance);
   }
 
   public void moveToPosition(double pos) {
