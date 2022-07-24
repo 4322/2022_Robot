@@ -339,7 +339,7 @@ public final class Constants {
     public static final double forward1 = 50000;
     public static final double backward1 = -25000;
     public static final double forward2 = 30000;
-    public static final int positionTolerance = 20;
+    public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
 
     public static final boolean statorEnabled = true;
@@ -352,10 +352,10 @@ public final class Constants {
     public static final double supplyThreshold = 25;
     public static final double supplyTime = 1.0;
 
-    public static final double kP = 1;
+    public static final double kP = 0.025;
     public static final double kD = 0;
-    public static final double kMinRange = 0;
-    public static final double kMaxRange = 1.0;
+    public static final double kMinRange = 0.07;
+    public static final double kMaxRange = 0.6;
     public static final double rampRate = 0.6;
   }
 }

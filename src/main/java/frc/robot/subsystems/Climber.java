@@ -54,6 +54,7 @@ public class Climber extends SubsystemBase {
       TalonFXConfiguration config = new TalonFXConfiguration();
       config.slot0.kP = ClimberConstants.kP;
       config.slot0.kD = ClimberConstants.kD;
+      config.slot0.allowableClosedloopError = ClimberConstants.positionTolerance;
       config.nominalOutputForward = ClimberConstants.kMinRange;
       config.nominalOutputReverse = -ClimberConstants.kMinRange;
       config.peakOutputForward = ClimberConstants.kMaxRange;
