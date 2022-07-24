@@ -343,14 +343,14 @@ public final class Constants {
     public static final double overrideTime = 15;
 
     public static final boolean statorEnabled = true;
-    public static final double statorLimit = 0;
-    public static final double statorThreshold = 0;
-    public static final double statorTime = 0;
+    public static final double statorLimit = 20;
+    public static final double statorThreshold = 25;
+    public static final double statorTime = 1.0;
 
     public static final boolean supplyEnabled = true;
-    public static final double supplyLimit = 0;
-    public static final double supplyThreshold = 0;
-    public static final double supplyTime = 0;
+    public static final double supplyLimit = 20;
+    public static final double supplyThreshold = 25;
+    public static final double supplyTime = 1.0;
 
     public static final double kP = 1;
     public static final double kD = 0;
