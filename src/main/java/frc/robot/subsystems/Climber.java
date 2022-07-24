@@ -67,6 +67,8 @@ public class Climber extends SubsystemBase {
       configCurrentLimit(climberRight);
       climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
       climberLeft.setNeutralMode(NeutralMode.Brake);

@@ -46,24 +46,34 @@ public class ClimbAuto extends CommandBase {
         if (currentPosTimer.hasElapsed(0.025)) { // give motor time to update current position
           climber.moveToPosition(ClimberConstants.forward1);
           currentMode = climberMode.forward1;
+          currentPosTimer.reset();
         }
         break;
       case forward1:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.backward1);
-          currentMode = climberMode.backward1;
+        if (currentPosTimer.hasElapsed(0.025)) {
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.backward1);
+            currentMode = climberMode.backward1;
+            currentPosTimer.reset();
+          }
         }
         break;
       case backward1:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.forward2);
-          currentMode = climberMode.forward2;
+        if (currentPosTimer.hasElapsed(0.025)) {
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.forward2);
+            currentMode = climberMode.forward2;
+            currentPosTimer.reset();
+          }
         }
         break;
       case forward2:
-        if (climber.isAtTarget()) {
-          climber.stop();
-          currentMode = climberMode.done;
+        if (currentPosTimer.hasElapsed(0.025)) {
+          if (climber.isAtTarget()) {
+            climber.stop();
+            currentMode = climberMode.done;
+            currentPosTimer.reset();
+          }
         }
         break;
       case done:
