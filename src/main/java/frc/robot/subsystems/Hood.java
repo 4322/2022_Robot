@@ -50,9 +50,9 @@ public class Hood extends SubsystemBase {
       hood.configPeakOutputForward(HoodConstants.maxForwardPower);
       hood.configPeakOutputReverse(HoodConstants.maxReversePower);   
           
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,   // for debug
         RobotContainer.nextShuffleboardStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);   
   
       setCoastMode();  // Allow manual movement until enabled

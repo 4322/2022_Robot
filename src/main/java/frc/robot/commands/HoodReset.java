@@ -14,7 +14,7 @@ public class HoodReset extends CommandBase {
 
   private Hood hood;
   private Timer overrideTimer = new Timer();
-  private Timer currentPosTimer = new Timer();
+  private Timer statusTimer = new Timer();
 
   private enum resetStates {
     firstDown,
@@ -47,21 +47,24 @@ public class HoodReset extends CommandBase {
       case firstDown:
         if (hood.isAtHome()) {
           hood.setCurrentPosition(0);
-          currentPosTimer.reset();  // clear accumulated time from prior hood reset
-          currentPosTimer.start();
+          statusTimer.reset();  // clear accumulated time from prior hood reset
+          statusTimer.start();
           currentState = resetStates.settingTarget;
         }
         break;
       case settingTarget:
-        if (currentPosTimer.hasElapsed(0.025)) {
+        if (statusTimer.hasElapsed(Constants.statusLatencySec)) {
           hood.setTargetPosition(1000, true);
           currentState = resetStates.goingUp;
+          statusTimer.reset();
         }
         break;
       case goingUp:
-        if (hood.isAtTarget()) {
-          hood.setHoodPower(HoodConstants.secondHomingPower);
-          currentState = resetStates.secondDown;
+        if (statusTimer.hasElapsed(Constants.statusLatencySec)) {
+          if (hood.isAtTarget()) {
+            hood.setHoodPower(HoodConstants.secondHomingPower);
+            currentState = resetStates.secondDown;
+          }
         }
         break;
       case secondDown:
