@@ -205,7 +205,7 @@ public class Hood extends SubsystemBase {
     if (!Constants.hoodEnabled) {
       return true;
     }
-    return (hood.getClosedLoopError() <= 
+    return (Math.abs(hood.getClosedLoopError()) <= 
       (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
         HoodConstants.hoodToleranceLime : HoodConstants.hoodTolerancePreset));
   }
