@@ -10,6 +10,7 @@ public class ClimbAuto extends CommandBase {
   private climberMode currentMode;
   private final Climber climber;
   private Timer overrideTimer = new Timer();
+  private Timer currentPosTimer = new Timer();
 
   public enum climberMode {
     stopped,
@@ -33,6 +34,8 @@ public class ClimbAuto extends CommandBase {
     currentMode = climberMode.stopped;
     overrideTimer.reset();
     overrideTimer.start();
+    currentPosTimer.reset();
+    currentPosTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,8 +43,10 @@ public class ClimbAuto extends CommandBase {
   public void execute() {
     switch (currentMode) {
       case stopped:
-        climber.moveToPosition(ClimberConstants.forward1);
-        currentMode = climberMode.forward1;
+        if (currentPosTimer.hasElapsed(0.025)) { // give motor time to update current position
+          climber.moveToPosition(ClimberConstants.forward1);
+          currentMode = climberMode.forward1;
+        }
         break;
       case forward1:
         if (climber.isAtTarget()) {
