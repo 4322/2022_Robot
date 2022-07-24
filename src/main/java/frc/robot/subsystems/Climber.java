@@ -39,6 +39,7 @@ public class Climber extends SubsystemBase {
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
   private NetworkTableEntry positionDisplay;
+  private NetworkTableEntry targetDisplay;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -78,6 +79,11 @@ public class Climber extends SubsystemBase {
             .withPosition(0, 0)
             .withSize(1, 1)
             .getEntry();
+        targetDisplay = tab.add("Target", 0)
+            .withPosition(1, 0)
+            .withSize(1, 1)
+            .getEntry();
+
       }
     }
   }
@@ -136,6 +142,9 @@ public class Climber extends SubsystemBase {
   public void moveToPosition(double pos) {
     if (Constants.climberEnabled) {
       climberLeft.set(ControlMode.Position, pos);
+      if (Constants.debug) {
+        targetDisplay.setDouble(pos);
+      }
     }
   }
 

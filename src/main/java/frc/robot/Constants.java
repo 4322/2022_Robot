@@ -338,7 +338,7 @@ public final class Constants {
 
     public static final double forward1 = -100000;
     public static final double backward1 = 100000;
-    public static final double forward2 = -100000;
+    public static final double forward2 = -101000;
     public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
 
