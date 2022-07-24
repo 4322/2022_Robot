@@ -273,9 +273,6 @@ public final class Constants {
   
   public static final class HoodConstants {
       public static final int motorID = 17;
-      public static final int hoodMaxPosition = 7388; 
-      public static int hoodMinPosition = 0;     //allows to be changed in demo mode
-      public static final int hoodDecellerationDistance = 500; 
       public static final int hoodTolerancePreset = 20;
       public static final int hoodToleranceLime = 20;
       public static final double homingTimeout = 6.0; 

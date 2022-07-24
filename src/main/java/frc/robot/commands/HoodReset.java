@@ -62,7 +62,7 @@ public class HoodReset extends CommandBase {
       case goingUp:
         if (statusTimer.hasElapsed(Constants.statusLatencySec)) {
           if (hood.isAtTarget()) {
-            hood.setHoodPower(HoodConstants.secondHomingPower);
+            hood.moveHomeSlow();
             currentState = resetStates.secondDown;
           }
         }
