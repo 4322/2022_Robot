@@ -65,9 +65,9 @@ public class Climber extends SubsystemBase {
       climberLeft.configOpenloopRamp(ClimberConstants.rampRate); // for PID tuning
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,  // rapid updates for follower
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
@@ -85,7 +85,6 @@ public class Climber extends SubsystemBase {
             .withPosition(1, 0)
             .withSize(1, 1)
             .getEntry();
-
       }
     }
   }

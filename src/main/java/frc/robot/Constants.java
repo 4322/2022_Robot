@@ -66,6 +66,12 @@ public final class Constants {
   // SPARK controllers support status periods of up to 65535 ms
   public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
+  // Controller commands are transmited by the library on the CAN bus every 10 ms.
+  // We then need to wait for the next status frame 
+  // for the values we read from the library to be current.
+  // We wait for two status frame periods in case the first frame was dropped.
+  public static final double statusLatencySec = (10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
+
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
