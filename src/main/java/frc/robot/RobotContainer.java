@@ -296,7 +296,7 @@ public class RobotContainer {
     SequentialCommandGroup leftAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodResetAuto(hood)
+        new HoodReset(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
@@ -308,7 +308,7 @@ public class RobotContainer {
     SequentialCommandGroup rightAuto = 
       new SequentialCommandGroup(
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new HoodResetAuto(hood)
+        new HoodReset(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
         new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
