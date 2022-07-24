@@ -67,7 +67,7 @@ public class Climber extends SubsystemBase {
       configCurrentLimit(climberRight);
       climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,  // rapid updates for follower
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,  // for position error feedback
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
