@@ -284,7 +284,7 @@ public final class Constants {
       public static double maxReversePower = -0.5;   //allows to be changed in demo mode
       public static final double minForwardPower = 0.1;
       public static final double minReversePower = -0.1;
-      public static final double homingPower = -0.3;
+      public static final double homingPower = -0.4;
       public static final double secondHomingPower = -0.2;
 
       public static final int kPIDLoopIdx = 0;
