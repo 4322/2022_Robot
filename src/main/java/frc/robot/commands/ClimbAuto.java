@@ -43,14 +43,14 @@ public class ClimbAuto extends CommandBase {
   public void execute() {
     switch (currentMode) {
       case stopped:
-        if (currentPosTimer.hasElapsed(0.025)) { // give motor time to update current position
+        if (currentPosTimer.hasElapsed(0.25)) { // give motor time to update current position(figure out why it needs to be so big)
           climber.moveToPosition(ClimberConstants.forward1);
           currentMode = climberMode.forward1;
           currentPosTimer.reset();
         }
         break;
       case forward1:
-        if (currentPosTimer.hasElapsed(0.025)) {
+        if (currentPosTimer.hasElapsed(0.25)) {
           if (climber.isAtTarget()) {
             climber.moveToPosition(ClimberConstants.backward1);
             currentMode = climberMode.backward1;
@@ -59,7 +59,7 @@ public class ClimbAuto extends CommandBase {
         }
         break;
       case backward1:
-        if (currentPosTimer.hasElapsed(0.025)) {
+        if (currentPosTimer.hasElapsed(0.25)) {
           if (climber.isAtTarget()) {
             climber.moveToPosition(ClimberConstants.forward2);
             currentMode = climberMode.forward2;
@@ -68,7 +68,7 @@ public class ClimbAuto extends CommandBase {
         }
         break;
       case forward2:
-        if (currentPosTimer.hasElapsed(0.025)) {
+        if (currentPosTimer.hasElapsed(0.25)) {
           if (climber.isAtTarget()) {
             climber.stop();
             currentMode = climberMode.done;
