@@ -70,7 +70,8 @@ public final class Constants {
   // We then need to wait for the next status frame 
   // for the values we read from the library to be current.
   // We wait for two status frame periods in case the first frame was dropped.
-  public static final double statusLatencySec = (10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
+  // TODO: Figure out why this needs to be so big!
+  public static final double statusLatencySec = 0.25; //(10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
 
   // Firing Solutions
   // fender distances need to be remeasured
