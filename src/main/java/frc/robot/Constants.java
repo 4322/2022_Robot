@@ -336,9 +336,9 @@ public final class Constants {
     public static final double configVoltageCompSaturation = 11.5;
     public static final boolean enableVoltageCompensation = true;
 
-    public static final double forward1 = 3000;
-    public static final double backward1 = 1000;
-    public static final double forward2 = 6000;
+    public static final double forward1 = 50000;
+    public static final double backward1 = -25000;
+    public static final double forward2 = 30000;
     public static final int positionTolerance = 20;
     public static final double overrideTime = 15;
 

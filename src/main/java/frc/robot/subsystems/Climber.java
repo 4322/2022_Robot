@@ -63,10 +63,13 @@ public class Climber extends SubsystemBase {
       climberLeft.configOpenloopRamp(ClimberConstants.rampRate); // for PID tuning
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
       climberLeft.setNeutralMode(NeutralMode.Brake);
       climberRight.setNeutralMode(NeutralMode.Brake);
+      
 
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Climber");
@@ -91,8 +94,6 @@ public class Climber extends SubsystemBase {
         ClimberConstants.supplyLimit,
         ClimberConstants.supplyThreshold,
         ClimberConstants.supplyTime));
-    climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,
-        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
 
   @Override
