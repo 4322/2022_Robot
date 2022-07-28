@@ -36,6 +36,8 @@ public class Climber extends SubsystemBase {
   private WPI_TalonFX climberLeft;
   private WPI_TalonFX climberRight;
 
+  private Double currentTarget = null;
+
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
   private NetworkTableEntry positionDisplay;
@@ -67,7 +69,7 @@ public class Climber extends SubsystemBase {
       configCurrentLimit(climberRight);
       climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,  // rapid updates for follower
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0,  // for position error feedback
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
@@ -137,7 +139,7 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (Math.abs(climberLeft.getClosedLoopError()) <= ClimberConstants.positionTolerance);
+    return (Math.abs(getPosition()-currentTarget) <= ClimberConstants.positionTolerance);
   }
 
   public void moveToPosition(double pos) {
@@ -152,6 +154,7 @@ public class Climber extends SubsystemBase {
   public void setCurrentPosition(double pos) {
     if (Constants.hoodEnabled) {
       climberLeft.setSelectedSensorPosition(pos);
+      currentTarget = pos;
     }
   }
 

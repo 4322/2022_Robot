@@ -4,13 +4,6 @@ Vertical Position
 Forward rotation (toward front) until hit bar
 Reposition robot to line up hooks
 
-Climb Auto
-Continue clockwise until passing second bar
-Counter clockwise to release previous hook and engage new hook
-Clockwise until passing third bar
-Counter clockwise to release previous hook and engage new hook
-Clockwise until vertical to complete hang
-
 */
 
 package frc.robot.commands;
@@ -20,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 
-public class ClimbAuto extends CommandBase {
+public class ClimbVertical extends CommandBase {
 
   private climberMode currentMode;
   private final Climber climber;
@@ -28,15 +21,11 @@ public class ClimbAuto extends CommandBase {
 
   public enum climberMode {
     stopped,
-    forwardSecondBar,
-    backwardLatchSecond,
-    forwardThirdBar,
-    backwardLatchThird,
-    forwardVertical,
+    forwardFirstBar,
     done;
   }
 
-  public ClimbAuto(Climber climbsubsystem) {
+  public ClimbVertical(Climber climbsubsystem) {
     climber = climbsubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -57,34 +46,10 @@ public class ClimbAuto extends CommandBase {
   public void execute() {
     switch (currentMode) {
       case stopped:
-        climber.moveToPosition(ClimberConstants.forwardSecondBar);
-        currentMode = climberMode.forwardSecondBar;
+        climber.moveToPosition(ClimberConstants.forwardFirstBar);
+        currentMode = climberMode.forwardFirstBar;
       break;
-      case forwardSecondBar:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.backwardLatchSecond);
-          currentMode = climberMode.backwardLatchSecond;
-        }
-        break;
-      case backwardLatchSecond:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.forwardThirdBar);
-          currentMode = climberMode.forwardThirdBar;
-        }
-      break;
-      case forwardThirdBar:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.backwardLatchThird);
-          currentMode = climberMode.backwardLatchThird;
-        }
-      break;
-      case backwardLatchThird:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.forwardVertical);
-          currentMode = climberMode.forwardVertical;
-        }
-      break;
-      case forwardVertical:
+      case forwardFirstBar:
         if (climber.isAtTarget()) {
           climber.stop();
           currentMode = climberMode.done;
