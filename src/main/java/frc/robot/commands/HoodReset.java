@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
-import frc.robot.Constants.HoodConstants;
 import frc.robot.subsystems.Hood;
 
 public class HoodReset extends CommandBase {
