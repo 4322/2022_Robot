@@ -84,8 +84,9 @@ public class RobotContainer {
   // Hood Commands
   private final HoodReset hoodReset = new HoodReset(hood);
 
-  //Climber Commands
+  // Climber Commands
   private final ClimbAuto climbAuto = new ClimbAuto(climber);
+  private final ClimbStop climbStop = new ClimbStop(climber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -188,6 +189,7 @@ public class RobotContainer {
       coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
 
       coPilot.start.whenPressed(climbAuto);
+      coPilot.dPad.up.whenPressed(climbStop);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
