@@ -66,6 +66,8 @@ public final class Constants {
   // SPARK controllers support status periods of up to 65535 ms
   public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
 
+  public static final int falconEncoderResolution = 2048;
+
   // Controller commands are transmited by the library on the CAN bus every 10 ms.
   // We then need to wait for the next status frame 
   // for the values we read from the library to be current.
@@ -118,8 +120,6 @@ public final class Constants {
       public static final int rearRightEncoderID = 11;
       public static final int frontLeftEncoderID = 12;
       public static final int rearLeftEncoderID = 13;
-
-      public static final int encoderResolution = 2048;
 
       public static final double kMaxSpeed = 3.0;
       public static final double kMaxAngularSpeed = Math.PI;
@@ -175,7 +175,7 @@ public final class Constants {
           public static final double configCLosedLoopRamp = 0.08;
           public static final double minPower = 0.0;  // allow for tighter tolerance
           public static final double maxPower = 0.3;  // reduce gear wear and overshoot
-          public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
+          public static final double countToDegrees = 360.0 / falconEncoderResolution * 12 / 24 * 14 / 72;
 
           public static final double configVoltageCompSaturation = 11.5;
           public static final boolean enableVoltageCompensation = true;
@@ -337,7 +337,6 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    // gear ratio of motor to climber revolutions is 245.4545... : 1
 
     public static final int climberLeftID = 20;
     public static final int climberRightID = 21;
@@ -352,6 +351,9 @@ public final class Constants {
     public static final double forwardVertical = -101000;
     public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
+
+    // gear ratio of motor to climber revolutions is 245.4545... : 1
+    public static final double fullRotation = 245.45454545 * falconEncoderResolution;
 
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 20;
