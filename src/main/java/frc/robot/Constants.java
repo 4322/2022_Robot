@@ -331,6 +331,8 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
+    // gear ratio of motor to climber revolutions is 245.4545... : 1
+
     public static final int climberLeftID = 20;
     public static final int climberRightID = 21;
     public static final double configVoltageCompSaturation = 11.5;

@@ -1,3 +1,18 @@
+/*
+
+Vertical Position
+Forward rotation (toward front) until hit bar
+Reposition robot to line up hooks
+
+Climb Auto
+Continue clockwise until passing second bar
+Counter clockwise to release previous hook and engage new hook
+Clockwise until passing third bar
+Counter clockwise to release previous hook and engage new hook
+Clockwise until vertical to complete hang
+
+*/
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
