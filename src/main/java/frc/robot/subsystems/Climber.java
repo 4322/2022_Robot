@@ -39,6 +39,7 @@ public class Climber extends SubsystemBase {
   // to be enabled if debug mode is on
   private ShuffleboardTab tab;
   private NetworkTableEntry positionDisplay;
+  private NetworkTableEntry targetDisplay;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -64,7 +65,9 @@ public class Climber extends SubsystemBase {
       climberLeft.configOpenloopRamp(ClimberConstants.rampRate); // for PID tuning
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,  // rapid updates for follower
+        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
@@ -76,6 +79,10 @@ public class Climber extends SubsystemBase {
         tab = Shuffleboard.getTab("Climber");
         positionDisplay = tab.add("Position", 0)
             .withPosition(0, 0)
+            .withSize(1, 1)
+            .getEntry();
+        targetDisplay = tab.add("Target", 0)
+            .withPosition(1, 0)
             .withSize(1, 1)
             .getEntry();
       }
@@ -130,12 +137,15 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (climberLeft.getClosedLoopError() <= ClimberConstants.positionTolerance);
+    return (Math.abs(climberLeft.getClosedLoopError()) <= ClimberConstants.positionTolerance);
   }
 
   public void moveToPosition(double pos) {
     if (Constants.climberEnabled) {
       climberLeft.set(ControlMode.Position, pos);
+      if (Constants.debug) {
+        targetDisplay.setDouble(pos);
+      }
     }
   }
 
