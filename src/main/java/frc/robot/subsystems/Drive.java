@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -56,7 +57,7 @@ public class Drive extends SubsystemBase {
             // wheel locations must be in the same order as the WheelPosition enum values
             frontRightLocation, frontLeftLocation, backLeftLocation, backRightLocation);
 
-  private RamseteController ram = new RamseteController();
+  private PPSwerveControllerCommand swerveController = new PPSwerveControllerCommand();
             
   private SwerveDriveOdometry odometry;
   private double robotCentricOffsetDegrees;
@@ -127,7 +128,7 @@ public class Drive extends SubsystemBase {
         }
       }
 
-      ram.setTolerance(DriveConstants.poseError);
+      swerveController.setTolerance(DriveConstants.poseError);
 
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Drivebase");
@@ -488,7 +489,7 @@ public class Drive extends SubsystemBase {
 
   // Drive using State object
   public void drive(State trajectoryState) {
-    var swerveModuleStates = kinematics.toSwerveModuleStates(ram.calculate(odometry.getPoseMeters(), trajectoryState));
+    var swerveModuleStates = kinematics.toSwerveModuleStates(swerveController.calculate(odometry.getPoseMeters(), trajectoryState));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
     for (int i = 0; i < swerveModules.length; i++) {
       swerveModules[i].setDesiredState(swerveModuleStates[i]);
@@ -496,7 +497,7 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isAtTarget() {
-    return ram.atReference();
+    return swerveController.atReference();
   }
 
   // Uses a PID Controller to rotate the robot to a certain degree
