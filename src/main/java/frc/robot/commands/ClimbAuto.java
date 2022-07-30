@@ -55,43 +55,45 @@ public class ClimbAuto extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch (currentMode) {
-      case stopped:
-        climber.moveToPosition(ClimberConstants.forwardSecondBar);
-        currentMode = climberMode.forwardSecondBar;
-      break;
-      case forwardSecondBar:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.backwardLatchSecond);
-          currentMode = climberMode.backwardLatchSecond;
-        }
+    if (climber.getClimbUnlocked()) {
+      switch (currentMode) {
+        case stopped:
+          climber.moveToPosition(ClimberConstants.forwardSecondBar);
+          currentMode = climberMode.forwardSecondBar;
         break;
-      case backwardLatchSecond:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.forwardThirdBar);
-          currentMode = climberMode.forwardThirdBar;
-        }
-      break;
-      case forwardThirdBar:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.backwardLatchThird);
-          currentMode = climberMode.backwardLatchThird;
-        }
-      break;
-      case backwardLatchThird:
-        if (climber.isAtTarget()) {
-          climber.moveToPosition(ClimberConstants.forwardVertical);
-          currentMode = climberMode.forwardVertical;
-        }
-      break;
-      case forwardVertical:
-        if (climber.isAtTarget()) {
-          climber.stop();
-          currentMode = climberMode.done;
-        }
-      break;
-      case done:
+        case forwardSecondBar:
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.backwardLatchSecond);
+            currentMode = climberMode.backwardLatchSecond;
+          }
+          break;
+        case backwardLatchSecond:
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.forwardThirdBar);
+            currentMode = climberMode.forwardThirdBar;
+          }
         break;
+        case forwardThirdBar:
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.backwardLatchThird);
+            currentMode = climberMode.backwardLatchThird;
+          }
+        break;
+        case backwardLatchThird:
+          if (climber.isAtTarget()) {
+            climber.moveToPosition(ClimberConstants.forwardVertical);
+            currentMode = climberMode.forwardVertical;
+          }
+        break;
+        case forwardVertical:
+          if (climber.isAtTarget()) {
+            climber.stop();
+            currentMode = climberMode.done;
+          }
+        break;
+        case done:
+          break;
+      }
     }
   }
 
@@ -104,7 +106,9 @@ public class ClimbAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((currentMode == climberMode.done) || (overrideTimer.hasElapsed(ClimberConstants.overrideTime)));
+    return ((currentMode == climberMode.done) || 
+    (overrideTimer.hasElapsed(ClimberConstants.overrideTime)) || 
+    !climber.getClimbUnlocked());
   }
 
 }

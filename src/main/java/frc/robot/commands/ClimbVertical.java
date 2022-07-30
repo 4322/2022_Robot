@@ -64,6 +64,7 @@ public class ClimbVertical extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     climber.stop();
+    climber.unlockClimb();
   }
 
   // Returns true when the command should end.

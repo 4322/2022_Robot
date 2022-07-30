@@ -43,7 +43,8 @@ public class Climber extends SubsystemBase {
   private NetworkTableEntry positionDisplay;
   private NetworkTableEntry targetDisplay;
 
-  private boolean climbEnabled = false;
+  // only unlock the climber if climber has been set to vertical position or manually unlocked (stopped)
+  private boolean climbUnlocked = false;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -160,12 +161,12 @@ public class Climber extends SubsystemBase {
     }
   }
 
-  public void enableClimb() {
-    climbEnabled = true;
+  public void unlockClimb() {
+    climbUnlocked = true;
   }
 
-  public boolean getClimbEnabled() {
-    return climbEnabled;
+  public boolean getClimbUnlocked() {
+    return climbUnlocked;
   }
 
   public void setCoastMode() {

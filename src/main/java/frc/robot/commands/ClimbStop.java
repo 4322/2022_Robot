@@ -27,7 +27,7 @@ public class ClimbStop extends InstantCommand {
   @Override
   public void initialize() {
     climber.stop();
-    climber.enableClimb();
+    climber.unlockClimb();
   }
 
   // Called once the command ends or is interrupted.
