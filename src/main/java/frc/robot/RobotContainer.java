@@ -87,6 +87,7 @@ public class RobotContainer {
   // Climber Commands
   private final ClimbAuto climbAuto = new ClimbAuto(climber);
   private final ClimbStop climbStop = new ClimbStop(climber);
+  private final ClimbVertical climbVertical = new ClimbVertical (climber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -189,7 +190,8 @@ public class RobotContainer {
       coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
 
       coPilot.start.whenPressed(climbAuto);
-      coPilot.dPad.up.whenPressed(climbStop);
+      coPilot.dPad.down.whenPressed(climbStop);
+      coPilot.dPad.up.whenPressed(climbVertical);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
