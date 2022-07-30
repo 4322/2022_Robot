@@ -344,11 +344,11 @@ public final class Constants {
     public static final boolean enableVoltageCompensation = true;
 
     public static final double forwardFirstBar= -100000;
-    public static final double forwardSecondBar= -100000;
-    public static final double backwardLatchSecond = 100000; //need to change these values
-    public static final double forwardThirdBar = -101000;
-    public static final double backwardLatchThird = -101000;
-    public static final double forwardVertical = -101000;
+    public static final double forwardSecondBar= -80000;
+    public static final double backwardLatchSecond = 60000; //need to change these values
+    public static final double forwardThirdBar = -121000;
+    public static final double backwardLatchThird = -14000;
+    public static final double forwardVertical = -181000;
     public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
 
