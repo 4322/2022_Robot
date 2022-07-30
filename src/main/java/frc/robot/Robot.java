@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -122,6 +123,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.hoodReset();
     m_robotContainer.enableSubsystems();
+    m_robotContainer.climberReset();
   }
 
   /** This function is called periodically during operator control. */

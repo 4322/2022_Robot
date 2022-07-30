@@ -148,6 +148,7 @@ public class Climber extends SubsystemBase {
   public void moveToPosition(double pos) {
     if (Constants.climberEnabled) {
       climberLeft.set(ControlMode.Position, pos);
+      currentTarget = pos;
       if (Constants.debug) {
         targetDisplay.setDouble(pos);
       }
@@ -157,7 +158,6 @@ public class Climber extends SubsystemBase {
   public void setCurrentPosition(double pos) {
     if (Constants.climberEnabled) {
       climberLeft.setSelectedSensorPosition(pos);
-      currentTarget = pos;
     }
   }
 
@@ -171,8 +171,16 @@ public class Climber extends SubsystemBase {
     climbUnlocked = true;
   }
 
-  public boolean getClimbUnlocked() {
+  public boolean isClimbUnlocked() {
     return climbUnlocked;
+  }
+
+  public void lockClimb() {
+    climbUnlocked = false;
+  }
+
+  public boolean isClimbLocked() {
+    return !climbUnlocked;
   }
 
   public void setCoastMode() {
