@@ -152,11 +152,18 @@ public class Climber extends SubsystemBase {
   }
 
   public void setCurrentPosition(double pos) {
-    if (Constants.hoodEnabled) {
+    if (Constants.climberEnabled) {
       climberLeft.setSelectedSensorPosition(pos);
       currentTarget = pos;
     }
   }
+
+  public void setClimberSpeed(double speed){
+    if (Constants.climberEnabled) {
+      climberLeft.set(speed);
+    }
+  }
+
 
   public void setCoastMode() {
     climberLeft.setNeutralMode(NeutralMode.Coast);
