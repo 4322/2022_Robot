@@ -533,7 +533,7 @@ public class RobotContainer {
   // Status frames needed at a higher rate can be set after initialization.
   public static void staggerTalonFrames(WPI_TalonFX talon) {
     talon.setControlFramePeriod(ControlFrame.Control_3_General, nextFastControlPeriodMs());
-    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());  // not sure what rate to use here
     talon.setControlFramePeriod(ControlFrame.Control_6_MotProfAddTrajPoint, nextSlowControlPeriodMs());
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
       RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
@@ -571,7 +571,7 @@ public class RobotContainer {
   // Status frames needed at a higher rate can be set after initialization.
   public static void staggerTalonFrames(WPI_TalonSRX talon) {
     talon.setControlFramePeriod(ControlFrame.Control_3_General, nextFastControlPeriodMs());
-    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());  // not sure what rate to use here
     talon.setControlFramePeriod(ControlFrame.Control_6_MotProfAddTrajPoint, nextSlowControlPeriodMs());
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
       RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);

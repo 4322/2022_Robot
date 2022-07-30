@@ -58,7 +58,8 @@ public final class Constants {
   // configuration values common to all motor controllers
   public static final int controllerConfigTimeoutMs = 50;
   public static final int fastControlPeriodBaseMs = 10;
-  public static final int fastControlPeriodMaxMs = 13;
+  // fastControlPeriodMaxMs - fastControlPeriodBaseMs + 1 must be odd to desync general frames from advanced frames
+  public static final int fastControlPeriodMaxMs = 14;
   public static final int slowControlPeriodBaseMs = 70;
   public static final int slowControlPeriodMaxMs = 90;
   public static final int fastStatusPeriodBaseMs = 13;
