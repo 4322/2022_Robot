@@ -87,7 +87,8 @@ public class RobotContainer {
   // Climber Commands
   private final ClimbAuto climbAuto = new ClimbAuto(climber);
   private final ClimbStop climbStop = new ClimbStop(climber);
-  private final ClimbVertical climbVertical = new ClimbVertical (climber);
+  private final ClimbVertical climbVertical = new ClimbVertical(climber);
+  private final ClimbManual climbManual = new ClimbManual(climber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -128,6 +129,9 @@ public class RobotContainer {
 
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
+    }
+    if (Constants.climberEnabled) {
+      climber.setDefaultCommand(climbManual);
     }
   }
 

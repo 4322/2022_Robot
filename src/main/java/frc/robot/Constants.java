@@ -370,5 +370,7 @@ public final class Constants {
     public static final double kMinRange = 0.07;
     public static final double kMaxRange = 0.6;
     public static final double rampRate = 0.6;
+
+    public static final double manualDeadband = 0.1;
   }
 }
