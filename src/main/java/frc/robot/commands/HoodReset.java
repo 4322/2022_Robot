@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
@@ -37,6 +38,7 @@ public class HoodReset extends CommandBase {
     overrideTimer.start();
     hood.clearInitialHome();
     hood.moveHome();
+    DataLogManager.log("Started HoodReset");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,7 +81,7 @@ public class HoodReset extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    DataLogManager.log("Interrupted Hood Reset: " + DriverStation.getMatchTime());
   }
 
   // Returns true when the command should end.
@@ -88,10 +90,12 @@ public class HoodReset extends CommandBase {
     if (currentState == resetStates.secondAtHome) {
       hood.stop();
       hood.setInitiallyHomed();
+      DataLogManager.log("Ended Hood Reset:" + overrideTimer.get());
       return true;
     }
     else if (overrideTimer.hasElapsed(Constants.HoodConstants.homingTimeout)) {
       DriverStation.reportError("Hood homing timed out", false);
+      DataLogManager.log("Ended Hood Reset: " + overrideTimer.get());
       hood.stop();
       return true;
     }
