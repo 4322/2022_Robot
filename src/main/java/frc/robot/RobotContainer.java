@@ -189,7 +189,7 @@ public class RobotContainer {
       coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
 
       coPilot.start.whenPressed(climbAuto);
-      coPilot.dPad.up.whenPressed(climbStop);
+      coPilot.dPad.down.whenPressed(climbStop);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));

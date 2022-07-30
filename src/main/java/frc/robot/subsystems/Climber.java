@@ -41,6 +41,8 @@ public class Climber extends SubsystemBase {
   private NetworkTableEntry positionDisplay;
   private NetworkTableEntry targetDisplay;
 
+  private boolean climbEnabled = false;
+
   public Climber() {
     if (Constants.climberEnabled) {
       climberLeft = new WPI_TalonFX(ClimberConstants.climberLeftID);
@@ -153,6 +155,14 @@ public class Climber extends SubsystemBase {
     if (Constants.hoodEnabled) {
       climberLeft.setSelectedSensorPosition(pos);
     }
+  }
+
+  public void enableClimb() {
+    climbEnabled = true;
+  }
+
+  public boolean getClimbEnabled() {
+    return climbEnabled;
   }
 
   public void setCoastMode() {
