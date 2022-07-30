@@ -497,6 +497,10 @@ public class RobotContainer {
     }
   }
 
+  public void climberReset() {
+    climber.lockClimb();
+  }
+  
   // stagger status frame periods to reduce peak CAN bus utilization
   private static int nextFastStatusPeriodMs = Constants.fastStatusPeriodBaseMs;
   private static int nextShuffleboardStatusPeriodMs = Constants.shuffleboardStatusPeriodBaseMs;
