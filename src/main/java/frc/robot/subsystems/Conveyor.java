@@ -50,7 +50,7 @@ public class Conveyor extends SubsystemBase {
 
     if (Constants.conveyorEnabled) {
       conveyor = new WPI_TalonSRX(ConveyorConstants.motorID);
-      RobotContainer.staggerTalonStatusFrames(conveyor);
+      RobotContainer.staggerTalonFrames(conveyor);
     }
  }
 

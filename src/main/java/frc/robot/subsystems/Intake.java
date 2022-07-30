@@ -78,7 +78,8 @@ public class Intake extends SubsystemBase{
     if (Constants.intakeEnabled) {
       intakeMotor = new CANSparkMax(Constants.IntakeConstants.motorID, MotorType.kBrushless);
 
-      // increase status reporting periods to reduce CAN bus utilization
+      // increase control and status periods to reduce CAN bus utilization
+      intakeMotor.setControlFramePeriodMs(RobotContainer.nextFastControlPeriodMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 

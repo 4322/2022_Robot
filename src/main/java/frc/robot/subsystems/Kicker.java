@@ -38,7 +38,8 @@ public class Kicker extends SubsystemBase {
       kicker = new CANSparkMax(KickerConstants.kickerID, MotorType.kBrushless);
       modeTimer.start();
 
-      // increase status reporting periods to reduce CAN bus utilization
+      // increase control and status periods to reduce CAN bus utilization
+      kicker.setControlFramePeriodMs(RobotContainer.nextFastControlPeriodMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 
         RobotContainer.nextSlowStatusPeriodMs());
       kicker.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 

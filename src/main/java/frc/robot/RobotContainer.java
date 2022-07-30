@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -480,12 +481,28 @@ public class RobotContainer {
     }
   }
 
-  // stagger status frame periods to reduce peak CAN bus utilization
+  // stagger control and status frame periods to reduce peak CAN bus utilization
+  private static int nextFastControlPeriodMs = Constants.fastControlPeriodBaseMs;
+  private static int nextSlowControlPeriodMs = Constants.slowControlPeriodBaseMs;
   private static int nextFastStatusPeriodMs = Constants.fastStatusPeriodBaseMs;
   private static int nextShuffleboardStatusPeriodMs = Constants.shuffleboardStatusPeriodBaseMs;
   private static int nextSlowStatusPeriodMs = Constants.slowStatusPeriodBaseMs;
   private static int nextVerySlowStatusPeriodSparkMs = Constants.verySlowStatusPeriodSparkBaseMs;
   
+  public static int nextFastControlPeriodMs() {
+    if (nextFastControlPeriodMs > Constants.fastControlPeriodMaxMs) {
+      nextFastControlPeriodMs = Constants.fastControlPeriodBaseMs;
+    }
+    return nextFastControlPeriodMs++;
+  }
+
+  public static int nextSlowControlPeriodMs() {
+    if (nextSlowControlPeriodMs > Constants.slowControlPeriodMaxMs) {
+      nextSlowControlPeriodMs = Constants.slowControlPeriodBaseMs;
+    }
+    return nextSlowControlPeriodMs++;
+  }
+
   public static int nextFastStatusPeriodMs() {
     if (nextFastStatusPeriodMs > Constants.fastStatusPeriodMaxMs) {
       nextFastStatusPeriodMs = Constants.fastStatusPeriodBaseMs;
@@ -512,9 +529,12 @@ public class RobotContainer {
     return nextVerySlowStatusPeriodSparkMs;
   }
 
-  // Stagger status frames from Talon FX controllers.
+  // Stagger control and status frames from Talon FX controllers.
   // Status frames needed at a higher rate can be set after initialization.
-  public static void staggerTalonStatusFrames(WPI_TalonFX talon) {
+  public static void staggerTalonFrames(WPI_TalonFX talon) {
+    talon.setControlFramePeriod(ControlFrame.Control_3_General, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_6_MotProfAddTrajPoint, nextSlowControlPeriodMs());
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
       RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
@@ -547,9 +567,12 @@ public class RobotContainer {
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
   }
 
-  // Stagger status frames from Talon SRX controllers.
+  // Stagger control and status frames from Talon SRX controllers.
   // Status frames needed at a higher rate can be set after initialization.
-  public static void staggerTalonStatusFrames(WPI_TalonSRX talon) {
+  public static void staggerTalonFrames(WPI_TalonSRX talon) {
+    talon.setControlFramePeriod(ControlFrame.Control_3_General, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_4_Advanced, nextFastControlPeriodMs());
+    talon.setControlFramePeriod(ControlFrame.Control_6_MotProfAddTrajPoint, nextSlowControlPeriodMs());
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
       RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
     talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 

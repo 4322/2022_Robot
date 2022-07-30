@@ -57,6 +57,10 @@ public final class Constants {
 
   // configuration values common to all motor controllers
   public static final int controllerConfigTimeoutMs = 50;
+  public static final int fastControlPeriodBaseMs = 10;
+  public static final int fastControlPeriodMaxMs = 13;
+  public static final int slowControlPeriodBaseMs = 70;
+  public static final int slowControlPeriodMaxMs = 90;
   public static final int fastStatusPeriodBaseMs = 13;
   public static final int fastStatusPeriodMaxMs = 18;  // less than 20ms periodic code cycle time
   public static final int shuffleboardStatusPeriodBaseMs = 75;

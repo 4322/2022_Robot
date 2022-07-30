@@ -35,8 +35,8 @@ public class TalonFXModule extends ControlModule {
 		m_encoder = new CANCoder(encoderID);
 		m_wheelPosition = pos;
 
-		RobotContainer.staggerTalonStatusFrames(m_wheel);
-		RobotContainer.staggerTalonStatusFrames(m_rotation);
+		RobotContainer.staggerTalonFrames(m_wheel);
+		RobotContainer.staggerTalonFrames(m_rotation);
 		m_encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 
 			RobotContainer.nextSlowStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
 	}

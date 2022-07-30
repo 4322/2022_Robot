@@ -31,7 +31,7 @@ public class Hood extends SubsystemBase {
   public Hood() {
     if (Constants.hoodEnabled) {
       hood = new WPI_TalonSRX(HoodConstants.motorID);
-      RobotContainer.staggerTalonStatusFrames(hood);
+      RobotContainer.staggerTalonFrames(hood);
     }
   }
 
