@@ -1,16 +1,19 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
@@ -588,6 +591,20 @@ public class Drive extends SubsystemBase {
     return kinematics;
   }
 
+  public Pose2d getPose2d() {
+    return odometry.getPoseMeters();
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    int i = 0;
+    for (SwerveModule s : swerveModules) {
+      states[i] = s.getState();
+      i++;
+    }
+    return states;
+  }
+  
   public class VectorXY extends Vector2d {
 
     public VectorXY() {

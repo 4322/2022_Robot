@@ -6,11 +6,15 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,6 +36,7 @@ import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -257,23 +262,16 @@ public class RobotContainer {
       return null;
     }
 
-    TrajectoryConfig config = new TrajectoryConfig(
-      DriveConstants.autoMaxSpeedMetersPerSecond,
-      DriveConstants.autoMaxAccelerationMetersPerSecond)
-      .setKinematics(drive.getKinematics());
-    
-    Trajectory exampleTrajectory =
-      TrajectoryGenerator.generateTrajectory(
-          // Start at the origin facing the +X direction
-          new Pose2d(0, 0, new Rotation2d(0)),
-          // Pass through these two interior waypoints, making an 's' curve path
-          List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-          // End 3 meters straight ahead of where we started, facing forward
-          new Pose2d(3, 0, new Rotation2d(0)),
-          // Pass config
-          config);
-    
-    return new DriveTrajectory(drive, exampleTrajectory, true);
+    PPSwerveControllerCommand testCommand1 = new PPSwerveControllerCommand(
+        arg1, 
+        drive.getPose2d(), 
+        drive.getKinematics(), 
+        new PIDController(0, 0, 0), // pass in empty controller in or
+        new PIDController(0, 0, 0), 
+        new ProfiledPIDController(0, 0, 0), 
+        drive.getModuleStates(),
+        drive
+      );
 
   }
 
