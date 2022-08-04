@@ -50,9 +50,9 @@ public class Climber extends SubsystemBase {
     if (Constants.climberEnabled) {
       TalonFXConfiguration config = new TalonFXConfiguration();
       config.slot0.kP = ClimberConstants.kPUnloaded;
-      config.slot0.kD = ClimberConstants.kDLoaded;
+      config.slot0.kD = ClimberConstants.kDUnloaded;
       config.slot0.allowableClosedloopError = ClimberConstants.positionTolerance;
-      config.slot1.kP = ClimberConstants.kPUnloaded;
+      config.slot1.kP = ClimberConstants.kPLoaded;
       config.slot1.kD = ClimberConstants.kDLoaded;
       config.slot1.allowableClosedloopError = ClimberConstants.positionTolerance;
       config.nominalOutputForward = ClimberConstants.kMinRange;
@@ -139,8 +139,9 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition()-currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public void moveToPosition(double pos) {
+  public void moveToPosition(double pos, int profile) {
     if (Constants.climberEnabled) {
+      climberLeft.selectProfileSlot(profile, profile);
       climberLeft.set(ControlMode.Position, pos);
       currentTarget = pos;
       if (Constants.debug) {
