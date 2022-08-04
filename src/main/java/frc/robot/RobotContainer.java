@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 import java.util.List;
 
@@ -258,11 +256,22 @@ public class RobotContainer {
     if (Constants.demo.inDemoMode) {
       return null;
     }
+
+    TrajectoryConfig config = new TrajectoryConfig(
+      DriveConstants.autoMaxSpeedMetersPerSecond,
+      DriveConstants.autoMaxAccelerationMetersPerSecond)
+      .setKinematics(drive.getKinematics());
     
-    PathPlannerTrajectory exampleTrajectory =
-      PathPlanner.loadPath("Test Path", 
-        DriveConstants.autoMaxSpeedMetersPerSecond, 
-        DriveConstants.autoMaxAccelerationMetersPerSecond);
+    Trajectory exampleTrajectory =
+      TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          new Pose2d(0, 0, new Rotation2d(0)),
+          // Pass through these two interior waypoints, making an 's' curve path
+          List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+          // End 3 meters straight ahead of where we started, facing forward
+          new Pose2d(3, 0, new Rotation2d(0)),
+          // Pass config
+          config);
     
     return new DriveTrajectory(drive, exampleTrajectory, true);
 
