@@ -11,7 +11,7 @@ public class DrivePreTurnWheels extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   /**
-   * Creates a new Drive_Manual.
+   * Creates a new Drive_Manual. 
    *
    * @param subsystem The subsystem used by this command.
    */
