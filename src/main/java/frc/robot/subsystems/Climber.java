@@ -1,12 +1,3 @@
-/* 
-Code review comment:
-Determine how you want to abort a climb. We could only continue while the start button is held down, 
-but we can't restart the entire sequence if the operator accidentally releases the button because the 
-climber would no longer be in initial position. The other buttons aren't needed once we start climbing, 
-so we could redefine one of them as the abort. We will figure out how to handle automatic feedback, 
-such as a motor stall or robot tilt, with Torsten on Wednesday.
-*/
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -44,7 +35,7 @@ public class Climber extends SubsystemBase {
   private NetworkTableEntry targetDisplay;
 
   // only unlock the climber if climber has been set to vertical position or manually unlocked (stopped)
-  private boolean climbUnlocked = false;
+  private boolean climbLocked = true;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -58,9 +49,12 @@ public class Climber extends SubsystemBase {
   public void init() {
     if (Constants.climberEnabled) {
       TalonFXConfiguration config = new TalonFXConfiguration();
-      config.slot0.kP = ClimberConstants.kP;
-      config.slot0.kD = ClimberConstants.kD;
+      config.slot0.kP = ClimberConstants.kPUnloaded;
+      config.slot0.kD = ClimberConstants.kDLoaded;
       config.slot0.allowableClosedloopError = ClimberConstants.positionTolerance;
+      config.slot1.kP = ClimberConstants.kPUnloaded;
+      config.slot1.kD = ClimberConstants.kDLoaded;
+      config.slot1.allowableClosedloopError = ClimberConstants.positionTolerance;
       config.nominalOutputForward = ClimberConstants.kMinRange;
       config.nominalOutputReverse = -ClimberConstants.kMinRange;
       config.peakOutputForward = ClimberConstants.kMaxRange;
@@ -168,28 +162,32 @@ public class Climber extends SubsystemBase {
   }
 
   public void unlockClimb() {
-    climbUnlocked = true;
+    climbLocked = false;
   }
 
   public boolean isClimbUnlocked() {
-    return climbUnlocked;
+    return !climbLocked;
   }
 
   public void lockClimb() {
-    climbUnlocked = false;
+    climbLocked = true;
   }
 
   public boolean isClimbLocked() {
-    return !climbUnlocked;
+    return climbLocked;
   }
 
   public void setCoastMode() {
-    climberLeft.setNeutralMode(NeutralMode.Coast);
-    climberRight.setNeutralMode(NeutralMode.Coast);
+    if (Constants.climberEnabled) {
+      climberLeft.setNeutralMode(NeutralMode.Coast);
+      climberRight.setNeutralMode(NeutralMode.Coast);
+    }
   }
 
   public void setBrakeMode() {
-    climberLeft.setNeutralMode(NeutralMode.Brake);
-    climberRight.setNeutralMode(NeutralMode.Brake);
+    if (Constants.climberEnabled) {
+      climberLeft.setNeutralMode(NeutralMode.Brake);
+      climberRight.setNeutralMode(NeutralMode.Brake);
+    }
   }
 }

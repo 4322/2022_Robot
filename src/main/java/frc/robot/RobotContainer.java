@@ -89,6 +89,7 @@ public class RobotContainer {
   private final ClimbStop climbStop = new ClimbStop(climber);
   private final ClimbVertical climbVertical = new ClimbVertical(climber);
   private final ClimbManual climbManual = new ClimbManual(climber);
+  private final ClimberReset climberReset = new ClimberReset(climber);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -498,7 +499,7 @@ public class RobotContainer {
   }
 
   public void climberReset() {
-    climber.lockClimb();
+    climberReset.schedule(false);
   }
   
   // stagger status frame periods to reduce peak CAN bus utilization

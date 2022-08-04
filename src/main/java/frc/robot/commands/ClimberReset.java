@@ -26,7 +26,8 @@ public class ClimberReset extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   climber.lockClimb();
+    climber.setCurrentPosition(0);
+    climber.lockClimb();
   }
 
   // Called once the command ends or is interrupted.

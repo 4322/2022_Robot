@@ -356,17 +356,19 @@ public final class Constants {
     public static final double fullRotation = 245.45454545 * falconEncoderResolution;
 
     public static final boolean statorEnabled = true;
-    public static final double statorLimit = 20;
+    public static final double statorLimit = 40;
     public static final double statorThreshold = 25;
     public static final double statorTime = 1.0;
 
     public static final boolean supplyEnabled = true;
-    public static final double supplyLimit = 20;
+    public static final double supplyLimit = 40;
     public static final double supplyThreshold = 25;
     public static final double supplyTime = 1.0;
 
-    public static final double kP = 0.025;
-    public static final double kD = 0;
+    public static final double kPUnloaded = 0.025;
+    public static final double kPLoaded = 0.075;
+    public static final double kDUnloaded = 0;
+    public static final double kDLoaded = 0;
     public static final double kMinRange = 0.07;
     public static final double kMaxRange = 0.6;
     public static final double rampRate = 0.6;
