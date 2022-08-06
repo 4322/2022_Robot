@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
@@ -594,14 +595,12 @@ public class Drive extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
-  public SwerveModuleState[] getModuleStates() {
-    SwerveModuleState[] states = new SwerveModuleState[4];
+  public void setModuleStates(SwerveModuleState[] states) {
     int i = 0;
-    for (SwerveModule s : swerveModules) {
-      states[i] = s.getState();
+    for (SwerveModuleState s : states) {
+      swerveModules[i].setDesiredState(s);
       i++;
     }
-    return states;
   }
   
   public class VectorXY extends Vector2d {
