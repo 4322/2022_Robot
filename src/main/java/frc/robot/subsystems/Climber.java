@@ -184,10 +184,6 @@ public class Climber extends SubsystemBase {
     return climbLocked;
   }
 
-  public boolean isClimbUnlocked() {
-    return !climbLocked;
-  }
-
   public void setCoastMode() {
     if (Constants.climberEnabled) {
       climberLeft.setNeutralMode(NeutralMode.Coast);

@@ -33,7 +33,7 @@ public class ClimbManual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (climber.isClimbUnlocked()) {
+    if (!climber.isClimbLocked()) {
       speed = RobotContainer.coPilot.leftStick.getY();
       if (Math.abs(speed) < ClimberConstants.manualDeadband) {
         speed = 0;

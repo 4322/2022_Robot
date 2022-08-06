@@ -54,7 +54,7 @@ public class ClimbAuto extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (climber.isClimbUnlocked()) {
+    if (!climber.isClimbLocked()) {
       switch (currentMode) {
         case stopped:
           climber.moveToPosition(ClimberConstants.forwardSecondBar, Climber.climbMode.loaded);
@@ -107,7 +107,7 @@ public class ClimbAuto extends CommandBase {
   public boolean isFinished() {
     return ((currentMode == climberMode.done) || 
     (overrideTimer.hasElapsed(ClimberConstants.overrideTime)) || 
-    !climber.isClimbUnlocked());
+    climber.isClimbLocked());
   }
 
 }
