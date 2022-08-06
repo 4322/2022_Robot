@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import com.kauailabs.navx.frc.AHRS;
 
