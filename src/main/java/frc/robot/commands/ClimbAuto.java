@@ -57,30 +57,30 @@ public class ClimbAuto extends CommandBase {
     if (climber.isClimbUnlocked()) {
       switch (currentMode) {
         case stopped:
-          climber.moveToPosition(ClimberConstants.forwardSecondBar, 0);
+          climber.moveToPosition(ClimberConstants.forwardSecondBar, Climber.climbMode.loaded);
           currentMode = climberMode.forwardSecondBar;
         break;
         case forwardSecondBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.backwardLatchSecond, 0);
+            climber.moveToPosition(ClimberConstants.backwardLatchSecond, Climber.climbMode.loaded);
             currentMode = climberMode.backwardLatchSecond;
           }
           break;
         case backwardLatchSecond:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.forwardThirdBar, 0);
+            climber.moveToPosition(ClimberConstants.forwardThirdBar, Climber.climbMode.loaded);
             currentMode = climberMode.forwardThirdBar;
           }
         break;
         case forwardThirdBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.backwardLatchThird, 0);
+            climber.moveToPosition(ClimberConstants.backwardLatchThird, Climber.climbMode.loaded);
             currentMode = climberMode.backwardLatchThird;
           }
         break;
         case backwardLatchThird:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.forwardVertical, 0);
+            climber.moveToPosition(ClimberConstants.forwardVertical, Climber.climbMode.loaded);
             currentMode = climberMode.forwardVertical;
           }
         break;

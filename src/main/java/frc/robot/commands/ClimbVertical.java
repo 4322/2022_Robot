@@ -29,7 +29,7 @@ public class ClimbVertical extends CommandBase {
   public void initialize() {
     overrideTimer.reset();
     overrideTimer.start();
-    climber.moveToPosition(ClimberConstants.forwardFirstBar, 1);
+    climber.moveToPosition(ClimberConstants.forwardFirstBar, Climber.climbMode.unloaded);
   }
 
   // Called once the command ends or is interrupted.

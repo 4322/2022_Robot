@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -34,8 +33,14 @@ public class Climber extends SubsystemBase {
   private NetworkTableEntry positionDisplay;
   private NetworkTableEntry targetDisplay;
 
-  // only unlock the climber if climber has been set to vertical position or manually unlocked (stopped)
+  // only unlock the climber if climber has been set to vertical position or
+  // manually unlocked (stopped)
   private boolean climbLocked = true;
+
+  public enum climbMode {
+    loaded,
+    unloaded
+  }
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -64,15 +69,14 @@ public class Climber extends SubsystemBase {
       climberLeft.configOpenloopRamp(ClimberConstants.rampRate); // for PID tuning
       configCurrentLimit(climberLeft);
       configCurrentLimit(climberRight);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,  // rapid updates for follower
-        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0,  // for position error feedback
-        RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, // rapid updates for follower
+          RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
+      climberLeft.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, // for position error feedback
+          RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
       climberRight.follow(climberLeft);
       climberRight.setInverted(InvertType.OpposeMaster);
       climberLeft.setNeutralMode(NeutralMode.Brake);
       climberRight.setNeutralMode(NeutralMode.Brake);
-      
 
       if (Constants.debug) {
         tab = Shuffleboard.getTab("Climber");
@@ -136,13 +140,19 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    return (Math.abs(getPosition()-currentTarget) <= ClimberConstants.positionTolerance);
+    return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public void moveToPosition(double pos, int profile) {
+  public void moveToPosition(double pos, climbMode mode) {
     if (Constants.climberEnabled) {
-      climberLeft.selectProfileSlot(profile, profile);
-      climberLeft.set(ControlMode.Position, pos);
+      switch (mode) {
+        case unloaded:
+          climberLeft.selectProfileSlot(0, 0);
+          break;
+        case loaded:
+          climberLeft.selectProfileSlot(1, 0);
+          break;
+      }
       currentTarget = pos;
       if (Constants.debug) {
         targetDisplay.setDouble(pos);
@@ -166,16 +176,16 @@ public class Climber extends SubsystemBase {
     climbLocked = false;
   }
 
-  public boolean isClimbUnlocked() {
-    return !climbLocked;
-  }
-
   public void lockClimb() {
     climbLocked = true;
   }
 
   public boolean isClimbLocked() {
     return climbLocked;
+  }
+
+  public boolean isClimbUnlocked() {
+    return !climbLocked;
   }
 
   public void setCoastMode() {
