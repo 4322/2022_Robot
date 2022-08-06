@@ -281,7 +281,7 @@ public class RobotContainer {
         drive
     );
 
-    return null;
+    return testCommand1;
   }
 
   public void hoodReset() {
