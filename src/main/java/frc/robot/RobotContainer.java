@@ -277,10 +277,11 @@ public class RobotContainer {
         new PIDController(0, 0, 0), // pass in empty controller in or
         new PIDController(0, 0, 0), 
         new ProfiledPIDController(0, 0, 0, null), 
-        drive::getModuleStates,
+        drive::setModuleStates,
         drive
-      );
+    );
 
+    return null;
   }
 
   public void hoodReset() {

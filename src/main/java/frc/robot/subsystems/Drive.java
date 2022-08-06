@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.Webcams;
@@ -489,15 +487,6 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  // Drive using State object
-  public void drive(State trajectoryState) {
-    var swerveModuleStates = kinematics.toSwerveModuleStates(ram.calculate(odometry.getPoseMeters(), trajectoryState));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DriveConstants.maxSpeedMetersPerSecond);
-    for (int i = 0; i < swerveModules.length; i++) {
-      swerveModules[i].setDesiredState(swerveModuleStates[i]);
-    }
-  }
-
   public boolean isAtTarget() {
     return ram.atReference();
   }
@@ -596,6 +585,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] states) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.autoMaxSpeedMetersPerSecond);
     int i = 0;
     for (SwerveModuleState s : states) {
       swerveModules[i].setDesiredState(s);
