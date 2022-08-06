@@ -274,9 +274,9 @@ public class RobotContainer {
         testPath, 
         drive::getPose2d, 
         drive.getKinematics(), 
-        new PIDController(0, 0, 0), // pass in empty controller in or
-        new PIDController(0, 0, 0), 
-        new ProfiledPIDController(0, 0, 0, null), 
+        new PIDController(1, 0, 0), // pass in empty controller in or
+        new PIDController(1, 0, 0), 
+        new ProfiledPIDController(1, 0, 0, null), 
         drive::setModuleStates,
         drive
     );
