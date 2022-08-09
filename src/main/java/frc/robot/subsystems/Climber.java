@@ -46,8 +46,8 @@ public class Climber extends SubsystemBase {
     if (Constants.climberEnabled) {
       climberLeft = new WPI_TalonFX(ClimberConstants.climberLeftID);
       climberRight = new WPI_TalonFX(ClimberConstants.climberRightID);
-      RobotContainer.staggerTalonStatusFrames(climberLeft);
-      RobotContainer.staggerTalonStatusFrames(climberRight);
+      RobotContainer.staggerTalonFrames(climberLeft);
+      RobotContainer.staggerTalonFrames(climberRight);
     }
   }
 
