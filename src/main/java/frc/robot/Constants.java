@@ -49,7 +49,7 @@ public final class Constants {
   public static final boolean intakeEnabled = true;
   public static final boolean shooterEnabled = true;
   public static final boolean kickerEnabled = true;
-  public static final boolean climberEnabled = false;
+  public static final boolean climberEnabled = true;
   public static final boolean hoodEnabled = true;
   public static final boolean conveyorEnabled = true;
   public static final boolean ballSensorEnabled = true;
@@ -69,6 +69,8 @@ public final class Constants {
   public static final int slowStatusPeriodMaxMs = 255;  // avoid Talon 8-bit wrapping of status period
   // SPARK controllers support status periods of up to 65535 ms
   public static final int verySlowStatusPeriodSparkBaseMs = 1000;  // for unused status
+
+  public static final int falconEncoderResolution = 2048;
 
   // Controller commands are transmited by the library on the CAN bus every 10 ms.
   // We then need to wait for the next status frame 
@@ -122,8 +124,6 @@ public final class Constants {
       public static final int rearRightEncoderID = 11;
       public static final int frontLeftEncoderID = 12;
       public static final int rearLeftEncoderID = 13;
-
-      public static final int encoderResolution = 2048;
 
       public static final double kMaxSpeed = 3.0;
       public static final double kMaxAngularSpeed = Math.PI;
@@ -179,7 +179,7 @@ public final class Constants {
           public static final double configCLosedLoopRamp = 0.08;
           public static final double minPower = 0.0;  // allow for tighter tolerance
           public static final double maxPower = 0.3;  // reduce gear wear and overshoot
-          public static final double countToDegrees = 360.0 / encoderResolution * 12 / 24 * 14 / 72;
+          public static final double countToDegrees = 360.0 / falconEncoderResolution * 12 / 24 * 14 / 72;
 
           public static final double configVoltageCompSaturation = 11.5;
           public static final boolean enableVoltageCompensation = true;
@@ -255,6 +255,8 @@ public final class Constants {
       public static final double logIntervalDistIn = 5;
   }
 
+
+
   public static final class KickerConstants {
       public static final int kickerID = 16;
       public static final double voltageCompSaturation = 11.0;
@@ -273,6 +275,7 @@ public final class Constants {
       public static final double speedSettlingLimeSec = 0.1;  // don't shoot until speed is stable
       public static final double minShotSec = 0.2;  // don't stop conveyor when kicker slows down as cargo enters
       public static final double resetSettingDelta = 100;
+      public static final int currentLimit = 20;
   }
   
   public static final class HoodConstants {
@@ -312,6 +315,8 @@ public final class Constants {
 
       public static final double minRunVel = 100;
       public static final double stallTimeoutSec = 1;
+
+      public static final int currentLimit = 30;
   }
 
   public static final class ConveyorConstants {
@@ -337,5 +342,45 @@ public final class Constants {
       public static final double limelightAngle = 33;
       public static final double targetHeight = 103;
       public static final double limelightHeight = 38;
+  }
+
+  public static final class ClimberConstants {
+
+    public static final int climberLeftID = 20;
+    public static final int climberRightID = 21;
+    public static final double configVoltageCompSaturation = 11.5;
+    public static final boolean enableVoltageCompensation = true;
+
+    public static final double forwardFirstBar= -100000;
+    public static final double forwardSecondBar= -80000;
+    public static final double backwardLatchSecond = 60000; //need to change these values
+    public static final double forwardThirdBar = -121000;
+    public static final double backwardLatchThird = -14000;
+    public static final double forwardVertical = -181000;
+    public static final int positionTolerance = 200;
+    public static final double overrideTime = 15;
+
+    // gear ratio of motor to climber revolutions is 245.4545... : 1
+    public static final double fullRotation = 245.45454545 * falconEncoderResolution;
+
+    public static final boolean statorEnabled = true;
+    public static final double statorLimit = 40;
+    public static final double statorThreshold = 25;
+    public static final double statorTime = 1.0;
+
+    public static final boolean supplyEnabled = true;
+    public static final double supplyLimit = 40;
+    public static final double supplyThreshold = 25;
+    public static final double supplyTime = 1.0;
+
+    public static final double kPUnloaded = 0.025;
+    public static final double kPLoaded = 0.075;
+    public static final double kDUnloaded = 0;
+    public static final double kDLoaded = 0;
+    public static final double kMinRange = 0.07;
+    public static final double kMaxRange = 0.6;
+    public static final double rampRate = 0.6;
+
+    public static final double manualDeadband = 0.1;
   }
 }

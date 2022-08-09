@@ -56,6 +56,7 @@ public class Kicker extends SubsystemBase {
       kicker.enableVoltageCompensation(KickerConstants.voltageCompSaturation);
       kicker.setInverted(false);
       kickerEncoder = kicker.getEncoder();
+      kicker.setSmartCurrentLimit(KickerConstants.currentLimit);
 
       kickerPID = kicker.getPIDController();
       kickerPID.setP(KickerConstants.kP);
