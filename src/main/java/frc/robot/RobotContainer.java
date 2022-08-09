@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -276,7 +277,10 @@ public class RobotContainer {
         drive.getKinematics(), 
         new PIDController(1, 0, 0), // pass in empty controller in or
         new PIDController(1, 0, 0), 
-        new ProfiledPIDController(1, 0, 0, null), 
+        new ProfiledPIDController(1, 0, 0, 
+          new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
+          DriveConstants.autoMaxRotationRadPerSecond)
+        ),
         drive::setModuleStates,
         drive
     );

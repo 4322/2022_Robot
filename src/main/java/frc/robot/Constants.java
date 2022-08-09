@@ -131,6 +131,8 @@ public final class Constants {
 
       public static final double autoMaxSpeedMetersPerSecond = 2;
       public static final double autoMaxAccelerationMetersPerSecond = 1;
+      public static final double autoMaxRotationRadPerSecond = Math.PI;
+      public static final double autoMaxRotationAccelerationRadPerSecond = Math.PI;
 
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
