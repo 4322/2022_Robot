@@ -285,7 +285,12 @@ public class RobotContainer {
         drive
     );
 
-    return testCommand1;
+    SequentialCommandGroup auto = new SequentialCommandGroup(
+      new OdometryReset(drive, testPath.getInitialPose()),
+      testCommand1
+    );
+
+    return auto;
   }
 
   public void hoodReset() {

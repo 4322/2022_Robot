@@ -539,6 +539,12 @@ public class Drive extends SubsystemBase {
         }
     }
 
+  public void resetOdometry(Pose2d pose) {
+    if (Constants.gyroEnabled) {
+      odometry.resetPosition(pose, gyro.getRotation2d());
+    }
+  }
+
   	public void setToFieldCentric(){
       fieldRelative = true;
       robotCentricOffsetDegrees = 0;
