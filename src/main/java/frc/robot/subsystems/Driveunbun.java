@@ -486,8 +486,10 @@ public class Driveunbun extends SubsystemBase {
   }
 
   public void stop() {
-    for (TalonFXModule module : swerveModules) {
-      module.stop();
+    if (Constants.driveEnabled) {
+      for (TalonFXModule module : swerveModules) {
+        module.stop();
+      }
     }
   }
 
