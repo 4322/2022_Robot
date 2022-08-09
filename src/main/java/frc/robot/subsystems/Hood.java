@@ -50,9 +50,9 @@ public class Hood extends SubsystemBase {
       hood.configPeakOutputForward(HoodConstants.maxForwardPower);
       hood.configPeakOutputReverse(HoodConstants.maxReversePower);   
           
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,   // for debug
         RobotContainer.nextShuffleboardStatusPeriodMs(), Constants.controllerConfigTimeoutMs);
-      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 
+      hood.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0,  // for position error feedback
         RobotContainer.nextFastStatusPeriodMs(), Constants.controllerConfigTimeoutMs);   
   
       setCoastMode();  // Allow manual movement until enabled
@@ -142,45 +142,23 @@ public class Hood extends SubsystemBase {
     }
   }
 
-  public void setHoodPower(double power) {
+  public double getPosition() {
     if (Constants.hoodEnabled) {
-      double encValue = getPosition();
-      double _power = power;
-      
-      if (_power > 0) {
-        if (encValue >= HoodConstants.hoodMaxPosition) {
-          hood.stopMotor();
-        } else {
-          if (encValue >= HoodConstants.hoodMaxPosition - HoodConstants.hoodDecellerationDistance) {
-            _power *= (HoodConstants.hoodMaxPosition - encValue) /
-                      HoodConstants.hoodDecellerationDistance;
-          }
-          // let motor controller apply minimum power bound for easier tuning
-          hood.set(Math.min(_power, HoodConstants.maxForwardPower));
-        }
-      } else if (_power < 0) {
-        if (encValue <= HoodConstants.hoodMinPosition) {
-          hood.stopMotor();
-        } else {
-          if (encValue <= HoodConstants.hoodDecellerationDistance) {
-            _power *= -encValue / HoodConstants.hoodDecellerationDistance;
-          }
-          // let motor controller apply minimum power bound for easier tuning
-          hood.set(Math.max(_power, HoodConstants.maxReversePower));
-        }
-      } else {
-        hood.stopMotor();
-      }
+      return hood.getSelectedSensorPosition(0);
+    } else {
+      return 0;
     }
-  }
-
-  private double getPosition() {
-    return hood.getSelectedSensorPosition(0);
   }
 
   public void moveHome() {
     if (Constants.hoodEnabled) {
       hood.set(HoodConstants.homingPower);
+    }
+  }
+
+  public void moveHomeSlow() {
+    if (Constants.hoodEnabled) {
+      hood.set(HoodConstants.secondHomingPower);
     }
   }
 
@@ -201,7 +179,7 @@ public class Hood extends SubsystemBase {
     if (!Constants.hoodEnabled) {
       return true;
     }
-    return (hood.getClosedLoopError() <= 
+    return (Math.abs(hood.getClosedLoopError()) <= 
       (Driveunbun.getDriveMode() == Driveunbun.DriveMode.limelightFieldCentric?
         HoodConstants.toleranceLime : HoodConstants.tolerancePreset));
   }

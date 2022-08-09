@@ -248,6 +248,7 @@ public final class Constants {
       public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
       public static final double speedSettlingLimeSec = 0.1;
       public static final double resetSettingDelta = 100;
+      public static final double logIntervalDistIn = 5;
   }
 
 
@@ -274,18 +275,15 @@ public final class Constants {
   
   public static final class HoodConstants {
       public static final int motorID = 17;
-      public static final int hoodMaxPosition = 7388; 
-      public static int hoodMinPosition = 0;     //allows to be changed in demo mode
-      public static final int hoodDecellerationDistance = 500; 
-      public static final int tolerancePreset = 20;
-      public static final int toleranceLime = 20;
+      public static final int hoodTolerancePreset = 20;
+      public static final int hoodToleranceLime = 20;
       public static final double homingTimeout = 6.0; 
 
       public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
       public static double maxReversePower = -0.5;   //allows to be changed in demo mode
       public static final double minForwardPower = 0.1;
       public static final double minReversePower = -0.1;
-      public static final double homingPower = -0.3;
+      public static final double homingPower = -0.4;
       public static final double secondHomingPower = -0.2;
 
       public static final int kPIDLoopIdx = 0;
@@ -309,6 +307,9 @@ public final class Constants {
       public static final double rampRate = 0.6;  // seconds to go from stopped to full power
       public static final double intakeVelocity = 1350;
       public static final double ejectVelocity = -1350;
+
+      public static final double minRunVel = 100;
+      public static final double stallTimeoutSec = 1;
   }
 
   public static final class ConveyorConstants {
