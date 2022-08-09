@@ -249,7 +249,7 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  private static DriveMode driveMode;
+  private static DriveMode driveMode = DriveMode.fieldCentric;
 
   public static DriveMode getDriveMode() {
     return driveMode;
