@@ -287,7 +287,8 @@ public class RobotContainer {
 
     SequentialCommandGroup auto = new SequentialCommandGroup(
       new OdometryReset(drive, testPath.getInitialPose()),
-      testCommand1
+      testCommand1,
+      new DriveStop(drive)
     );
 
     return auto;
