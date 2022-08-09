@@ -280,8 +280,8 @@ public final class Constants {
   
   public static final class HoodConstants {
       public static final int motorID = 17;
-      public static final int hoodTolerancePreset = 20;
-      public static final int hoodToleranceLime = 20;
+      public static final int tolerancePreset = 20;
+      public static final int toleranceLime = 20;
       public static final double homingTimeout = 6.0; 
 
       public static double maxForwardPower = 0.6;    //allows to be changed in demo mode
