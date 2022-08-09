@@ -94,6 +94,7 @@ public class Intake extends SubsystemBase{
       intakeMotor.setOpenLoopRampRate(IntakeConstants.rampRate);
       intakeMotor.setInverted(true);
       intakeEncoder = intakeMotor.getEncoder();
+      intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
 
       intakePID = intakeMotor.getPIDController();
       intakePID.setP(IntakeConstants.kP);
