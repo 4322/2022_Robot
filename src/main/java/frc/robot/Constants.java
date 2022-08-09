@@ -271,6 +271,7 @@ public final class Constants {
       public static final double speedSettlingLimeSec = 0.1;  // don't shoot until speed is stable
       public static final double minShotSec = 0.2;  // don't stop conveyor when kicker slows down as cargo enters
       public static final double resetSettingDelta = 100;
+      public static final int currentLimit = 20;
   }
   
   public static final class HoodConstants {
@@ -310,6 +311,8 @@ public final class Constants {
 
       public static final double minRunVel = 100;
       public static final double stallTimeoutSec = 1;
+
+      public static final int currentLimit = 30;
   }
 
   public static final class ConveyorConstants {
