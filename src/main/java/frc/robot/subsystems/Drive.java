@@ -80,8 +80,9 @@ public class Drive extends SubsystemBase {
   private NetworkTableEntry driveXTab;
   private NetworkTableEntry driveYTab;
   private NetworkTableEntry rotateTab;
-  private NetworkTableEntry displaceXTab;
-  private NetworkTableEntry displaceYTab;
+  private NetworkTableEntry odometryX;
+  private NetworkTableEntry odometryY;
+  private NetworkTableEntry odometryDegrees;
 
   public Drive(Webcams webcams, Limelight limelight) {
     this.webcams = webcams;
@@ -216,13 +217,18 @@ public class Drive extends SubsystemBase {
         .withSize(1, 1)
         .getEntry();
 
-        displaceXTab = tab.add("Displacement X", 0)
+        odometryX = tab.add("Odometry X", 0)
         .withPosition(3, 2)
         .withSize(1, 1)
         .getEntry();
 
-        displaceYTab = tab.add("Displacement Y", 0)
+        odometryY = tab.add("Odometry Y", 0)
         .withPosition(4, 2)
+        .withSize(1, 1)
+        .getEntry();
+
+        odometryDegrees = tab.add("Odometry Degrees", 0)
+        .withPosition(5, 2)
         .withSize(1, 1)
         .getEntry();
       }
@@ -325,8 +331,9 @@ public class Drive extends SubsystemBase {
       if (Constants.gyroEnabled) {
         roll.setDouble(gyro.getRoll());
         pitch.setDouble(gyro.getPitch());
-        displaceXTab.setDouble(gyro.getDisplacementX());
-        displaceYTab.setDouble(gyro.getDisplacementY());
+        odometryX.setDouble(getPose2d().getX());
+        odometryY.setDouble(getPose2d().getY());
+        odometryDegrees.setDouble(getPose2d().getRotation().getDegrees());
       }
     }
   }
