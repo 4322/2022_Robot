@@ -209,7 +209,7 @@ public class Climber extends SubsystemBase {
       } else if ((currentZDir == oneWayDir.backward) && (speed <= 0)) {
         climberLeft.set(speed);
       } else {
-        
+        stop();
       }
     }
   }
