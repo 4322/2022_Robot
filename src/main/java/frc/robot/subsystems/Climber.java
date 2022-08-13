@@ -42,6 +42,14 @@ public class Climber extends SubsystemBase {
     unloaded
   }
 
+  private enum oneWayDir {
+    forward,
+    backward,
+    none
+  }
+
+  private oneWayDir currentZDir = oneWayDir.none;
+
   public Climber() {
     if (Constants.climberEnabled) {
       climberLeft = new WPI_TalonFX(ClimberConstants.climberLeftID);
@@ -112,6 +120,7 @@ public class Climber extends SubsystemBase {
     if (Constants.climberEnabled) {
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
+        currentZDir = getOneWay();
       }
     }
   }
@@ -122,6 +131,31 @@ public class Climber extends SubsystemBase {
     } else {
       return -1;
     }
+  }
+
+  private oneWayDir getOneWay() {
+    
+    double pos = getPosition();
+    double offset = ClimberConstants.fullRotation * (int)(pos/ClimberConstants.fullRotation); 
+    // number of encoder ticks to add to oneWayZone
+    double minZone = ClimberConstants.oneWayZoneMin + offset;
+    double maxZone = ClimberConstants.oneWayZoneMax + offset;
+
+    if (currentZDir == oneWayDir.none) {
+      if ((pos > minZone) && (pos < maxZone)) {
+        if (Math.abs(minZone - pos)
+            < Math.abs(maxZone - pos)) {
+          return oneWayDir.forward;
+        } else {
+          return oneWayDir.backward;
+        }
+      } else {
+        return oneWayDir.none;
+      }
+    } else {
+      return currentZDir;
+    }
+  
   }
 
   public void stop() {
@@ -168,7 +202,15 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     if (Constants.climberEnabled) {
-      climberLeft.set(speed);
+      if (currentZDir == oneWayDir.none) {
+        climberLeft.set(speed);
+      } else if ((currentZDir == oneWayDir.forward) && (speed >= 0)) {
+        climberLeft.set(speed);
+      } else if ((currentZDir == oneWayDir.backward) && (speed <= 0)) {
+        climberLeft.set(speed);
+      } else {
+        
+      }
     }
   }
 

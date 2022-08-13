@@ -359,6 +359,9 @@ public final class Constants {
     // gear ratio of motor to climber revolutions is 245.4545... : 1
     public static final double fullRotation = 245.45454545 * falconEncoderResolution;
 
+    public static final double oneWayZoneMin = 100000; // temporary values
+    public static final double oneWayZoneMax = 120000; 
+
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 40;
     public static final double statorThreshold = 25;
