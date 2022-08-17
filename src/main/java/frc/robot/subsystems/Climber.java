@@ -48,7 +48,7 @@ public class Climber extends SubsystemBase {
     none
   }
 
-  private oneWayDir currentZDir = oneWayDir.none;
+  private oneWayDir currentZoneDir = oneWayDir.none;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -120,7 +120,7 @@ public class Climber extends SubsystemBase {
     if (Constants.climberEnabled) {
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
-        currentZDir = getOneWay();
+        updateOneWay();
       }
     }
   }
@@ -133,29 +133,36 @@ public class Climber extends SubsystemBase {
     }
   }
 
-  private oneWayDir getOneWay() {
-    
-    double pos = getPosition();
-    double offset = ClimberConstants.fullRotation * (int)(pos/ClimberConstants.fullRotation); 
-    // number of encoder ticks to add to oneWayZone
-    double minZone = ClimberConstants.oneWayZoneMin + offset;
-    double maxZone = ClimberConstants.oneWayZoneMax + offset;
+  private void updateOneWay() {
 
-    if (currentZDir == oneWayDir.none) {
-      if ((pos > minZone) && (pos < maxZone)) {
-        if (Math.abs(minZone - pos)
-            < Math.abs(maxZone - pos)) {
-          return oneWayDir.forward;
-        } else {
-          return oneWayDir.backward;
-        }
-      } else {
-        return oneWayDir.none;
+    double pos = getPosition();
+
+    // number of encoder ticks to add to one way zone
+    double offset = (ClimberConstants.fullRotation/2) * (int)(pos / (ClimberConstants.fullRotation/2));
+
+    double fwdMinZone = ClimberConstants.fwdOneWayZoneMin + offset;
+    double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax + offset;
+    double bwdMinZone = ClimberConstants.bwdOneWayZoneMin + offset;
+    double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax + offset;
+
+    boolean inFwdZone = (pos > fwdMinZone) && (pos < fwdMaxZone);
+    boolean inBwdZone = (pos > bwdMinZone) && (pos < bwdMaxZone);
+
+    if (currentZoneDir == oneWayDir.none) {
+      if (inFwdZone) {
+        currentZoneDir = oneWayDir.forward;
+      } else if (inBwdZone) {
+        currentZoneDir = oneWayDir.backward;
       }
+      else {
+        currentZoneDir = oneWayDir.none;
+      }
+    } else if (!inFwdZone && !inBwdZone) {
+      currentZoneDir = oneWayDir.none;
     } else {
-      return currentZDir;
+      return;
     }
-  
+
   }
 
   public void stop() {
@@ -202,11 +209,11 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     if (Constants.climberEnabled) {
-      if (currentZDir == oneWayDir.none) {
+      if (currentZoneDir == oneWayDir.none) {
         climberLeft.set(speed);
-      } else if ((currentZDir == oneWayDir.forward) && (speed >= 0)) {
+      } else if ((currentZoneDir == oneWayDir.forward) && (speed >= 0)) {
         climberLeft.set(speed);
-      } else if ((currentZDir == oneWayDir.backward) && (speed <= 0)) {
+      } else if ((currentZoneDir == oneWayDir.backward) && (speed <= 0)) {
         climberLeft.set(speed);
       } else {
         stop();
