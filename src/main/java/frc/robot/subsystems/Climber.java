@@ -137,7 +137,7 @@ public class Climber extends SubsystemBase {
 
     double pos = getPosition();
 
-    // number of encoder ticks to add to one way zone
+    // number of encoder ticks to add to one way zone, half rotations to account for two climber arms
     double offset = (ClimberConstants.fullRotation/2) * (int)(pos / (ClimberConstants.fullRotation/2));
 
     double fwdMinZone = ClimberConstants.fwdOneWayZoneMin + offset;
