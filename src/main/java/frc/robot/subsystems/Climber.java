@@ -144,6 +144,8 @@ public class Climber extends SubsystemBase {
     double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax + offset;
     double bwdMinZone = ClimberConstants.bwdOneWayZoneMin + offset;
     double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax + offset;
+    //forward when top of climber rotates to the front of robot
+    //backward when top of climber rotates to the back of robot
 
     boolean inFwdZone = (pos > fwdMinZone) && (pos < fwdMaxZone);
     boolean inBwdZone = (pos > bwdMinZone) && (pos < bwdMaxZone);
