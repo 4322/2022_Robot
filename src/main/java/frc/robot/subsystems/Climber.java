@@ -42,13 +42,14 @@ public class Climber extends SubsystemBase {
     unloaded
   }
 
-  private enum oneWayDir {
+  private enum lockedDir {
     forward,
     backward,
     none
   }
 
-  private oneWayDir currentZoneDir = oneWayDir.none;
+  private lockedDir currentLockedDir = lockedDir.none;
+  private double lastPos = 0;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -118,10 +119,11 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.climberEnabled) {
-      updateOneWay();
+      updateLockedDir();
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
       }
+      updateLastPos();
     }
   }
 
@@ -133,34 +135,46 @@ public class Climber extends SubsystemBase {
     }
   }
 
-  private void updateOneWay() {
+  private void updateLastPos() {
+    lastPos = getPosition();
+  }
+
+  private void updateLockedDir() {
 
     double pos = getPosition();
 
-    // number of encoder ticks to add to one way zone, half rotations to account for two climber arms
-    double offset = (ClimberConstants.fullRotation/2) * (int)(pos / (ClimberConstants.fullRotation/2));
-
-    double fwdMinZone = ClimberConstants.fwdOneWayZoneMin + offset;
-    double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax + offset;
-    double bwdMinZone = ClimberConstants.bwdOneWayZoneMin + offset;
-    double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax + offset;
+    // number of encoder ticks from starting position, half rotations to account for two climber arms
+    double posRelativeStarting = pos % (ClimberConstants.fullRotation/2);
+  
+    double fwdMinZone = ClimberConstants.fwdOneWayZoneMin;
+    double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax;
+    double bwdMinZone = ClimberConstants.bwdOneWayZoneMin;
+    double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax;
     //forward when top of climber rotates to the front of robot
     //backward when top of climber rotates to the back of robot
 
-    boolean inFwdZone = (pos > fwdMinZone) && (pos < fwdMaxZone);
-    boolean inBwdZone = (pos > bwdMinZone) && (pos < bwdMaxZone);
+    boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
+    boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
 
-    if (currentZoneDir == oneWayDir.none) {
+    if (currentLockedDir == lockedDir.none) {
       if (inFwdZone) {
-        currentZoneDir = oneWayDir.forward;
+        if (Math.abs(posRelativeStarting - fwdMaxZone) < Math.abs(posRelativeStarting - fwdMinZone)) {
+          currentLockedDir = lockedDir.backward;
+        } else {
+          currentLockedDir = lockedDir.forward;
+        }
       } else if (inBwdZone) {
-        currentZoneDir = oneWayDir.backward;
+        if (Math.abs(posRelativeStarting - bwdMaxZone) < Math.abs(posRelativeStarting - bwdMinZone)) {
+          currentLockedDir = lockedDir.forward;
+        } else {
+          currentLockedDir = lockedDir.backward;
+        }
       }
       else {
-        currentZoneDir = oneWayDir.none;
+        currentLockedDir = lockedDir.none;
       }
     } else if (!inFwdZone && !inBwdZone) {
-      currentZoneDir = oneWayDir.none;
+      currentLockedDir = lockedDir.none;
     } else {
       return;
     }
@@ -211,11 +225,11 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     if (Constants.climberEnabled) {
-      if (currentZoneDir == oneWayDir.none) {
+      if (currentLockedDir == lockedDir.none) {
         climberLeft.set(speed);
-      } else if ((currentZoneDir == oneWayDir.forward) && (speed >= 0)) {
+      } else if ((currentLockedDir == lockedDir.forward) && (speed >= 0)) {
         climberLeft.set(speed);
-      } else if ((currentZoneDir == oneWayDir.backward) && (speed <= 0)) {
+      } else if ((currentLockedDir == lockedDir.backward) && (speed <= 0)) {
         climberLeft.set(speed);
       } else {
         stop();
