@@ -118,9 +118,9 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.climberEnabled) {
+      updateOneWay();
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
-        updateOneWay();
       }
     }
   }
