@@ -72,6 +72,7 @@ public class RobotContainer {
   private static JoystickButton rotateButtonSeven;
   private static JoystickButton rotateButtonNine;
   private static JoystickButton rotateButtonTen;
+  private static JoystickButton driveButtonEleven;
 
   private ShuffleboardTab tab;
   private SendableChooser<Integer> autoModeChooser = new SendableChooser<Integer>();
@@ -86,6 +87,7 @@ public class RobotContainer {
   private final Intake intake = Intake.getSingleton();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = Conveyor.getSingleton();
+  private final Pose2d zeroPose = new Pose2d(new Translation2d(), new Rotation2d());
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(drive, limelight);
@@ -100,6 +102,9 @@ public class RobotContainer {
 
   // Hood Commands
   private final HoodReset hoodReset = new HoodReset(hood);
+
+  //Odometry Reset
+  private final OdometryReset odometryReset = new OdometryReset(drive, zeroPose);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -231,6 +236,7 @@ public class RobotContainer {
       rotateButtonSeven = new JoystickButton(rotateStick, 7);
       rotateButtonNine = new JoystickButton(rotateStick, 9);
       rotateButtonTen = new JoystickButton(rotateStick, 10);
+      driveButtonEleven = new JoystickButton(driveStick, 11);
 
       driveTopLeftButton.whenPressed(new SetDriveMode(kicker, shooter, hood,
          drive, limelight, Drive.DriveMode.fieldCentric));
@@ -251,6 +257,8 @@ public class RobotContainer {
       rotateButtonNine.whenPressed(new ResetFieldCentric(drive, 21, false)); // 1/2 ball
       rotateButtonTen.whenPressed(new ResetFieldCentric(drive, -69, false)); // 3/5 ball
       rotateButtonSeven.whenPressed(drive::resetDisplacement);
+
+      driveButtonEleven.whenPressed(odometryReset);
     }
   }
   

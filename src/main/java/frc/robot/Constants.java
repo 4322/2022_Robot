@@ -24,7 +24,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-  public static final boolean debug = true;
+  public static final boolean debug = false;
 
   public static final class demo {
     public enum DriveMode {
