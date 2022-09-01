@@ -184,7 +184,7 @@ public class SwerveModule extends ControlModule {
 	}
 
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveMotor.getSelectedSensorPosition(), 
+    return new SwerveModuleState(getVelocity() * Constants.feetToMeters, 
         Rotation2d.fromDegrees(
             turningMotor.getSelectedSensorPosition() * DriveConstants.Rotation.countToDegrees));
   }
