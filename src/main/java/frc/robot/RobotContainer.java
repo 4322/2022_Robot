@@ -274,7 +274,7 @@ public class RobotContainer {
     }
 
     PathPlannerTrajectory testPath = PathPlanner.loadPath(
-        "Test Path", 
+        "Test Path Rotation", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
         DriveConstants.autoMaxAccelerationMetersPerSecond
       );
