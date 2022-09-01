@@ -228,7 +228,7 @@ public class Drive extends SubsystemBase {
         .getEntry();
 
         odometryDegrees = tab.add("Odometry Degrees", 0)
-        .withPosition(5, 2)
+        .withPosition(2, 2)
         .withSize(1, 1)
         .getEntry();
       }
