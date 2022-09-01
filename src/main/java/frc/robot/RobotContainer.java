@@ -276,7 +276,7 @@ public class RobotContainer {
     PathPlannerTrajectory testPath = PathPlanner.loadPath(
         "Test Path Rotation", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
-        DriveConstants.autoMaxAccelerationMetersPerSecond
+        DriveConstants.autoMaxAccelerationMetersPerSec2
       );
 
     PPSwerveControllerCommand testCommand1 = new PPSwerveControllerCommand(
@@ -287,7 +287,7 @@ public class RobotContainer {
         new PIDController(1, 0, 0), 
         new ProfiledPIDController(1, 0, 0, 
           new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
-          DriveConstants.autoMaxRotationRadPerSecond)
+          DriveConstants.autoMaxRotationAccelerationRadPerSec2)
         ),
         drive::setModuleStates,
         drive

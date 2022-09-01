@@ -130,10 +130,11 @@ public final class Constants {
       public static final double maxSpeedMetersPerSecond = 3.6576;
       public static final double maxRotationSpeedRadSecond = 12.2718;
 
-      public static final double autoMaxSpeedMetersPerSecond = 2;
-      public static final double autoMaxAccelerationMetersPerSecond = 1;
+      // Values for autonomous path finding
+      public static final double autoMaxSpeedMetersPerSecond = 3.5;
+      public static final double autoMaxAccelerationMetersPerSec2 = 2.5;
       public static final double autoMaxRotationRadPerSecond = Math.PI;
-      public static final double autoMaxRotationAccelerationRadPerSecond = Math.PI;
+      public static final double autoMaxRotationAccelerationRadPerSec2 = Math.PI * 2;
 
       public static final double autoRotkP = 0.008;
       public static final double autoRotkD = 0.0004;
