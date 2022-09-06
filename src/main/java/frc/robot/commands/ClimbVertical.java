@@ -16,6 +16,7 @@ import frc.robot.subsystems.Climber;
 public class ClimbVertical extends CommandBase {
   private final Climber climber;
   private Timer overrideTimer = new Timer();
+  private boolean abort;
 
   public ClimbVertical(Climber climbsubsystem) {
     climber = climbsubsystem;
@@ -29,7 +30,7 @@ public class ClimbVertical extends CommandBase {
   public void initialize() {
     overrideTimer.reset();
     overrideTimer.start();
-    climber.moveToPosition(ClimberConstants.forwardFirstBar, Climber.climbMode.unloaded);
+    abort = !climber.moveToPosition(ClimberConstants.forwardFirstBar, Climber.climbMode.unloaded);
   }
 
   // Called once the command ends or is interrupted.
@@ -42,7 +43,7 @@ public class ClimbVertical extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((climber.isAtTarget()) || (overrideTimer.hasElapsed(ClimberConstants.overrideTime)));
+    return ((climber.isAtTarget()) || (overrideTimer.hasElapsed(ClimberConstants.overrideTime)) || (abort));
   }
 
 }
