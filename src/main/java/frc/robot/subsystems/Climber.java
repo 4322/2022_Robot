@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.function.BooleanConsumer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -198,8 +199,19 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public void moveToPosition(double pos, climbMode mode) {
+  public void moveToPosition(double targetPos, climbMode mode) {
+    double pos = getPosition();
     if (Constants.climberEnabled) {
+      if (targetPos > pos){
+        if (currentLockedDir == lockedDir.forward){
+          climberLeft.stopMotor();
+        }
+      }
+      else if (targetPos < pos){
+        if (currentLockedDir == lockedDir.backward){
+          climberLeft.stopMotor();
+        }
+      }
       switch (mode) {
         case unloaded:
           climberLeft.selectProfileSlot(0, 0);
@@ -208,9 +220,9 @@ public class Climber extends SubsystemBase {
           climberLeft.selectProfileSlot(1, 0);
           break;
       }
-      currentTarget = pos;
+      currentTarget = targetPos;
       if (Constants.debug) {
-        targetDisplay.setDouble(pos);
+        targetDisplay.setDouble(targetPos);
       }
     }
   }
