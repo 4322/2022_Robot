@@ -123,7 +123,6 @@ public class Climber extends SubsystemBase {
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
       }
-      updateLastPos();
     }
   }
 
@@ -133,10 +132,6 @@ public class Climber extends SubsystemBase {
     } else {
       return -1;
     }
-  }
-
-  private void updateLastPos() {
-    lastPos = getPosition();
   }
 
   private void updateLockedDir() {
@@ -178,6 +173,9 @@ public class Climber extends SubsystemBase {
     } else {
       return;
     }
+
+    // update last position
+    lastPos = pos;
 
   }
 
