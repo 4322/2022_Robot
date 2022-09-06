@@ -152,28 +152,33 @@ public class Climber extends SubsystemBase {
     boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
     boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
 
-    if (currentLockedDir == lockedDir.none) {
-      if (inFwdZone) {
-        if (Math.abs(posRelativeStarting - fwdMaxZone) < Math.abs(posRelativeStarting - fwdMinZone)) {
-          currentLockedDir = lockedDir.backward;
-        } else {
-          currentLockedDir = lockedDir.forward;
-        }
-      } else if (inBwdZone) {
-        if (Math.abs(posRelativeStarting - bwdMaxZone) < Math.abs(posRelativeStarting - bwdMinZone)) {
-          currentLockedDir = lockedDir.forward;
-        } else {
-          currentLockedDir = lockedDir.backward;
-        }
-      }
-      else {
-        currentLockedDir = lockedDir.none;
-      }
-    } else if (!inFwdZone && !inBwdZone) {
-      currentLockedDir = lockedDir.none;
-    } else {
-      return;
-    }
+
+    if (currentLockedDir == lockedDir.none){
+      
+    } 
+
+    // if (currentLockedDir == lockedDir.none) {
+    //   if (inFwdZone) {
+    //     if (Math.abs(posRelativeStarting - fwdMaxZone) < Math.abs(posRelativeStarting - fwdMinZone)) {     left here for 
+    //       currentLockedDir = lockedDir.backward;                                                           future reference
+    //     } else {
+    //       currentLockedDir = lockedDir.forward;
+    //     }
+    //   } else if (inBwdZone) {
+    //     if (Math.abs(posRelativeStarting - bwdMaxZone) < Math.abs(posRelativeStarting - bwdMinZone)) {
+    //       currentLockedDir = lockedDir.forward;
+    //     } else {
+    //       currentLockedDir = lockedDir.backward;
+    //     }
+    //   }
+    //   else {
+    //     currentLockedDir = lockedDir.none;
+    //   }
+    // } else if (!inFwdZone && !inBwdZone) {
+    //   currentLockedDir = lockedDir.none;
+    // } else {
+    //   return;
+    // }
 
     // update last position
     lastPos = pos;
