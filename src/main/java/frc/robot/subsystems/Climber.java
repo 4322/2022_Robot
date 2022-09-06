@@ -199,17 +199,19 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public void moveToPosition(double targetPos, climbMode mode) {
+  public boolean moveToPosition(double targetPos, climbMode mode) {
     double pos = getPosition();
     if (Constants.climberEnabled) {
       if (targetPos > pos){
         if (currentLockedDir == lockedDir.forward){
           climberLeft.stopMotor();
+          return false;
         }
       }
       else if (targetPos < pos){
         if (currentLockedDir == lockedDir.backward){
           climberLeft.stopMotor();
+          return false;
         }
       }
       switch (mode) {
@@ -224,7 +226,9 @@ public class Climber extends SubsystemBase {
       if (Constants.debug) {
         targetDisplay.setDouble(targetPos);
       }
+      return true;
     }
+    return false;
   }
 
   public void setCurrentPosition(double pos) {
