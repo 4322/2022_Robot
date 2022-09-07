@@ -49,8 +49,16 @@ public class Climber extends SubsystemBase {
     none
   }
 
+  private enum rotationDir {
+    forward,
+    backward,
+    none
+  }
+
   private lockedDir currentLockedDir = lockedDir.none;
   private double lastPos = 0;
+
+  private rotationDir currentRotationDir = rotationDir.none;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -152,35 +160,28 @@ public class Climber extends SubsystemBase {
     boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
     boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
 
+    if (pos - lastPos > 0) {
+      currentRotationDir = rotationDir.forward;
+    } else if (pos - lastPos < 0) {
+      currentRotationDir = rotationDir.backward;
+    }
+
 
     if (currentLockedDir == lockedDir.none){
-      
-    } 
+      if (inFwdZone && currentRotationDir == rotationDir.forward) {
+      currentLockedDir = lockedDir.backward;
+      } else if (inBwdZone && currentRotationDir == rotationDir.backward); {
+        currentLockedDir = lockedDir.forward;
+        }  if (inFwdZone && currentRotationDir == rotationDir.backward) {
+          } if (inBwdZone && currentRotationDir == rotationDir.forward) {
+            }
+    } else if (!inFwdZone && !inBwdZone) { 
+      currentLockedDir = lockedDir.none;   
+    } else {
+      return;
+    }
 
-    // if (currentLockedDir == lockedDir.none) {
-    //   if (inFwdZone) {
-    //     if (Math.abs(posRelativeStarting - fwdMaxZone) < Math.abs(posRelativeStarting - fwdMinZone)) {     left here for 
-    //       currentLockedDir = lockedDir.backward;                                                           future reference
-    //     } else {
-    //       currentLockedDir = lockedDir.forward;
-    //     }
-    //   } else if (inBwdZone) {
-    //     if (Math.abs(posRelativeStarting - bwdMaxZone) < Math.abs(posRelativeStarting - bwdMinZone)) {
-    //       currentLockedDir = lockedDir.forward;
-    //     } else {
-    //       currentLockedDir = lockedDir.backward;
-    //     }
-    //   }
-    //   else {
-    //     currentLockedDir = lockedDir.none;
-    //   }
-    // } else if (!inFwdZone && !inBwdZone) {
-    //   currentLockedDir = lockedDir.none;
-    // } else {
-    //   return;
-    // }
-
-    // update last position
+    //update last position
     lastPos = pos;
 
   }
