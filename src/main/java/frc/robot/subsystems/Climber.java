@@ -172,13 +172,9 @@ public class Climber extends SubsystemBase {
       currentLockedDir = lockedDir.backward;
       } else if (inBwdZone && currentRotationDir == rotationDir.backward); {
         currentLockedDir = lockedDir.forward;
-        }  if (inFwdZone && currentRotationDir == rotationDir.backward) {
-          } if (inBwdZone && currentRotationDir == rotationDir.forward) {
-            }
+        }//if in forward zone w/ backward rotation or backward zone w/ forward rotation, no locking needed
     } else if (!inFwdZone && !inBwdZone) { 
       currentLockedDir = lockedDir.none;   
-    } else {
-      return;
     }
 
     //update last position
@@ -208,6 +204,7 @@ public class Climber extends SubsystemBase {
   public boolean moveToPosition(double targetPos, climbMode mode) {
     double pos = getPosition();
     if (Constants.climberEnabled) {
+      updateLockedDir();
       if (targetPos > pos){
         if (currentLockedDir == lockedDir.forward){
           climberLeft.stopMotor();
