@@ -167,14 +167,16 @@ public class Climber extends SubsystemBase {
       currentRotationDir = rotationDir.backward;
     }
 
-    if (currentLockedDir == lockedDir.none) {
+    if (!inFwdZone && !inBwdZone) {
+      currentLockedDir = lockedDir.none;
+    } else if (currentLockedDir == lockedDir.none) {
       if (inFwdZone && currentRotationDir == rotationDir.forward) {
         currentLockedDir = lockedDir.backward;
       } else if (inBwdZone && currentRotationDir == rotationDir.backward) {
         currentLockedDir = lockedDir.forward;
       }
-    } else if (!inFwdZone && !inBwdZone) {
-      currentLockedDir = lockedDir.none;
+    } else {
+      return; // keep currentLockedDir
     }
 
     // update last position
@@ -248,9 +250,9 @@ public class Climber extends SubsystemBase {
       updateLockedDir();
       if (currentLockedDir == lockedDir.none) {
         climberLeft.set(speed);
-      } else if ((currentLockedDir == lockedDir.forward) && (speed >= 0)) {
+      } else if ((currentLockedDir == lockedDir.forward) && (speed <= 0)) {
         climberLeft.set(speed);
-      } else if ((currentLockedDir == lockedDir.backward) && (speed <= 0)) {
+      } else if ((currentLockedDir == lockedDir.backward) && (speed >= 0)) {
         climberLeft.set(speed);
       } else {
         stop();

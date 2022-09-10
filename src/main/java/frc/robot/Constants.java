@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-  public static final boolean debug = false;
+  public static final boolean debug = true;
 
   public static final class demo {
     public enum DriveMode {
@@ -359,10 +359,10 @@ public final class Constants {
     // gear ratio of motor to climber revolutions is 245.4545... : 1
     public static final double fullRotation = 245.45454545 * falconEncoderResolution;
 
-    public static final double fwdOneWayZoneMin = fullRotation * (1/4); // temporary values
-    public static final double fwdOneWayZoneMax = fullRotation * (1/2); 
-    public static final double bwdOneWayZoneMin = fullRotation * (1/3); // temporary values
-    public static final double bwdOneWayZoneMax = fullRotation * (2/3); 
+    public static final double fwdOneWayZoneMin = fullRotation/2 * (0.25); // temporary values
+    public static final double fwdOneWayZoneMax = fullRotation/2 * (0.45); 
+    public static final double bwdOneWayZoneMin = fullRotation/2 * (0.55); // temporary values
+    public static final double bwdOneWayZoneMax = fullRotation/2 * (0.75); 
 
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 40;
