@@ -146,12 +146,11 @@ public class Climber extends SubsystemBase {
   private void updateLockedDir() {
 
     double pos = getPosition();
-    if (pos < 0) {
-      pos += ClimberConstants.fullRotation/2;
-    }
     // number of encoder ticks from starting position, half rotations to account for two climber arms
     double posRelativeStarting = pos % (ClimberConstants.fullRotation/2);
-  
+    if (posRelativeStarting < 0) {
+      posRelativeStarting += ClimberConstants.fullRotation/2;
+    }
     double fwdMinZone = ClimberConstants.fwdOneWayZoneMin;
     double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax;
     double bwdMinZone = ClimberConstants.bwdOneWayZoneMin;
@@ -205,9 +204,13 @@ public class Climber extends SubsystemBase {
 
   public boolean moveToPosition(double targetPos, climbMode mode) {
     double pos = getPosition();
-    pos = pos % (ClimberConstants.fullRotation/2);
+    
     if (Constants.climberEnabled) {
       updateLockedDir();
+      pos = pos % (ClimberConstants.fullRotation/2);
+      if (pos < 0){
+        pos+=ClimberConstants.fullRotation/2;
+      }
       if (targetPos > pos){
         if (currentLockedDir == lockedDir.forward){
           climberLeft.stopMotor();
