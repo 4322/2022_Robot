@@ -32,7 +32,8 @@ public class ClimbAuto extends CommandBase {
     disengageFirstBar,
     floatingThirdBar,
     disengageSecondBar,
-    done;
+    done,
+    abort;
   }
 
   public ClimbAuto(Climber climbsubsystem) {
@@ -56,33 +57,50 @@ public class ClimbAuto extends CommandBase {
     if (!climber.isClimbLocked()) {
       switch (currentMode) {
         case stopped:
-          climber.moveToPosition(ClimberConstants.floatingSecondBar, Climber.climbMode.loaded);
-          currentMode = climberMode.floatingSecondBar;
-        break;
+          if (climber.moveToPosition(ClimberConstants.floatingSecondBar, Climber.climbMode.loaded)) {
+            currentMode = climberMode.floatingSecondBar;
+          }
+          else {
+            currentMode = climberMode.abort;
+          }
+          break;
         case floatingSecondBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded);
-            currentMode = climberMode.disengageFirstBar;
+            if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
+              currentMode = climberMode.disengageFirstBar;
+            }
+            else {
+              currentMode = climberMode.abort;
+            }
           }
           break;
         case disengageFirstBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.floatingThirdBar, Climber.climbMode.loaded);
-            currentMode = climberMode.floatingThirdBar;
+            if (climber.moveToPosition(ClimberConstants.floatingThirdBar, Climber.climbMode.loaded)) {
+              currentMode = climberMode.floatingThirdBar;
+            }
+            else {
+              currentMode = climberMode.abort;
+            }
           }
-        break;
+          break;
         case floatingThirdBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded);
-            currentMode = climberMode.disengageSecondBar;
+            if (climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded)) {
+              currentMode = climberMode.disengageSecondBar;
+            }
+            else {
+              currentMode = climberMode.abort;
+            }
           }
-        break;
+          break;
         case disengageSecondBar:
           if (climber.isAtTarget()) {
             currentMode = climberMode.done;
           }
-        break;
-        case done:
+          break;
+        case done:  // fall through to break
+        case abort:
           break;
       }
     }
@@ -99,7 +117,7 @@ public class ClimbAuto extends CommandBase {
   public boolean isFinished() {
     return ((currentMode == climberMode.done) || 
     (overrideTimer.hasElapsed(ClimberConstants.overrideTime)) || 
-    climber.isClimbLocked());
+    climber.isClimbLocked() || (currentMode == climberMode.abort));
   }
 
 }

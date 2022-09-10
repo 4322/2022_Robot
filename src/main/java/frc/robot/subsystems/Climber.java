@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -41,6 +42,23 @@ public class Climber extends SubsystemBase {
     loaded,
     unloaded
   }
+
+  private enum lockedDir {
+    forward,
+    backward,
+    none
+  }
+
+  private enum rotationDir {
+    forward,
+    backward,
+    none
+  }
+
+  private lockedDir currentLockedDir = lockedDir.none;
+  private double lastPos = 0;
+
+  private rotationDir currentRotationDir = rotationDir.none;
 
   public Climber() {
     if (Constants.climberEnabled) {
@@ -110,6 +128,7 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     if (Constants.climberEnabled) {
+      updateLockedDir();
       if (Constants.debug) {
         positionDisplay.setDouble(getPosition());
       }
@@ -122,6 +141,48 @@ public class Climber extends SubsystemBase {
     } else {
       return -1;
     }
+  }
+
+  private void updateLockedDir() {
+
+    double pos = getPosition();
+    // number of encoder ticks from starting position, half rotations to account for
+    // two climber arms
+    double posRelativeStarting = pos % (ClimberConstants.fullRotation / 2);
+    if (posRelativeStarting < 0) {
+      posRelativeStarting += ClimberConstants.fullRotation / 2;
+    }
+    double fwdMinZone = ClimberConstants.fwdOneWayZoneMin;
+    double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax;
+    double bwdMinZone = ClimberConstants.bwdOneWayZoneMin;
+    double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax;
+    // forward when top of climber rotates to the front of robot
+    // backward when top of climber rotates to the back of robot
+
+    boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
+    boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
+
+    if (pos - lastPos > 0) {
+      currentRotationDir = rotationDir.forward;
+    } else if (pos - lastPos < 0) {
+      currentRotationDir = rotationDir.backward;
+    }
+
+    if (!inFwdZone && !inBwdZone) {
+      currentLockedDir = lockedDir.none;
+    } else if (currentLockedDir == lockedDir.none) {
+      if (inFwdZone && currentRotationDir == rotationDir.forward) {
+        currentLockedDir = lockedDir.backward;
+      } else if (inBwdZone && currentRotationDir == rotationDir.backward) {
+        currentLockedDir = lockedDir.forward;
+      }
+    } else {
+      return; // keep currentLockedDir
+    }
+
+    // update last position
+    lastPos = pos;
+
   }
 
   public void stop() {
@@ -143,8 +204,25 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public void moveToPosition(double pos, climbMode mode) {
+  public boolean moveToPosition(double targetPos, climbMode mode) {
     if (Constants.climberEnabled) {
+      double pos = getPosition();
+      updateLockedDir();
+      pos = pos % (ClimberConstants.fullRotation / 2);
+      if (pos < 0) {
+        pos += ClimberConstants.fullRotation / 2;
+      }
+      if (targetPos > pos) {
+        if (currentLockedDir == lockedDir.forward) {
+          climberLeft.stopMotor();
+          return false;
+        }
+      } else if (targetPos < pos) {
+        if (currentLockedDir == lockedDir.backward) {
+          climberLeft.stopMotor();
+          return false;
+        }
+      }
       switch (mode) {
         case unloaded:
           climberLeft.selectProfileSlot(0, 0);
@@ -153,11 +231,14 @@ public class Climber extends SubsystemBase {
           climberLeft.selectProfileSlot(1, 0);
           break;
       }
-      currentTarget = pos;
+      climberLeft.set(ControlMode.Position, targetPos);
+      currentTarget = targetPos;
       if (Constants.debug) {
-        targetDisplay.setDouble(pos);
+        targetDisplay.setDouble(targetPos);
       }
+      return true;
     }
+    return false;
   }
 
   public void setCurrentPosition(double pos) {
@@ -168,7 +249,16 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     if (Constants.climberEnabled) {
-      climberLeft.set(speed);
+      updateLockedDir();
+      if (currentLockedDir == lockedDir.none) {
+        climberLeft.set(speed);
+      } else if ((currentLockedDir == lockedDir.forward) && (speed <= 0)) {
+        climberLeft.set(speed);
+      } else if ((currentLockedDir == lockedDir.backward) && (speed >= 0)) {
+        climberLeft.set(speed);
+      } else {
+        stop();
+      }
     }
   }
 

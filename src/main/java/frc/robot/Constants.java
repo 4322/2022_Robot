@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveDrive.ControlModule.WheelPosition;
  */
 public final class Constants {
 
-  public static final boolean debug = false;
+  public static final boolean debug = true;
 
   public static final class demo {
     public enum DriveMode {
@@ -359,6 +359,11 @@ public final class Constants {
     public static final double disengageSecondBar = vertical + fullRotation * 2;
     public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
+    
+    public static final double fwdOneWayZoneMin = 111700;
+    public static final double fwdOneWayZoneMax = 119900; 
+    public static final double bwdOneWayZoneMin = 66500;
+    public static final double bwdOneWayZoneMax = 73000; 
 
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 40;
