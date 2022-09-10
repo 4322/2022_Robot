@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ClimberConstants;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -230,6 +231,7 @@ public class Climber extends SubsystemBase {
           climberLeft.selectProfileSlot(1, 0);
           break;
       }
+      climberLeft.set(ControlMode.Position, targetPos);
       currentTarget = targetPos;
       if (Constants.debug) {
         targetDisplay.setDouble(targetPos);
