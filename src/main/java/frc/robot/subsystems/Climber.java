@@ -146,17 +146,18 @@ public class Climber extends SubsystemBase {
   private void updateLockedDir() {
 
     double pos = getPosition();
-    // number of encoder ticks from starting position, half rotations to account for two climber arms
-    double posRelativeStarting = pos % (ClimberConstants.fullRotation/2);
+    // number of encoder ticks from starting position, half rotations to account for
+    // two climber arms
+    double posRelativeStarting = pos % (ClimberConstants.fullRotation / 2);
     if (posRelativeStarting < 0) {
-      posRelativeStarting += ClimberConstants.fullRotation/2;
+      posRelativeStarting += ClimberConstants.fullRotation / 2;
     }
     double fwdMinZone = ClimberConstants.fwdOneWayZoneMin;
     double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax;
     double bwdMinZone = ClimberConstants.bwdOneWayZoneMin;
     double bwdMaxZone = ClimberConstants.bwdOneWayZoneMax;
-    //forward when top of climber rotates to the front of robot
-    //backward when top of climber rotates to the back of robot
+    // forward when top of climber rotates to the front of robot
+    // backward when top of climber rotates to the back of robot
 
     boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
     boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
@@ -167,18 +168,17 @@ public class Climber extends SubsystemBase {
       currentRotationDir = rotationDir.backward;
     }
 
-
-    if (currentLockedDir == lockedDir.none){
+    if (currentLockedDir == lockedDir.none) {
       if (inFwdZone && currentRotationDir == rotationDir.forward) {
-      currentLockedDir = lockedDir.backward;
-      } else if (inBwdZone && currentRotationDir == rotationDir.backward); {
+        currentLockedDir = lockedDir.backward;
+      } else if (inBwdZone && currentRotationDir == rotationDir.backward) {
         currentLockedDir = lockedDir.forward;
-        }//if in forward zone w/ backward rotation or backward zone w/ forward rotation, no locking needed
-    } else if (!inFwdZone && !inBwdZone) { 
-      currentLockedDir = lockedDir.none;   
+      }
+    } else if (!inFwdZone && !inBwdZone) {
+      currentLockedDir = lockedDir.none;
     }
 
-    //update last position
+    // update last position
     lastPos = pos;
 
   }
@@ -203,22 +203,20 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean moveToPosition(double targetPos, climbMode mode) {
-    double pos = getPosition();
-    
     if (Constants.climberEnabled) {
+      double pos = getPosition();
       updateLockedDir();
-      pos = pos % (ClimberConstants.fullRotation/2);
-      if (pos < 0){
-        pos+=ClimberConstants.fullRotation/2;
+      pos = pos % (ClimberConstants.fullRotation / 2);
+      if (pos < 0) {
+        pos += ClimberConstants.fullRotation / 2;
       }
-      if (targetPos > pos){
-        if (currentLockedDir == lockedDir.forward){
+      if (targetPos > pos) {
+        if (currentLockedDir == lockedDir.forward) {
           climberLeft.stopMotor();
           return false;
         }
-      }
-      else if (targetPos < pos){
-        if (currentLockedDir == lockedDir.backward){
+      } else if (targetPos < pos) {
+        if (currentLockedDir == lockedDir.backward) {
           climberLeft.stopMotor();
           return false;
         }
