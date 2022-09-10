@@ -347,17 +347,18 @@ public final class Constants {
     public static final double configVoltageCompSaturation = 11.5;
     public static final boolean enableVoltageCompensation = true;
 
-    public static final double forwardFirstBar= -100000;
-    public static final double forwardSecondBar= -80000;
-    public static final double backwardLatchSecond = 60000; //need to change these values
-    public static final double forwardThirdBar = -121000;
-    public static final double backwardLatchThird = -14000;
-    public static final double forwardVertical = -181000;
-    public static final int positionTolerance = 200;
-    public static final double overrideTime = 15;
-
     // gear ratio of motor to climber revolutions is 245.4545... : 1
     public static final double fullRotation = 245.45454545 * falconEncoderResolution;
+
+    public static final double horizontal = -43615;
+    public static final double vertical = 86141;
+    public static final double firstEngage= 134673;
+    public static final double floatingSecondBar= 325000;
+    public static final double disengageFirstBar = 195000;
+    public static final double floatingThirdBar = floatingSecondBar + fullRotation;
+    public static final double disengageSecondBar = vertical + fullRotation * 2;
+    public static final int positionTolerance = 200;
+    public static final double overrideTime = 15;
 
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 40;

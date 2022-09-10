@@ -28,11 +28,10 @@ public class ClimbAuto extends CommandBase {
 
   public enum climberMode {
     stopped,
-    forwardSecondBar,
-    backwardLatchSecond,
-    forwardThirdBar,
-    backwardLatchThird,
-    forwardVertical,
+    floatingSecondBar,
+    disengageFirstBar,
+    floatingThirdBar,
+    disengageSecondBar,
     done;
   }
 
@@ -57,36 +56,29 @@ public class ClimbAuto extends CommandBase {
     if (!climber.isClimbLocked()) {
       switch (currentMode) {
         case stopped:
-          climber.moveToPosition(ClimberConstants.forwardSecondBar, Climber.climbMode.loaded);
-          currentMode = climberMode.forwardSecondBar;
+          climber.moveToPosition(ClimberConstants.floatingSecondBar, Climber.climbMode.loaded);
+          currentMode = climberMode.floatingSecondBar;
         break;
-        case forwardSecondBar:
+        case floatingSecondBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.backwardLatchSecond, Climber.climbMode.loaded);
-            currentMode = climberMode.backwardLatchSecond;
+            climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded);
+            currentMode = climberMode.disengageFirstBar;
           }
           break;
-        case backwardLatchSecond:
+        case disengageFirstBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.forwardThirdBar, Climber.climbMode.loaded);
-            currentMode = climberMode.forwardThirdBar;
+            climber.moveToPosition(ClimberConstants.floatingThirdBar, Climber.climbMode.loaded);
+            currentMode = climberMode.floatingThirdBar;
           }
         break;
-        case forwardThirdBar:
+        case floatingThirdBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.backwardLatchThird, Climber.climbMode.loaded);
-            currentMode = climberMode.backwardLatchThird;
+            climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded);
+            currentMode = climberMode.disengageSecondBar;
           }
         break;
-        case backwardLatchThird:
+        case disengageSecondBar:
           if (climber.isAtTarget()) {
-            climber.moveToPosition(ClimberConstants.forwardVertical, Climber.climbMode.loaded);
-            currentMode = climberMode.forwardVertical;
-          }
-        break;
-        case forwardVertical:
-          if (climber.isAtTarget()) {
-            climber.stop();
             currentMode = climberMode.done;
           }
         break;
