@@ -285,7 +285,7 @@ public class RobotContainer {
         drive.getKinematics(), 
         new PIDController(1, 0, 0), // pass in empty controller in or
         new PIDController(1, 0, 0), 
-        new ProfiledPIDController(1, 0, 0, 
+        new ProfiledPIDController(4, 0, 0, 
           new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
           DriveConstants.autoMaxRotationAccelerationRadPerSec2)
         ),
