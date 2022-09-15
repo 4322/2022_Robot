@@ -170,13 +170,16 @@ public class Climber extends SubsystemBase {
 
     if (!inFwdZone && !inBwdZone) {
       currentLockedDir = lockedDir.none;
-    } else if (currentLockedDir == lockedDir.none) {
+    } 
+    else if (currentLockedDir == lockedDir.none) {
       if (inFwdZone && currentRotationDir == rotationDir.forward) {
         currentLockedDir = lockedDir.backward;
-      } else if (inBwdZone && currentRotationDir == rotationDir.backward) {
+      } 
+      else if (inBwdZone && currentRotationDir == rotationDir.backward) {
         currentLockedDir = lockedDir.forward;
       }
-    } else {
+    } 
+    else {
       return; // keep currentLockedDir
     }
 
