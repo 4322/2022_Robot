@@ -283,9 +283,10 @@ public class RobotContainer {
         testPath, 
         drive::getPose2d, 
         drive.getKinematics(), 
-        new PIDController(1, 0, 0), // pass in empty controller in or
-        new PIDController(1, 0, 0), 
-        new ProfiledPIDController(1, 0, 0, 
+        new PIDController(0.5, 0, 0),
+        new PIDController(0.5, 0, 0), 
+        new ProfiledPIDController(4
+        , 0, 0.5, 
           new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
           DriveConstants.autoMaxRotationAccelerationRadPerSec2)
         ),
