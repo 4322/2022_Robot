@@ -152,6 +152,11 @@ public class Climber extends SubsystemBase {
     if (posRelativeStarting < 0) {
       posRelativeStarting += ClimberConstants.fullRotation / 2;
     }
+    double lastPosRelativeStarting = lastPos % (ClimberConstants.fullRotation / 2);
+    if (lastPosRelativeStarting < 0) {
+      lastPosRelativeStarting += ClimberConstants.fullRotation / 2;
+    }
+    
     double fwdMinZone = ClimberConstants.fwdOneWayZoneMin;
     double fwdMaxZone = ClimberConstants.fwdOneWayZoneMax;
     double bwdMinZone = ClimberConstants.bwdOneWayZoneMin;
@@ -161,26 +166,31 @@ public class Climber extends SubsystemBase {
 
     boolean inFwdZone = (posRelativeStarting > fwdMinZone) && (posRelativeStarting < fwdMaxZone);
     boolean inBwdZone = (posRelativeStarting > bwdMinZone) && (posRelativeStarting < bwdMaxZone);
-
-    if (pos - lastPos > 0) {
-      currentRotationDir = rotationDir.forward;
-    } else if (pos - lastPos < 0) {
-      currentRotationDir = rotationDir.backward;
-    }
-
+    boolean lastInFwdZone = (lastPosRelativeStarting > fwdMinZone) && (lastPosRelativeStarting < fwdMaxZone);
+    boolean lastInBwdZone = (lastPosRelativeStarting > bwdMinZone) && (lastPosRelativeStarting < bwdMaxZone);
+    if (inFwdZone && !lastInFwdZone) {
+      if (lastPosRelativeStarting < fwdMinZone) {
+        currentRotationDir = rotationDir.forward;
+      } else if (lastPosRelativeStarting > fwdMaxZone) {
+        currentRotationDir = rotationDir.backward;
+      }
+    } else if (inBwdZone && !lastInBwdZone) {
+      if (lastPosRelativeStarting < bwdMinZone) {
+        currentRotationDir = rotationDir.forward;
+      } else if (lastPosRelativeStarting > bwdMaxZone) {
+        currentRotationDir = rotationDir.backward;
+      }
+    } //this section determines which way it entered from. 
+    //if it's not in a zone, the rotationdir doesn't matter, and if it was already in a zone, the rotation direction should stay consistent.
+    //i may combine the direction finding and locking for efficiency
     if (!inFwdZone && !inBwdZone) {
       currentLockedDir = lockedDir.none;
-    } 
-    else if (currentLockedDir == lockedDir.none) {
+    } else if (currentLockedDir == lockedDir.none) {
       if (inFwdZone && currentRotationDir == rotationDir.forward) {
         currentLockedDir = lockedDir.backward;
-      } 
-      else if (inBwdZone && currentRotationDir == rotationDir.backward) {
+      } else if (inBwdZone && currentRotationDir == rotationDir.backward) {
         currentLockedDir = lockedDir.forward;
       }
-    } 
-    else {
-      return; // keep currentLockedDir
     }
 
     // update last position
