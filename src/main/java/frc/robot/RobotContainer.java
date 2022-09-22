@@ -198,7 +198,7 @@ public class RobotContainer {
       coPilot.start.whenPressed(climbAuto);
       coPilot.dPad.down.whenPressed(climbStop);
       coPilot.dPad.up.whenPressed(climbVertical);
-      coPilot.dPad.right.whenPressed(climbHorizontal);
+      coPilot.dPad.left.whenPressed(climbHorizontal);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
