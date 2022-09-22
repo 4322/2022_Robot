@@ -283,10 +283,20 @@ public class RobotContainer {
         testPath, 
         drive::getPose2d, 
         drive.getKinematics(), 
-        new PIDController(0.5, 0, 0),
-        new PIDController(0.5, 0, 0), 
-        new ProfiledPIDController(4
-        , 0, 0.5, 
+        new PIDController(
+          DriveConstants.Trajectory.PIDX.kP, 
+          DriveConstants.Trajectory.PIDX.kI, 
+          DriveConstants.Trajectory.PIDX.kD
+        ),
+        new PIDController(
+          DriveConstants.Trajectory.PIDY.kP, 
+          DriveConstants.Trajectory.PIDY.kI, 
+          DriveConstants.Trajectory.PIDY.kD
+        ),
+        new ProfiledPIDController(
+          DriveConstants.Trajectory.ProfiledPID.kP, 
+          DriveConstants.Trajectory.ProfiledPID.kI, 
+          DriveConstants.Trajectory.ProfiledPID.kD,
           new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
           DriveConstants.autoMaxRotationAccelerationRadPerSec2)
         ),
