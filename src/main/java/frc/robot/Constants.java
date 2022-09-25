@@ -355,8 +355,8 @@ public final class Constants {
     public static final double firstEngage= 134673;
     public static final double floatingSecondBar= 325000;
     public static final double disengageFirstBar = 195000;
-    public static final double floatingThirdBar = floatingSecondBar + fullRotation;
-    public static final double disengageSecondBar = vertical + fullRotation * 2;
+    public static final double floatingThirdBar = floatingSecondBar + fullRotation/2;
+    public static final double disengageSecondBar = vertical + fullRotation;
     public static final int positionTolerance = 200;
     public static final double overrideTime = 15;
     
