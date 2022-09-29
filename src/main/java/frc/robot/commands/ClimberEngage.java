@@ -8,42 +8,45 @@ Reposition robot to line up hooks
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Driveunbun;
 
-public class ClimbVertical extends CommandBase {
+public class ClimberEngage extends CommandBase {
   private final Climber climber;
-  private Timer overrideTimer = new Timer();
-  private boolean abort;
+  private final Driveunbun drive;
 
-  public ClimbVertical(Climber climbsubsystem) {
+  public ClimberEngage(Climber climbsubsystem, Driveunbun drivesubsystem) {
     climber = climbsubsystem;
+    drive = drivesubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
+    addRequirements(climber, drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    overrideTimer.reset();
-    overrideTimer.start();
-    abort = !climber.moveToPosition(ClimberConstants.vertical, Climber.climbMode.unloaded);
+    climber.moveToPosition(Constants.ClimberConstants.firstEngage, Climber.climbMode.unloaded);
+    drive.drive(0, 0.15, 0);
   }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+  } 
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     climber.stop();
-    climber.unlockClimb();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((climber.isAtTarget()) || (overrideTimer.hasElapsed(ClimberConstants.overrideTime)) || (abort));
+    return false;
   }
 
 }

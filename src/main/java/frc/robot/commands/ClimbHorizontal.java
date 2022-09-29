@@ -1,6 +1,6 @@
 /*
 
-Vertical Position
+Horizontal Position
 Forward rotation (toward front) until hit bar
 Reposition robot to line up hooks
 
@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 
-public class ClimbVertical extends CommandBase {
+public class ClimbHorizontal extends CommandBase {
   private final Climber climber;
   private Timer overrideTimer = new Timer();
   private boolean abort;
 
-  public ClimbVertical(Climber climbsubsystem) {
+  public ClimbHorizontal(Climber climbsubsystem) {
     climber = climbsubsystem;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +30,7 @@ public class ClimbVertical extends CommandBase {
   public void initialize() {
     overrideTimer.reset();
     overrideTimer.start();
-    abort = !climber.moveToPosition(ClimberConstants.vertical, Climber.climbMode.unloaded);
+    abort = !climber.moveToPosition(ClimberConstants.horizontal, Climber.climbMode.unloaded);
   }
 
   // Called once the command ends or is interrupted.

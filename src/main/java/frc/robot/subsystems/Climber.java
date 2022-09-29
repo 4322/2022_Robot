@@ -219,12 +219,10 @@ public class Climber extends SubsystemBase {
 
   public boolean moveToPosition(double targetPos, climbMode mode) {
     if (Constants.climberEnabled) {
+
       double pos = getPosition();
       updateLockedDir();
-      pos = pos % (ClimberConstants.fullRotation / 2);
-      if (pos < 0) {
-        pos += ClimberConstants.fullRotation / 2;
-      }
+
       if (targetPos > pos) {
         if (currentLockedDir == lockedDir.forward) {
           climberLeft.stopMotor();
@@ -236,6 +234,7 @@ public class Climber extends SubsystemBase {
           return false;
         }
       }
+
       switch (mode) {
         case unloaded:
           climberLeft.selectProfileSlot(0, 0);
@@ -244,12 +243,14 @@ public class Climber extends SubsystemBase {
           climberLeft.selectProfileSlot(1, 0);
           break;
       }
+
       climberLeft.set(ControlMode.Position, targetPos);
       currentTarget = targetPos;
       if (Constants.debug) {
         targetDisplay.setDouble(targetPos);
       }
       return true;
+      
     }
     return false;
   }

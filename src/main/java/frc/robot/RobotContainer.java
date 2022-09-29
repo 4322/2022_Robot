@@ -90,6 +90,8 @@ public class RobotContainer {
   private final ClimbVertical climbVertical = new ClimbVertical(climber);
   private final ClimbManual climbManual = new ClimbManual(climber);
   private final ClimberReset climberReset = new ClimberReset(climber);
+  private final ClimbHorizontal climbHorizontal = new ClimbHorizontal(climber);
+  private final ClimberEngage climberEngage = new ClimberEngage(climber, driveunbun);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -197,6 +199,8 @@ public class RobotContainer {
       coPilot.start.whenPressed(climbAuto);
       coPilot.dPad.down.whenPressed(climbStop);
       coPilot.dPad.up.whenPressed(climbVertical);
+      coPilot.dPad.left.whenPressed(climbHorizontal);
+      coPilot.dPad.right.whenHeld(climberEngage);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
