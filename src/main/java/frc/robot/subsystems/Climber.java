@@ -143,6 +143,11 @@ public class Climber extends SubsystemBase {
     }
   }
 
+  // check if climber has stalled against a bar
+  public boolean isStalled() {
+    return Math.abs(getSpeed()) < ClimberConstants.minRunVel;
+  }
+
   private void updateLockedDir() {
 
     double pos = getPosition();
@@ -217,7 +222,7 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public boolean isAtCoastTarget() {
+  public boolean isPastCoastTarget() {
     if (!Constants.climberEnabled) {
       return true;
     }

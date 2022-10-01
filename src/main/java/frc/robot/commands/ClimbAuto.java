@@ -24,15 +24,17 @@ public class ClimbAuto extends CommandBase {
 
   private climberMode currentMode;
   private final Climber climber;
+  private Timer hookSwingTimer = new Timer();
   private Timer overrideTimer = new Timer();
 
   public enum climberMode {
     stopped,
     floatingSecondBar,
-    engageSecondBar,
+    engageSecondBar,  // after hooks have settled onto bar
     disengageFirstBar,
+    disengageFirstBarClear,  // after hooks have swung clear
     floatingThirdBar,
-    engageThirdBar,
+    engageThirdBar,  // after hooks have settled onto bar
     disengageSecondBar,
     done,
     abort;
@@ -73,7 +75,7 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case engageSecondBar:
-          if (climber.isAtCoastTarget()) {
+          if (climber.isPastCoastTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageFirstBar;
             }
@@ -83,7 +85,14 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case disengageFirstBar:
-          if (climber.isAtTarget()) {
+          if (climber.isAtTarget() || climber.isStalled()) {
+            hookSwingTimer.reset();
+            hookSwingTimer.start();
+            currentMode = climberMode.disengageFirstBarClear;
+          }
+          break;
+        case disengageFirstBarClear:
+          if (hookSwingTimer.hasElapsed(ClimberConstants.hookSwingSec)) {
             if (climber.moveToPosition(ClimberConstants.floatingThirdBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.floatingThirdBar;
             }
@@ -99,7 +108,7 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case engageThirdBar:
-          if (climber.isAtCoastTarget()) {
+          if (climber.isPastCoastTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageSecondBar;
             }
@@ -109,7 +118,7 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case disengageSecondBar:
-          if (climber.isAtTarget()) {
+          if (climber.isAtTarget() || climber.isStalled()) {
             currentMode = climberMode.done;
           }
           break;
