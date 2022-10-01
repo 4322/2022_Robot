@@ -217,9 +217,15 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
+  public void coastToPosition(double targetPos) {
+    setCoastMode();
+    currentTarget = targetPos;
+  }
+
   public boolean moveToPosition(double targetPos, climbMode mode) {
     if (Constants.climberEnabled) {
 
+      setBrakeMode();
       double pos = getPosition();
       updateLockedDir();
 

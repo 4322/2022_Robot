@@ -29,8 +29,10 @@ public class ClimbAuto extends CommandBase {
   public enum climberMode {
     stopped,
     floatingSecondBar,
+    engageSecondBar,
     disengageFirstBar,
     floatingThirdBar,
+    engageThirdBar,
     disengageSecondBar,
     done,
     abort;
@@ -66,6 +68,12 @@ public class ClimbAuto extends CommandBase {
           break;
         case floatingSecondBar:
           if (climber.isAtTarget()) {
+            climber.coastToPosition(ClimberConstants.engageSecondBar);
+            currentMode = climberMode.engageSecondBar;
+          }
+          break;
+        case engageSecondBar:
+          if (climber.isAtTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageFirstBar;
             }
@@ -85,6 +93,12 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case floatingThirdBar:
+          if (climber.isAtTarget()) {
+            climber.coastToPosition(ClimberConstants.engageThirdBar);
+            currentMode = climberMode.engageThirdBar;
+          }
+          break;
+        case engageThirdBar:
           if (climber.isAtTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageSecondBar;
