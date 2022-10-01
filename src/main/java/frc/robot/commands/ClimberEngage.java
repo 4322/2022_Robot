@@ -16,6 +16,7 @@ import frc.robot.subsystems.Driveunbun;
 public class ClimberEngage extends CommandBase {
   private final Climber climber;
   private final Driveunbun drive;
+  private boolean abort;
 
   public ClimberEngage(Climber climbsubsystem, Driveunbun drivesubsystem) {
     climber = climbsubsystem;
@@ -28,7 +29,7 @@ public class ClimberEngage extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.moveToPosition(Constants.ClimberConstants.firstEngage, Climber.climbMode.unloaded);
+    abort = !climber.moveToPosition(Constants.ClimberConstants.firstEngage, Climber.climbMode.unloaded);
     drive.drive(0, 0.15, 0);
   }
 
@@ -41,12 +42,13 @@ public class ClimberEngage extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     climber.stop();
+    drive.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return abort;
   }
 
 }
