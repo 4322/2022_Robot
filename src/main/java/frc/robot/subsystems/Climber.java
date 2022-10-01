@@ -217,7 +217,16 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
+  public boolean isAtCoastTarget() {
+    if (!Constants.climberEnabled) {
+      return true;
+    }
+    // it may drop below the target before our next position check
+    return getPosition() <= currentTarget;
+  }
+
   public void coastToPosition(double targetPos) {
+    stop();
     setCoastMode();
     currentTarget = targetPos;
   }

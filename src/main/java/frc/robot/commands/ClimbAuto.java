@@ -73,7 +73,7 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case engageSecondBar:
-          if (climber.isAtTarget()) {
+          if (climber.isAtCoastTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageFirstBar;
             }
@@ -99,7 +99,7 @@ public class ClimbAuto extends CommandBase {
           }
           break;
         case engageThirdBar:
-          if (climber.isAtTarget()) {
+          if (climber.isAtCoastTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageSecondBar;
             }

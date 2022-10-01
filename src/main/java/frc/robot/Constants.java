@@ -353,7 +353,7 @@ public final class Constants {
     public static final double horizontal = -43615;
     public static final double vertical = 86141;
     public static final double firstEngage = 134673;  // performed manually currently
-    public static final double floatingSecondBar= 325000;
+    public static final double floatingSecondBar= 335000;
     public static final double engageSecondBar= 280000;
     public static final double disengageFirstBar = 195000;
     public static final double floatingThirdBar = floatingSecondBar + fullRotation/2;
