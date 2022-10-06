@@ -10,8 +10,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -19,9 +17,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -36,12 +31,7 @@ import frc.robot.subsystems.*;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.cameras.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
@@ -273,6 +263,10 @@ public class RobotContainer {
       return null;
     }
 
+    final double spinUpMediumSec = 0.6;
+    final double shootOneCargoSec = 2.0;  // must already be spun-up
+    final double shootTwoCargoSec = 4.0;  // must already be spun-up
+
     PathPlannerTrajectory p_FiveBallOpposite1 = PathPlanner.loadPath(
         "5 Ball Opposite Hangar 1", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
@@ -336,10 +330,35 @@ public class RobotContainer {
     );
 
     SequentialCommandGroup auto = new SequentialCommandGroup(
+
+    // Initialize and fire preload
+      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
+      new HoodReset(hood)
+          .raceWith(new IntakeIn(intake, conveyor)),
+      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
+      new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec),
+      new FireStop(kicker, conveyor, shooter, hood),
+
+      // Follow the first part of the path while intaking
+      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
       new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
-      FiveBallOpposite1,
-      
-      new DriveStop(drive)
+      FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
+      new DriveStop(drive),
+
+      // Fire two collected balls from cargo ring
+      new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+      new FireStop(kicker, conveyor, shooter, hood),
+
+      // Follow the second part of the path while intaking
+      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.autoBall5),
+      new OdometryReset(drive, p_FiveBallOpposite2.getInitialPose()),
+      FiveBallOpposite2.raceWith(new IntakeIn(intake, conveyor)),
+      new DriveStop(drive),
+
+      // Fire two collected balls from autoBall5 (needs tuning)
+      new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+      new FireStop(kicker, conveyor, shooter, hood)
+
     );
 
     return auto;
