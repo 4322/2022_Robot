@@ -273,14 +273,45 @@ public class RobotContainer {
       return null;
     }
 
-    PathPlannerTrajectory testPath = PathPlanner.loadPath(
-        "Test Path Rotation", 
+    PathPlannerTrajectory p_FiveBallOpposite1 = PathPlanner.loadPath(
+        "5 Ball Opposite Hangar 1", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
         DriveConstants.autoMaxAccelerationMetersPerSec2
-      );
+    );
 
-    PPSwerveControllerCommand testCommand1 = new PPSwerveControllerCommand(
-        testPath, 
+    PathPlannerTrajectory p_FiveBallOpposite2 = PathPlanner.loadPath(
+        "5 Ball Opposite Hangar 2", 
+        DriveConstants.autoMaxSpeedMetersPerSecond, 
+        DriveConstants.autoMaxAccelerationMetersPerSec2
+    );
+
+    PPSwerveControllerCommand FiveBallOpposite1 = new PPSwerveControllerCommand(
+        p_FiveBallOpposite1, 
+        drive::getPose2d, 
+        drive.getKinematics(), 
+        new PIDController(
+          DriveConstants.Trajectory.PIDX.kP, 
+          DriveConstants.Trajectory.PIDX.kI, 
+          DriveConstants.Trajectory.PIDX.kD
+        ),
+        new PIDController(
+          DriveConstants.Trajectory.PIDY.kP, 
+          DriveConstants.Trajectory.PIDY.kI, 
+          DriveConstants.Trajectory.PIDY.kD
+        ),
+        new ProfiledPIDController(
+          DriveConstants.Trajectory.ProfiledPID.kP, 
+          DriveConstants.Trajectory.ProfiledPID.kI, 
+          DriveConstants.Trajectory.ProfiledPID.kD,
+          new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
+          DriveConstants.autoMaxRotationAccelerationRadPerSec2)
+        ),
+        drive::setModuleStates,
+        drive
+    );
+
+    PPSwerveControllerCommand FiveBallOpposite2 = new PPSwerveControllerCommand(
+        p_FiveBallOpposite2, 
         drive::getPose2d, 
         drive.getKinematics(), 
         new PIDController(
@@ -305,8 +336,9 @@ public class RobotContainer {
     );
 
     SequentialCommandGroup auto = new SequentialCommandGroup(
-      new OdometryReset(drive, testPath.getInitialPose()),
-      testCommand1,
+      new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
+      FiveBallOpposite1,
+      
       new DriveStop(drive)
     );
 
