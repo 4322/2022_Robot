@@ -363,6 +363,7 @@ public final class Constants {
     public static final double minRunVel = 250;
     public static final double hookSwingSec = 0.25;
     public static final double overrideTime = 15;
+    public static final double poweredDescentSpeedPercent = 0.05; // should always be positive (going fwd)
     
     public static final double fwdOneWayZoneMin = 111700;
     public static final double fwdOneWayZoneMax = 119900; 

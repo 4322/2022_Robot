@@ -222,7 +222,7 @@ public class Climber extends SubsystemBase {
     return (Math.abs(getPosition() - currentTarget) <= ClimberConstants.positionTolerance);
   }
 
-  public boolean isPastCoastTarget() {
+  public boolean isPastPoweredDescentTarget() {
     if (!Constants.climberEnabled) {
       return true;
     }
@@ -230,9 +230,8 @@ public class Climber extends SubsystemBase {
     return getPosition() <= currentTarget;
   }
 
-  public void coastToPosition(double targetPos) {
-    stop();
-    setCoastMode();
+  public void poweredDescent(double targetPos) {
+    climberLeft.set(ControlMode.PercentOutput, ClimberConstants.poweredDescentSpeedPercent);
     currentTarget = targetPos;
   }
 
