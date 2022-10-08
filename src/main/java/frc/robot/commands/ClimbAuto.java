@@ -15,6 +15,7 @@ Clockwise until vertical to complete hang
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ClimberConstants;
@@ -63,6 +64,7 @@ public class ClimbAuto extends CommandBase {
         case stopped:
           if (climber.moveToPosition(ClimberConstants.floatingSecondBar, Climber.climbMode.loaded)) {
             currentMode = climberMode.floatingSecondBar;
+            DriverStation.reportWarning("Starting floatingSecondBar", false);
           }
           else {
             currentMode = climberMode.abort;
@@ -72,12 +74,14 @@ public class ClimbAuto extends CommandBase {
           if (climber.isAtTarget()) {
             climber.poweredDescent(ClimberConstants.engageSecondBar);
             currentMode = climberMode.engageSecondBar;
+            DriverStation.reportWarning("Starting engageSecondBar", false);
           }
           break;
         case engageSecondBar:
           if (climber.isPastPoweredDescentTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.done;
+              DriverStation.reportWarning("Starting disengageFirstBar", false);
             }
             else {
               currentMode = climberMode.abort;
@@ -89,12 +93,14 @@ public class ClimbAuto extends CommandBase {
             hookSwingTimer.reset();
             hookSwingTimer.start();
             currentMode = climberMode.disengageFirstBarClear;
+            DriverStation.reportWarning("Starting disengageFirstBarClear", false);
           }
           break;
         case disengageFirstBarClear:
           if (hookSwingTimer.hasElapsed(ClimberConstants.hookSwingSec)) {
             if (climber.moveToPosition(ClimberConstants.floatingThirdBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.floatingThirdBar;
+              DriverStation.reportWarning("Starting floatingThirdBar", false);
             }
             else {
               currentMode = climberMode.abort;
@@ -105,12 +111,14 @@ public class ClimbAuto extends CommandBase {
           if (climber.isAtTarget()) {
             climber.poweredDescent(ClimberConstants.engageThirdBar);
             currentMode = climberMode.engageThirdBar;
+            DriverStation.reportWarning("Starting engageThirdBar", false);
           }
           break;
         case engageThirdBar:
           if (climber.isPastPoweredDescentTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageSecondBar, Climber.climbMode.loaded)) {
               currentMode = climberMode.disengageSecondBar;
+              DriverStation.reportWarning("Starting disengageSecondBar", false);
             }
             else {
               currentMode = climberMode.abort;
@@ -120,6 +128,7 @@ public class ClimbAuto extends CommandBase {
         case disengageSecondBar:
           if (climber.isAtTarget() || climber.isStalled()) {
             currentMode = climberMode.done;
+            DriverStation.reportWarning("Done", false);
           }
           break;
         case done:  // fall through to break

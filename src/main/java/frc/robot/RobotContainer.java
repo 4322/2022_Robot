@@ -146,7 +146,7 @@ public class RobotContainer {
     disableTimer.reset();
     disableTimer.start();
     driveunbun.stop();
-    climber.setBrakeMode();
+    climber.setCoastMode();
   }
 
   public void enableSubsystems() {

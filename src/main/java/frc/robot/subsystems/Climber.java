@@ -226,11 +226,18 @@ public class Climber extends SubsystemBase {
     if (!Constants.climberEnabled) {
       return true;
     }
-    // it may drop below the target before our next position check
-    return getPosition() <= currentTarget;
+
+    if (getPosition() <= currentTarget) {
+      setBrakeMode();
+      // it may drop below the target before our next position check
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void poweredDescent(double targetPos) {
+    setCoastMode();
     climberLeft.set(ControlMode.PercentOutput, ClimberConstants.poweredDescentSpeedPercent);
     currentTarget = targetPos;
   }
