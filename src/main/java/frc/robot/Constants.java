@@ -74,6 +74,12 @@ public final class Constants {
     // SPARK controllers support status periods of up to 65535 ms
     public static final int verySlowStatusPeriodSparkBaseMs = 1000; // for unused status
 
+    // Controller commands are transmited by the library on the CAN bus every 10 ms.
+    // We then need to wait for the next status frame
+    // for the values we read from the library to be current.
+    // We wait for two status frame periods in case the first frame was dropped.
+    public static final double statusLatencySec = (10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
+
     // Firing Solutions
     // fender distances need to be remeasured
     // measurement from back of bumper for now
@@ -286,6 +292,7 @@ public final class Constants {
         public static final double speedSettlingPresetSec = 0.1; // don't shoot until speed is stable
         public static final double speedSettlingLimeSec = 0.1;
         public static final double resetSettingDelta = 100;
+        public static final double logIntervalDistIn = 5;
     }
 
     public static final class KickerConstants {
@@ -306,6 +313,7 @@ public final class Constants {
         public static final double speedSettlingLimeSec = 0.1; // don't shoot until speed is stable
         public static final double minShotSec = 0.2; // don't stop conveyor when kicker slows down as cargo enters
         public static final double resetSettingDelta = 100;
+        public static final int currentLimit = 20;
     }
 
     public static final class HoodConstants {
@@ -348,6 +356,8 @@ public final class Constants {
 
         public static final double minRunVel = 100;
         public static final double stallTimeoutSec = 1;
+
+        public static final int currentLimit = 30;
     }
 
     public static final class ConveyorConstants {
