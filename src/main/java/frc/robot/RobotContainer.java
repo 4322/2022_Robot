@@ -68,6 +68,7 @@ public class RobotContainer {
   private final Intake intake = Intake.getSingleton();
   private final Hood hood = new Hood();
   private final Conveyor conveyor = Conveyor.getSingleton();
+  private final Climber climber = new Climber();
 
   // Drive Commands
   private final DriveManual driveManual = new DriveManual(driveunbun, limelight);
@@ -83,6 +84,15 @@ public class RobotContainer {
   // Hood Commands
   private final HoodReset hoodReset = new HoodReset(hood);
 
+  // Climber Commands
+  private final ClimbAuto climbAuto = new ClimbAuto(climber);
+  private final ClimbStop climbStop = new ClimbStop(climber);
+  private final ClimbVertical climbVertical = new ClimbVertical(climber);
+  private final ClimbManual climbManual = new ClimbManual(climber);
+  private final ClimberReset climberReset = new ClimberReset(climber);
+  private final ClimbHorizontal climbHorizontal = new ClimbHorizontal(climber);
+  private final ClimberEngage climberEngage = new ClimberEngage(climber, driveunbun);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
   public RobotContainer() {
@@ -95,6 +105,7 @@ public class RobotContainer {
     intake.init();
     hood.init();
     conveyor.init();
+    climber.init();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -122,6 +133,9 @@ public class RobotContainer {
     if (Constants.driveEnabled) {
       driveunbun.setDefaultCommand(driveManual);
     }
+    if (Constants.climberEnabled) {
+      climber.setDefaultCommand(climbManual);
+    }
   }
 
   public void disableSubsystems() {
@@ -132,6 +146,7 @@ public class RobotContainer {
     disableTimer.reset();
     disableTimer.start();
     driveunbun.stop();
+    climber.setCoastMode();
   }
 
   public void enableSubsystems() {
@@ -141,6 +156,7 @@ public class RobotContainer {
     conveyor.setBrakeMode();
     intake.setBrakeMode();
     kicker.setBrakeMode();
+    climber.setBrakeMode();
     disableTimer.stop();
     disableTimer.reset();
   }
@@ -179,6 +195,12 @@ public class RobotContainer {
       coPilot.x.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh));
       coPilot.y.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.outsideTarmac));
       coPilot.b.whenPressed(new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac));
+
+      coPilot.start.whenPressed(climbAuto);
+      coPilot.dPad.down.whenPressed(climbStop);
+      coPilot.dPad.up.whenPressed(climbVertical);
+      coPilot.dPad.left.whenPressed(climbHorizontal);
+      coPilot.dPad.right.whenHeld(climberEngage);
     }
     
     //coPilot.dPad.up.whileHeld(new CalcFiringSolution(kicker, shooter, hood, limelight));
@@ -189,7 +211,7 @@ public class RobotContainer {
 
     coPilot.lt.whileHeld(startFiring);
 
-    coPilot.back.whenPressed(hoodReset, false);  // non-interruptable
+    coPilot.back.whenPressed(hoodReset, false);  // non-interruptables
 
     if (Constants.joysticksEnabled) {
       driveStick = new Joystick(0);
@@ -480,6 +502,10 @@ public class RobotContainer {
     }
   }
 
+  public void climberReset() {
+    climberReset.schedule(false);
+  }
+  
   // stagger status frame periods to reduce peak CAN bus utilization
   private static int nextFastStatusPeriodMs = Constants.fastStatusPeriodBaseMs;
   private static int nextShuffleboardStatusPeriodMs = Constants.shuffleboardStatusPeriodBaseMs;
