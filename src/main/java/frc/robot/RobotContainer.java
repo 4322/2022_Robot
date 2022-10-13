@@ -66,7 +66,6 @@ public class RobotContainer {
 
   private ShuffleboardTab tab;
   private SendableChooser<Integer> autoModeChooser = new SendableChooser<Integer>();
-  private SendableChooser<Integer> autoSubModeChooser = new SendableChooser<Integer>();
 
   // The robot's subsystems and commands are defined here...
   private final Webcams webcams = new Webcams();
@@ -113,7 +112,6 @@ public class RobotContainer {
     configureButtonBindings();
 
     tab = Shuffleboard.getTab("Auto");
-    autoModeChooser.setDefaultOption("Preload Only", 1);
     autoModeChooser.addOption("Preload + 1", 2);
     autoModeChooser.addOption("Preload + 2", 3);
     autoModeChooser.addOption("Quintet", 5);
@@ -121,15 +119,6 @@ public class RobotContainer {
     tab.add("Auto Mode", autoModeChooser)
       .withWidget(BuiltInWidgets.kSplitButtonChooser)
       .withPosition(0, 0)
-      .withSize(4, 2);
-
-    autoSubModeChooser.setDefaultOption("None", 0);
-    autoSubModeChooser.addOption("Left Only", 1);
-    autoSubModeChooser.addOption("Left and Right", 2);
-
-    tab.add("Preload + 1 Disposal Mode", autoSubModeChooser)
-      .withWidget(BuiltInWidgets.kSplitButtonChooser)
-      .withPosition(0, 2)
       .withSize(4, 2);
 
     if (Constants.driveEnabled) {
@@ -267,6 +256,12 @@ public class RobotContainer {
     final double shootOneCargoSec = 2.0;  // must already be spun-up
     final double shootTwoCargoSec = 4.0;  // must already be spun-up
 
+    PathPlannerTrajectory p_OneBallSame = PathPlanner.loadPath(
+      "1 Ball Same Side Hangar",
+      DriveConstants.autoMaxSpeedMetersPerSecond, 
+      DriveConstants.autoMaxAccelerationMetersPerSec2
+    );
+
     PathPlannerTrajectory p_FiveBallOpposite1 = PathPlanner.loadPath(
         "5 Ball Opposite Hangar 1", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
@@ -278,6 +273,32 @@ public class RobotContainer {
         DriveConstants.autoMaxSpeedMetersPerSecond, 
         DriveConstants.autoMaxAccelerationMetersPerSec2
     );
+
+    PPSwerveControllerCommand OneBallSame = new PPSwerveControllerCommand(
+        p_OneBallSame, 
+        drive::getPose2d, 
+        drive.getKinematics(), 
+        new PIDController(
+          DriveConstants.Trajectory.PIDX.kP, 
+          DriveConstants.Trajectory.PIDX.kI, 
+          DriveConstants.Trajectory.PIDX.kD
+        ),
+        new PIDController(
+          DriveConstants.Trajectory.PIDY.kP, 
+          DriveConstants.Trajectory.PIDY.kI, 
+          DriveConstants.Trajectory.PIDY.kD
+        ),
+        new ProfiledPIDController(
+          DriveConstants.Trajectory.ProfiledPID.kP, 
+          DriveConstants.Trajectory.ProfiledPID.kI, 
+          DriveConstants.Trajectory.ProfiledPID.kD,
+          new Constraints(DriveConstants.autoMaxRotationRadPerSecond, 
+          DriveConstants.autoMaxRotationAccelerationRadPerSec2)
+        ),
+        drive::setModuleStates,
+        drive
+    );
+
 
     PPSwerveControllerCommand FiveBallOpposite1 = new PPSwerveControllerCommand(
         p_FiveBallOpposite1, 
@@ -331,35 +352,60 @@ public class RobotContainer {
 
     SequentialCommandGroup auto = new SequentialCommandGroup(
 
-    // Initialize and fire preload
+      // Initialize and fire preload
       new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
       new HoodReset(hood)
           .raceWith(new IntakeIn(intake, conveyor)),
       new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
       new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootTwoCargoSec),
-      new FireStop(kicker, conveyor, shooter, hood),
-
-      // Follow the first part of the path while intaking
-      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-      new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
-      FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
-      new DriveStop(drive),
-
-      // Fire two collected balls from cargo ring
-      new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
-      new FireStop(kicker, conveyor, shooter, hood),
-
-      // Follow the second part of the path while intaking
-      new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.autoBall5),
-      new OdometryReset(drive, p_FiveBallOpposite2.getInitialPose()),
-      FiveBallOpposite2.raceWith(new IntakeIn(intake, conveyor)),
-      new DriveStop(drive),
-
-      // Fire two collected balls from autoBall5 (needs tuning)
-      new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
       new FireStop(kicker, conveyor, shooter, hood)
 
     );
+
+    switch (autoModeChooser.getSelected()) {
+
+      case 2:
+        break;
+
+      case 3:
+        auto.addCommands(
+          // Follow the first part of the path while intaking
+          new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
+          new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
+          FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
+          new DriveStop(drive),
+
+          // Fire two collected balls from cargo ring
+          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new FireStop(kicker, conveyor, shooter, hood)
+        );
+        break;
+
+        case 5:
+          auto.addCommands(
+            // Follow the first part of the path while intaking
+            new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
+            new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
+            FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
+            new DriveStop(drive),
+
+            // Fire two collected balls from cargo ring
+            new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+            new FireStop(kicker, conveyor, shooter, hood),
+
+            // Follow the second part of the path while intaking
+            new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.autoBall5),
+            new OdometryReset(drive, p_FiveBallOpposite2.getInitialPose()),
+            FiveBallOpposite2.raceWith(new IntakeIn(intake, conveyor)),
+            new DriveStop(drive),
+
+            // Fire two collected balls from autoBall5 (needs tuning)
+            new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+            new FireStop(kicker, conveyor, shooter, hood)
+          );
+          break;
+
+    }
 
     return auto;
   }
