@@ -353,17 +353,17 @@ public final class Constants {
     public static final double horizontal = -43615;
     public static final double vertical = 86141;
     public static final double firstEngage = 134673;  // performed manually currently
-    public static final double floatingSecondBar= 339000;
-    public static final double engageSecondBar= 280000;
-    public static final double disengageFirstBar = 190000;
-    public static final double floatingThirdBar = floatingSecondBar + fullRotation/2;
+    public static final double floatingSecondBar= 339500;
+    public static final double engageSecondBar= 292500;
+    public static final double disengageFirstBar = 180000;
+    public static final double floatingThirdBar = floatingSecondBar + fullRotation/2 + 20000;
     public static final double engageThirdBar = engageSecondBar + fullRotation/2;
     public static final double disengageSecondBar = vertical + fullRotation;
-    public static final int positionTolerance = 2000;
+    public static final int positionTolerance = 1000;
     public static final double minRunVel = 250;
-    public static final double hookSwingSec = 0.25;
-    public static final double overrideTime = 30;
-    public static final double poweredDescentSpeedPercent = 0.001; // should always be positive (going fwd)
+    public static final double hookSwingSec = 1.5;
+    public static final double overrideTime = 60;
+    public static final double poweredDescentAmps = 3; // should always be positive (going fwd)
     
     public static final double fwdOneWayZoneMin = 111700;
     public static final double fwdOneWayZoneMax = 119900; 

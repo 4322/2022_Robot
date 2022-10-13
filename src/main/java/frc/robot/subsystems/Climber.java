@@ -238,7 +238,7 @@ public class Climber extends SubsystemBase {
 
   public void poweredDescent(double targetPos) {
     setCoastMode();
-    climberLeft.set(ControlMode.PercentOutput, ClimberConstants.poweredDescentSpeedPercent);
+    climberLeft.set(ControlMode.Current, ClimberConstants.poweredDescentAmps);
     currentTarget = targetPos;
   }
 

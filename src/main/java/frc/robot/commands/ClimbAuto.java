@@ -80,7 +80,7 @@ public class ClimbAuto extends CommandBase {
         case engageSecondBar:
           if (climber.isPastPoweredDescentTarget()) {
             if (climber.moveToPosition(ClimberConstants.disengageFirstBar, Climber.climbMode.loaded)) {
-              currentMode = climberMode.done;
+              currentMode = climberMode.disengageFirstBar;
               DriverStation.reportWarning("Starting disengageFirstBar", false);
             }
             else {
