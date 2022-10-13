@@ -336,7 +336,7 @@ public class RobotContainer {
       new HoodReset(hood)
           .raceWith(new IntakeIn(intake, conveyor)),
       new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.fenderHigh),
-      new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec),
+      new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootTwoCargoSec),
       new FireStop(kicker, conveyor, shooter, hood),
 
       // Follow the first part of the path while intaking
