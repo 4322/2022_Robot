@@ -84,7 +84,7 @@ public final class Constants {
     public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0);
     public static final FiringSolution disposal = new FiringSolution(600, 700, 2500 + hoodFiringSolutionOffset, 5.0, 0);
     public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500 + hoodFiringSolutionOffset, 2.0, 44.6);
-    public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800 + hoodFiringSolutionOffset, 2.0, 53);
+    public static final FiringSolution insideTarmac = new FiringSolution(2200, 3500, 2800 + hoodFiringSolutionOffset, 2.0, 53);
     public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000 + hoodFiringSolutionOffset, 1.5, 96.8);
     public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000 + hoodFiringSolutionOffset, 1.5, 128);
     public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000 + hoodFiringSolutionOffset, 1.5, 169.5);
