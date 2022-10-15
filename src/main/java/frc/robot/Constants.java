@@ -74,23 +74,25 @@ public final class Constants {
   // We wait for two status frame periods in case the first frame was dropped.
   public static final double statusLatencySec = (10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
 
+  public static final double hoodFiringSolutionOffset = 500;
+
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
   public static final class FiringSolutions {
-    public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800, 3.0, 0);
-    public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0);
-    public static final FiringSolution disposal = new FiringSolution(600, 700, 2500, 5.0, 0);
-    public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500, 2.0, 44.6);
-    public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800, 2.0, 53);
-    public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000, 1.5, 96.8);
-    public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000, 1.5, 128);
-    public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000, 1.5, 169.5);
-    public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200, 1.25, 160);  // needs calibration
-    public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100, 1.0, 233.75);
-    public static final FiringSolution reallyFar = new FiringSolution(2600, 4200, 4300, 1.0, 271.75);
-    public static final FiringSolution demoSlowPop = new FiringSolution(1500, 1700, 1400, 1.0, 0);
-    public static final FiringSolution demoMediumPop = new FiringSolution(2200, 3000, 1800, 1.0, 0);
+    public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800 + hoodFiringSolutionOffset, 3.0, 0);
+    public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700 + hoodFiringSolutionOffset, 5.0, 0);
+    public static final FiringSolution disposal = new FiringSolution(600, 700, 2500 + hoodFiringSolutionOffset, 5.0, 0);
+    public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500 + hoodFiringSolutionOffset, 2.0, 44.6);
+    public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800 + hoodFiringSolutionOffset, 2.0, 53);
+    public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000 + hoodFiringSolutionOffset, 1.5, 96.8);
+    public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000 + hoodFiringSolutionOffset, 1.5, 128);
+    public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000 + hoodFiringSolutionOffset, 1.5, 169.5);
+    public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200 + hoodFiringSolutionOffset, 1.25, 160);  // needs calibration
+    public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100 + hoodFiringSolutionOffset, 1.0, 233.75);
+    public static final FiringSolution reallyFar = new FiringSolution(2600, 4200, 4300 + hoodFiringSolutionOffset, 1.0, 271.75);
+    public static final FiringSolution demoSlowPop = new FiringSolution(1500, 1700, 1400 + hoodFiringSolutionOffset, 1.0, 0);
+    public static final FiringSolution demoMediumPop = new FiringSolution(2200, 3000, 1800 + hoodFiringSolutionOffset, 1.0, 0);
   }
 
   public static FiringSolution[] limelightFiringSolutions;
