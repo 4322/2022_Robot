@@ -170,7 +170,7 @@ public class SwerveModule extends ControlModule {
 
 	@Override
 	public double getDistance(){
-		return driveMotor.getSelectedSensorPosition(0) / DriveConstants.encoderResolution /
+		return driveMotor.getSelectedSensorPosition(0) / Constants.falconEncoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI *
 			DriveConstants.Drive.wheelDiameterInches / 12;
 	}
@@ -178,7 +178,7 @@ public class SwerveModule extends ControlModule {
 	@Override
 	public double getVelocity() {
 		// feet per second
-		return driveMotor.getSelectedSensorVelocity(0) * 10 / DriveConstants.encoderResolution /
+		return driveMotor.getSelectedSensorVelocity(0) * 10 / Constants.falconEncoderResolution /
 			Constants.DriveConstants.Drive.gearRatio * Math.PI * 
 			Constants.DriveConstants.Drive.wheelDiameterInches / 12;
 	}
@@ -199,7 +199,7 @@ public class SwerveModule extends ControlModule {
     driveMotor.set(ControlMode.Velocity, 
         state.speedMetersPerSecond / 
         (DriveConstants.Drive.wheelDiameterInches * Constants.inchesToMeters * Math.PI)
-        * DriveConstants.Drive.gearRatio * DriveConstants.encoderResolution
+        * DriveConstants.Drive.gearRatio * Constants.falconEncoderResolution
         / 10); // every 100 ms
 
 	// Calculate the change in degrees and add that to the current position
