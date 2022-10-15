@@ -358,7 +358,8 @@ public final class Constants {
     public static final double disengageFirstBar = 180000;
     public static final double floatingThirdBar = floatingSecondBar + fullRotation/2 + 20000;
     public static final double engageThirdBar = engageSecondBar + fullRotation/2;
-    public static final double disengageSecondBar = vertical + fullRotation;
+    public static final double disengageSecondBar = disengageFirstBar + fullRotation/2;
+    public static final double donePos = vertical + fullRotation;
     public static final int positionTolerance = 1000;
     public static final double minRunVel = 250;
     public static final double hookSwingSec = 1.5;
