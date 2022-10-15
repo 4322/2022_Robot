@@ -74,14 +74,14 @@ public final class Constants {
   // We wait for two status frame periods in case the first frame was dropped.
   public static final double statusLatencySec = (10 + Constants.fastStatusPeriodMaxMs * 2) / 1000;
 
-  public static final double hoodFiringSolutionOffset = 500;
+  public static final double hoodFiringSolutionOffset = 1000;
 
   // Firing Solutions
   // fender distances need to be remeasured
   // measurement from back of bumper for now
   public static final class FiringSolutions {
     public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800 + hoodFiringSolutionOffset, 3.0, 0);
-    public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700 + hoodFiringSolutionOffset, 5.0, 0);
+    public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0);
     public static final FiringSolution disposal = new FiringSolution(600, 700, 2500 + hoodFiringSolutionOffset, 5.0, 0);
     public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500 + hoodFiringSolutionOffset, 2.0, 44.6);
     public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800 + hoodFiringSolutionOffset, 2.0, 53);
