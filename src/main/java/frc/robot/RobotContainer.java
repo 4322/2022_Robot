@@ -321,7 +321,7 @@ public class RobotContainer {
         new HoodReset(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootTwoCargoSec)
             // doesn't hurt in 1 ball mode
             .alongWith(new DrivePreTurnWheels(driveunbun, ballTwoLeftAutoDriveDeg))
       );
@@ -333,7 +333,7 @@ public class RobotContainer {
         new HoodReset(hood)
             .raceWith(new IntakeIn(intake, conveyor)),
         new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.insideTarmac),
-        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootOneCargoSec)
+        new FirePreset(kicker, conveyor, shooter, hood, spinUpMediumSec + shootTwoCargoSec)
             .alongWith(new DrivePreTurnWheels(driveunbun, ballTwoRightAutoDriveDeg)),
         new FireStop(kicker, conveyor, shooter, hood),
         new ParallelRaceGroup(
