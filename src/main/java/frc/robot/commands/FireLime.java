@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -26,6 +27,9 @@ public class FireLime extends CommandBase {
   private Driveunbun driveunbun;
   private Limelight limelight;
   private double lastLoggedDistance = 0;
+  
+  private Timer fireStopTimer = new Timer();
+  private double stopDelay = 1;
 
   public FireLime(Kicker kickerSubsystem, Shooter shooterSubsystem, 
       Hood hoodSubsystem, Driveunbun driveunbun, Limelight limelight) {
@@ -43,17 +47,24 @@ public class FireLime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    fireStopTimer.reset();
+    fireStopTimer.start();
   }
 
   @Override
   public void execute() {
+
     if (!limelight.getTargetVisible()) {
-      conveyor.autoStop();
-      kicker.stop();
-      shooter.stop();
-      hood.stop();
+      if (fireStopTimer.hasElapsed(stopDelay)) {
+        conveyor.autoStop();
+        kicker.stop();
+        shooter.stop();
+        hood.stop();
+      }
       return;
     }
+
+    fireStopTimer.reset();
 
     FiringSolution firingSolution = FiringSolutionManager.getSingleton()
         .calcNewSolution(limelight.getDistance());
