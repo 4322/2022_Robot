@@ -37,6 +37,8 @@ public class ClimbAuto extends CommandBase {
     floatingThirdBar,
     engageThirdBar,  // after hooks have settled onto bar
     disengageSecondBar,
+    disengageSecondBarClear,
+    moveToDone,
     done,
     abort;
   }
@@ -127,10 +129,27 @@ public class ClimbAuto extends CommandBase {
           break;
         case disengageSecondBar:
           if (climber.isAtTarget() || climber.isStalled()) {
+            hookSwingTimer.reset();
+            hookSwingTimer.start();
+            currentMode = climberMode.done;
+            DriverStation.reportWarning("Starting disengageSecondBarClear", false);
+          }
+          break;
+        case disengageSecondBarClear:
+          if (hookSwingTimer.hasElapsed(ClimberConstants.hookSwingSec)) {
+            if (climber.moveToPosition(ClimberConstants.donePos, Climber.climbMode.loaded)) {
+              currentMode = climberMode.floatingThirdBar;
+              DriverStation.reportWarning("Starting moveToDone", false);
+            }
+            else {
+              currentMode = climberMode.abort;
+            }
+          }
+        case moveToDone:
+          if (climber.isAtTarget() || climber.isStalled()) {
             currentMode = climberMode.done;
             DriverStation.reportWarning("Done", false);
           }
-          break;
         case done:  // fall through to break
         case abort:
           break;
@@ -141,6 +160,7 @@ public class ClimbAuto extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    climber.setBrakeMode();
     climber.stop();
   }
 
