@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -78,6 +79,10 @@ public class Conveyor extends SubsystemBase {
           }
           break;
         case loaded:
+          if(!getSensedBall()) {
+            DriverStation.reportError("Ball has slipped past button", false);
+            conveyorMode = ConveyorMode.stopped;
+          }
           break;
         case shooting:
           if (shotTimer.hasElapsed(Constants.ConveyorConstants.kickerInjectSec)) {
