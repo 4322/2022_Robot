@@ -38,6 +38,9 @@ public class ClimbManual extends CommandBase {
       if (Math.abs(speed) < ClimberConstants.manualDeadband) {
         speed = 0;
       }
+      // spread max climber power across full joystick range for increased sensitivity
+      speed *= ClimberConstants.kMaxRange;
+
       climber.setClimberSpeed(speed);
     }
   }
