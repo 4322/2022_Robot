@@ -288,6 +288,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setClimberSpeed(double speed) {
+    double pos = getPosition();
     if (Constants.climberEnabled) {
       updateLockedDir();
       if (currentLockedDir == lockedDir.none) {
@@ -299,6 +300,8 @@ public class Climber extends SubsystemBase {
       } else {
         stop();
       }
+     //check if heading backwards + within 1500(const slowmanualzone) more than disengage 
+      //and a bit less than disengage. If so, then multiply speed by slowmanual power
     }
   }
 
