@@ -289,18 +289,20 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     double pos = getPosition();
+    boolean goingBackward = speed<=0;
+    boolean goingForward = speed>=0;
     boolean inDisengageZone1 = (pos < (ClimberConstants.disengageFirstBar + ClimberConstants.slowManualZone)) && (pos > (ClimberConstants.disengageFirstBar - ClimberConstants.slowManualZone));
     boolean inDisengageZone2 = (pos < (ClimberConstants.disengageSecondBar + ClimberConstants.slowManualZone)) && (pos > (ClimberConstants.disengageSecondBar - ClimberConstants.slowManualZone));
-    if ((inDisengageZone1 || inDisengageZone2) && (speed <= 0)) {
+    if ((inDisengageZone1 || inDisengageZone2) && (goingBackward)) {
         speed *= ClimberConstants.slowManualPower;
     }
     if (Constants.climberEnabled) {
       updateLockedDir();
       if (currentLockedDir == lockedDir.none) {
         climberLeft.set(speed);
-      } else if ((currentLockedDir == lockedDir.forward) && (speed <= 0)) {
+      } else if ((currentLockedDir == lockedDir.forward) && (goingBackward)) {
         climberLeft.set(speed);
-      } else if ((currentLockedDir == lockedDir.backward) && (speed >= 0)) {
+      } else if ((currentLockedDir == lockedDir.backward) && (goingForward)) {
         climberLeft.set(speed);           
       } else {
         stop();
