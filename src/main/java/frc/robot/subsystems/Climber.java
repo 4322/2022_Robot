@@ -289,6 +289,11 @@ public class Climber extends SubsystemBase {
 
   public void setClimberSpeed(double speed) {
     double pos = getPosition();
+    boolean inDisengageZone1 = (pos < (ClimberConstants.disengageFirstBar + ClimberConstants.slowManualZone)) && (pos > (ClimberConstants.disengageFirstBar - ClimberConstants.slowManualZone));
+    boolean inDisengageZone2 = (pos < (ClimberConstants.disengageSecondBar + ClimberConstants.slowManualZone)) && (pos > (ClimberConstants.disengageSecondBar - ClimberConstants.slowManualZone));
+    if ((inDisengageZone1 || inDisengageZone2) && (speed <= 0)) {
+        speed *= ClimberConstants.slowManualPower;
+    }
     if (Constants.climberEnabled) {
       updateLockedDir();
       if (currentLockedDir == lockedDir.none) {
@@ -296,10 +301,11 @@ public class Climber extends SubsystemBase {
       } else if ((currentLockedDir == lockedDir.forward) && (speed <= 0)) {
         climberLeft.set(speed);
       } else if ((currentLockedDir == lockedDir.backward) && (speed >= 0)) {
-        climberLeft.set(speed);
+        climberLeft.set(speed);           
       } else {
         stop();
       }
+
      //check if heading backwards + within 1500(const slowmanualzone) more than disengage 
       //and a bit less than disengage. If so, then multiply speed by slowmanual power
     }
