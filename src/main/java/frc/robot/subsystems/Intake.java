@@ -95,9 +95,6 @@ public class Intake extends SubsystemBase{
       intakeMotor.setInverted(true);
       intakeEncoder = intakeMotor.getEncoder();
 
-      // more than 30 amps needed to initially start intake
-      // intakeMotor.setSmartCurrentLimit(IntakeConstants.currentLimit);
-
       intakePID = intakeMotor.getPIDController();
       intakePID.setP(IntakeConstants.kP);
       intakePID.setI(IntakeConstants.kI);
