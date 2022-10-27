@@ -275,6 +275,7 @@ public class RobotContainer {
     }
 
     final double spinUpMediumSec = 0.6;
+    final double shootOneCargoSec = 2.0;
     final double shootTwoCargoSec = 4.0;  // must already be spun-up
 
     PathPlannerTrajectory p_OneBallSame = PathPlanner.loadPath(
@@ -394,7 +395,7 @@ public class RobotContainer {
           new DriveStop(drive),
 
           // Fire one collected ball from cargo ring (but run for two just in case)
-          new FirePreset(kicker, conveyor, shooter, hood, shootTwoCargoSec),
+          new FirePreset(kicker, conveyor, shooter, hood, shootOneCargoSec),
           new FireStop(kicker, conveyor, shooter, hood)
         );
         break;
