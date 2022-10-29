@@ -129,7 +129,7 @@ public class RobotContainer {
     tab = Shuffleboard.getTab("Auto");
     autoModeChooser.addOption("Preload + 1", 2);
     autoModeChooser.addOption("Preload + 2", 3);
-    autoModeChooser.addOption("Quintet", 5);
+    autoModeChooser.setDefaultOption("Quintet", 5);
 
     tab.add("Auto Mode", autoModeChooser)
       .withWidget(BuiltInWidgets.kSplitButtonChooser)
