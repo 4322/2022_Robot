@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.Drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /** An example command that uses an example subsystem. */
@@ -30,6 +31,7 @@ public class OdometryReset extends InstantCommand {
   @Override
   public void initialize() {
     drive.resetOdometry(pose);
+    DriverStation.reportWarning("Reset Pose: " + pose.toString(), false);
   }
 
   // Called once the command ends or is interrupted.
