@@ -105,6 +105,10 @@ public class RobotContainer {
   private final ClimbHorizontal climbHorizontal = new ClimbHorizontal(climber);
   private final ClimberEngage climberEngage = new ClimberEngage(climber, drive);
 
+  // Paths
+  PathPlannerTrajectory p_OneBallSame;
+  PathPlannerTrajectory p_FiveBallOpposite1;
+  PathPlannerTrajectory p_FiveBallOpposite2;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
 
   public RobotContainer() {
@@ -138,6 +142,25 @@ public class RobotContainer {
     if (Constants.climberEnabled) {
       climber.setDefaultCommand(climbManual);
     }
+
+    // Load paths
+    p_OneBallSame = PathPlanner.loadPath(
+      "1 Ball Same Side Hangar",
+      DriveConstants.autoMaxSpeedMetersPerSecond, 
+      DriveConstants.autoMaxAccelerationMetersPerSec2
+    );
+
+    p_FiveBallOpposite1 = PathPlanner.loadPath(
+        "5 Ball Opposite Hangar 1", 
+        DriveConstants.autoMaxSpeedMetersPerSecond, 
+        DriveConstants.autoMaxAccelerationMetersPerSec2
+    );
+
+    p_FiveBallOpposite2 = PathPlanner.loadPath(
+        "5 Ball Opposite Hangar 2", 
+        DriveConstants.autoMaxSpeedMetersPerSecond, 
+        DriveConstants.autoMaxAccelerationMetersPerSec2
+    );
   }
 
   public void disableSubsystems() {
@@ -277,24 +300,6 @@ public class RobotContainer {
     final double spinUpMediumSec = 0.6;
     final double shootOneCargoSec = 2.0;
     final double shootTwoCargoSec = 4.0;  // must already be spun-up
-
-    PathPlannerTrajectory p_OneBallSame = PathPlanner.loadPath(
-      "1 Ball Same Side Hangar",
-      DriveConstants.autoMaxSpeedMetersPerSecond, 
-      DriveConstants.autoMaxAccelerationMetersPerSec2
-    );
-
-    PathPlannerTrajectory p_FiveBallOpposite1 = PathPlanner.loadPath(
-        "5 Ball Opposite Hangar 1", 
-        DriveConstants.autoMaxSpeedMetersPerSecond, 
-        DriveConstants.autoMaxAccelerationMetersPerSec2
-    );
-
-    PathPlannerTrajectory p_FiveBallOpposite2 = PathPlanner.loadPath(
-        "5 Ball Opposite Hangar 2", 
-        DriveConstants.autoMaxSpeedMetersPerSecond, 
-        DriveConstants.autoMaxAccelerationMetersPerSec2
-    );
 
     PPSwerveControllerCommand OneBallSame = new PPSwerveControllerCommand(
         p_OneBallSame, 
