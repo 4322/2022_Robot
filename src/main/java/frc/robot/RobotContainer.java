@@ -433,7 +433,6 @@ public class RobotContainer {
 
             // Follow the second part of the path while intaking
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.autoBall5),
-            new OdometryReset(drive, p_FiveBallOpposite2.getInitialPose()),
             FiveBallOpposite2.raceWith(new IntakeIn(intake, conveyor)),
             new DriveStop(drive),
 
