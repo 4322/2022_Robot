@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.Drive;
 import frc.robot.subsystems.Driveunbun;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrive.SwerveHelper;
@@ -90,6 +91,7 @@ public class DriveManual extends CommandBase {
         rotate = (rotateRawZ + twistDeadband) / (1 - twistDeadband);
       }
       rotate = rotate * rotate * rotate;  // increase sensitivity
+      rotate *= DriveConstants.Rotation.rotateTwistScale; // scale twist sensitivity
 
       if (Constants.demo.inDemoMode) {
         rotate *= Constants.demo.rotationScaleFactor;

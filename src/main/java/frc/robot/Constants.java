@@ -174,6 +174,8 @@ public final class Constants {
           public static final double kP = 1.2;
           public static final double kD = 6.0;
 
+          public static final double rotateTwistScale = 0.75; // scale twisting
+
           public static final double configCLosedLoopRamp = 0.08;
           public static final double minPower = 0.0;  // allow for tighter tolerance
           public static final double maxPower = 0.3;  // reduce gear wear and overshoot
