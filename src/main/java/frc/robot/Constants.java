@@ -89,8 +89,8 @@ public final class Constants {
     public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000 + hoodFiringSolutionOffset, 1.5, 138.2);//good 
     public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000 + hoodFiringSolutionOffset, 1.5, 169.5);//in progress
     public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200 + hoodFiringSolutionOffset, 1.25, 160);  // needs calibration
-    public static final FiringSolution farLaunchpad = new FiringSolution(2600, 4000, 4100 + hoodFiringSolutionOffset, 1.0, 233.75);
-    public static final FiringSolution reallyFar = new FiringSolution(2600, 4200, 4300 + hoodFiringSolutionOffset, 1.0, 271.75);
+    public static final FiringSolution farLaunchpad = new FiringSolution(2800, 4150, 4300 + hoodFiringSolutionOffset, 1.0, 233.75);
+    public static final FiringSolution reallyFar = new FiringSolution(3000, 4300, 5500 + hoodFiringSolutionOffset, 1.25, 271.75);
     public static final FiringSolution demoSlowPop = new FiringSolution(1500, 1700, 1400 + hoodFiringSolutionOffset, 1.0, 0);
     public static final FiringSolution demoMediumPop = new FiringSolution(2200, 3000, 1800 + hoodFiringSolutionOffset, 1.0, 0);
   }
