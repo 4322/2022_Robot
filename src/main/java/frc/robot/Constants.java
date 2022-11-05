@@ -374,7 +374,7 @@ public final class Constants {
     public static final double fwdOneWayZoneMax = 119900; 
     public static final double bwdOneWayZoneMin = 66500;
     public static final double bwdOneWayZoneMax = 73000; 
-
+    
     public static final boolean statorEnabled = true;
     public static final double statorLimit = 40;
     public static final double statorThreshold = 25;
@@ -392,6 +392,9 @@ public final class Constants {
     public static final double kMinRange = 0.07;
     public static final double kMaxRange = 0.6;
     public static final double rampRate = 0.6;
+    
+    public static final double slowManualPower = 0.25;
+    public static final double slowManualZone = 15000;
 
     public static final double manualDeadband = 0.1;
   }

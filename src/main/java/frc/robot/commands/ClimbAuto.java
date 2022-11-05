@@ -160,7 +160,11 @@ public class ClimbAuto extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setBrakeMode();
+    if (currentMode != climberMode.done) {
+      climber.setBrakeMode();
+    } else {
+      climber.setCoastMode();
+    }
     climber.stop();
   }
 
