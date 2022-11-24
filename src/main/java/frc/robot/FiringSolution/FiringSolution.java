@@ -1,5 +1,6 @@
 package frc.robot.FiringSolution;
 
+import frc.robot.utility.OrangeMath;
 public class FiringSolution {
     private double flywheelSpeed;
     private double hoodPosition;
@@ -13,6 +14,31 @@ public class FiringSolution {
       this.hoodPosition = hoodPosition;
       this.aimingToleranceDeg = aimingToleranceDeg;
       this.distance = distanceIn;
+    }
+
+    // See: https://www.geeksforgeeks.org/overriding-equals-method-in-java/
+    @Override
+    public boolean equals(Object o) {
+ 
+        // If the object is compared with itself then return true 
+        if (o == this) {
+            return true;
+        }
+ 
+        /* Check if o is an instance of FiringSolution or not
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof FiringSolution)) {
+            return false;
+        }
+         
+        // typecast o to FiringSolution so that we can compare data members
+        FiringSolution c = (FiringSolution) o;
+         
+        return OrangeMath.equalToTwoDecimal(c.getAimingToleranceDeg(), aimingToleranceDeg)
+              && OrangeMath.equalToTwoDecimal(c.getDistance(), distance)
+              && OrangeMath.equalToTwoDecimal(c.getFlywheelSpeed(), flywheelSpeed)
+              && OrangeMath.equalToTwoDecimal(c.getHoodPosition(), hoodPosition)
+              && OrangeMath.equalToTwoDecimal(c.getKickerSpeed(), kickerSpeed);
     }
 
     public double getFlywheelSpeed() { return flywheelSpeed; }
