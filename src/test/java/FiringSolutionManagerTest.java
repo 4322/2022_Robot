@@ -20,7 +20,6 @@ public class FiringSolutionManagerTest {
     // Test a solution for an existing firing solution (should give back the same firing solution)
     @Test 
     public void testCalcNewSolutionExisting_insideTarmac() {
-        
         assertEquals(manager.calcNewSolution(Constants.FiringSolutions.insideTarmac.getDistance()),
         Constants.FiringSolutions.insideTarmac);
     }
