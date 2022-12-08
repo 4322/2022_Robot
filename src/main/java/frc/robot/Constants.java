@@ -80,14 +80,14 @@ public final class Constants {
   // fender distances need to be remeasured
   // measurement from back of bumper for now
   public static final class FiringSolutions {
-    public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 1800 + hoodFiringSolutionOffset, 3.0, 0); //good
+    public static final FiringSolution fenderHigh = new FiringSolution(2200, 3000, 2000 + hoodFiringSolutionOffset, 3.0, 0); //good
     public static final FiringSolution fenderLow = new FiringSolution(1400, 1400, 8700, 5.0, 0); //good
     public static final FiringSolution disposal = new FiringSolution(600, 700, 2500 + hoodFiringSolutionOffset, 5.0, 0); //good
     public static final FiringSolution middleTarmac = new FiringSolution(2200, 3000, 2500 + hoodFiringSolutionOffset, 2.0, 47.0);//good
     public static final FiringSolution insideTarmac = new FiringSolution(2200, 3100, 2800 + hoodFiringSolutionOffset, 2.0, 61.5);//good
     public static final FiringSolution outsideTarmac = new FiringSolution(2400, 3300, 4000 + hoodFiringSolutionOffset, 1.5, 105.6);//good
-    public static final FiringSolution cargoRing = new FiringSolution(2600, 3400, 4000 + hoodFiringSolutionOffset, 1.5, 138.2);//good 
-    public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3650, 4000 + hoodFiringSolutionOffset, 1.5, 169.5);//in progress
+    public static final FiringSolution cargoRing = new FiringSolution(2600, 3600, 4000 + hoodFiringSolutionOffset, 1.5, 139);//good 
+    public static final FiringSolution closeLaunchpad = new FiringSolution(2600, 3800, 4000 + hoodFiringSolutionOffset, 1.5, 169);//in progress
     public static final FiringSolution autoBall5 = new FiringSolution(3200, 4100, 4200 + hoodFiringSolutionOffset, 1.25, 160);  // needs calibration
     public static final FiringSolution farLaunchpad = new FiringSolution(2800, 4150, 4300 + hoodFiringSolutionOffset, 1.0, 233.75);
     public static final FiringSolution reallyFar = new FiringSolution(3000, 4300, 5500 + hoodFiringSolutionOffset, 1.25, 271.75);
@@ -308,7 +308,7 @@ public final class Constants {
       public static final double kI = 0.000001;
       public static final double kD = 0.0;
       public static final double kIz = 200;
-      public static final double kFF = 0.00033;
+      public static final double kFF = 0.00043;
       public static final double rampRate = 0.6;  // seconds to go from stopped to full power
       public static final double intakeVelocity = 1350;
       public static final double ejectVelocity = -1350;
@@ -368,7 +368,7 @@ public final class Constants {
     public static final double minRunVel = 250;
     public static final double hookSwingSec = 1.5;
     public static final double overrideTime = 60;
-    public static final double poweredDescentAmps = 3; // should always be positive (going fwd)
+    public static final double poweredDescentAmps = 9; // should always be positive (going fwd)
     
     public static final double fwdOneWayZoneMin = 111700;
     public static final double fwdOneWayZoneMax = 119900; 
