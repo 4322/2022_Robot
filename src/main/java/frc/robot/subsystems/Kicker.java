@@ -174,18 +174,20 @@ public class Kicker extends SubsystemBase {
   }
 
   public void setSpeed(double rpm) {
-    if (Constants.kickerEnabled && Conveyor.getSingleton().canKickerStop()) {
-      kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
-      if ((Driveunbun.getDriveMode() != Driveunbun.DriveMode.limelightFieldCentric) || 
-        (Math.abs(target - rpm) > KickerConstants.resetSettingDelta) || 
-        (kickerMode == KickerMode.stopped)  || (kickerMode == KickerMode.stopping)) {
-        kickerMode = KickerMode.started;
+    if (Constants.kickerEnabled){ 
+      if(Conveyor.getSingleton().canKickerStop()) {
+        kickerPID.setReference(rpm, CANSparkMax.ControlType.kVelocity);
+        if ((Driveunbun.getDriveMode() != Driveunbun.DriveMode.limelightFieldCentric) || 
+          (Math.abs(target - rpm) > KickerConstants.resetSettingDelta) || 
+          (kickerMode == KickerMode.stopped)  || (kickerMode == KickerMode.stopping)) {
+          kickerMode = KickerMode.started;
+        }
+        target = rpm;
+        if (Constants.debug) {
+          targetRPM.setDouble(rpm);
+        }
+        periodic();  // kludge for limelight
       }
-      target = rpm;
-      if (Constants.debug) {
-        targetRPM.setDouble(rpm);
-      }
-      periodic();  // kludge for limelight
     }
   }
 

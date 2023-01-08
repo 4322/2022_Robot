@@ -130,13 +130,15 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void shoot() {
-    if (Constants.conveyorEnabled && (conveyorMode == ConveyorMode.loaded)) {
-      conveyorMode = ConveyorMode.shooting;
-      start();
-      shotTimer.reset();
-      shotTimer.start();
-      Intake.getSingleton().autoIntake();
-      autoAdvanceCargoActive = true;
+    if (Constants.conveyorEnabled){
+      if (conveyorMode == ConveyorMode.loaded) {
+        conveyorMode = ConveyorMode.shooting;
+        start();
+        shotTimer.reset();
+        shotTimer.start();
+        Intake.getSingleton().autoIntake();
+        autoAdvanceCargoActive = true;
+      }
     }
   }
 

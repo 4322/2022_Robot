@@ -163,9 +163,11 @@ public class Hood extends SubsystemBase {
   }
 
   public void setTargetPosition(double setpoint, boolean overrideInitialHome) {
-    if (Constants.hoodEnabled && Conveyor.getSingleton().canShooterStop()) {
-      if (initialHome || overrideInitialHome) {
-        hood.set(ControlMode.Position, setpoint);
+    if (Constants.hoodEnabled) {
+      if (Conveyor.getSingleton().canShooterStop()) {
+        if (initialHome || overrideInitialHome) {
+          hood.set(ControlMode.Position, setpoint);
+        }
       }
     }
   }
