@@ -151,7 +151,7 @@ public class RobotContainer {
     );
 
     p_FiveBallOpposite1 = PathPlanner.loadPath(
-        "5 Ball Opposite Hangar 1", 
+        "45Degree", 
         DriveConstants.autoMaxSpeedMetersPerSecond, 
         DriveConstants.autoMaxAccelerationMetersPerSec2
     );
@@ -420,6 +420,7 @@ public class RobotContainer {
         break;
 
         case 5:
+        p_FiveBallOpposite1.getInitialPose();
           auto.addCommands(
             // Follow the first part of the path while intaking
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
