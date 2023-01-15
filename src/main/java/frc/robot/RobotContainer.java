@@ -395,7 +395,8 @@ public class RobotContainer {
         auto.addCommands(
           // Follow the first part of the path while intaking
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-          new OdometryReset(drive, p_OneBallSame.getInitialPose()),
+          new OdometryReset(drive, new Pose2d(p_OneBallSame.getInitialPose().getTranslation(), 
+              p_OneBallSame.getInitialState().holonomicRotation)),
           OneBallSame.raceWith(new IntakeIn(intake, conveyor)),
           new DriveStop(drive),
 
@@ -409,7 +410,8 @@ public class RobotContainer {
         auto.addCommands(
           // Follow the first part of the path while intaking
           new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-          new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
+          new OdometryReset(drive, new Pose2d(p_FiveBallOpposite1.getInitialPose().getTranslation(), 
+              p_FiveBallOpposite1.getInitialState().holonomicRotation)),
           FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
           new DriveStop(drive),
 
@@ -423,7 +425,8 @@ public class RobotContainer {
           auto.addCommands(
             // Follow the first part of the path while intaking
             new SetFiringSolution(kicker, shooter, hood, Constants.FiringSolutions.cargoRing),
-            new OdometryReset(drive, p_FiveBallOpposite1.getInitialPose()),
+            new OdometryReset(drive, new Pose2d(p_FiveBallOpposite1.getInitialPose().getTranslation(), 
+                p_FiveBallOpposite1.getInitialState().holonomicRotation)),
             FiveBallOpposite1.raceWith(new IntakeIn(intake, conveyor)),
             new DriveStop(drive),
 
