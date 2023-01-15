@@ -397,75 +397,74 @@ public class Drive extends SubsystemBase {
       }
 
       // anti-tipping logic
-      if (latestVelocity >= (tipDecelerateActive ? DriveConstants.Tip.lowVelocityFtPerSec
-                                           : DriveConstants.Tip.highVelocityFtPerSec) &&
-          latestAcceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
-                                               : DriveConstants.Tip.highAccFtPerSec2) &&
-          // check if decelerating
-          Math.abs(boundDegrees(180 +
-              velocityXY.degrees() - accelerationXY.degrees())) <= DriveConstants.Tip.velAccDiffMaxDeg) {
-        rotate = 0; // don't tip over our own wheels while declerating
-        tipDecelerateActive = true;
-      } else {
-        tipDecelerateActive = false;
-      }
-
+      if (Constants.tippingCodeEnabled) {
+        if (latestVelocity >= (tipDecelerateActive ? DriveConstants.Tip.lowVelocityFtPerSec
+                                            : DriveConstants.Tip.highVelocityFtPerSec) &&
+            latestAcceleration >= (tipDecelerateActive ? DriveConstants.Tip.lowAccFtPerSec2
+                                                : DriveConstants.Tip.highAccFtPerSec2) &&
+            // check if decelerating
+            Math.abs(boundDegrees(180 +
+                velocityXY.degrees() - accelerationXY.degrees())) <= DriveConstants.Tip.velAccDiffMaxDeg) {
+          rotate = 0; // don't tip over our own wheels while declerating
+          tipDecelerateActive = true;
+        } else {
+          tipDecelerateActive = false;
+        }
       // Don't get stuck in anti-tipping mode if driver is applying partial power.
       // Scale power threshold based on the robot velocity to allow steering
       // at low power and low velocity.
-      double powerOffThreshold = DriveConstants.Tip.lowPowerOff +
-          (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
-              (latestVelocity - DriveConstants.Tip.lowVelocityFtPerSec) /
-              (DriveConstants.Tip.highVelocityFtPerSec - DriveConstants.Tip.lowVelocityFtPerSec);
-      powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff,
-          Math.min(DriveConstants.Tip.highPowerOff, powerOffThreshold));
+        double powerOffThreshold = DriveConstants.Tip.lowPowerOff +
+            (DriveConstants.Tip.highPowerOff - DriveConstants.Tip.lowPowerOff) *
+                (latestVelocity - DriveConstants.Tip.lowVelocityFtPerSec) /
+                (DriveConstants.Tip.highVelocityFtPerSec - DriveConstants.Tip.lowVelocityFtPerSec);
+        powerOffThreshold = Math.max(DriveConstants.Tip.lowPowerOff,
+            Math.min(DriveConstants.Tip.highPowerOff, powerOffThreshold));
 
-      if (latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
-          driveXY.magnitude() < powerOffThreshold) {
-        rotate = 0; // don't tip when about to start declerating
-        tipSmallStickActive = true;
-      } else {
-        tipSmallStickActive = false;
-      }
-
-      // find largest recent steering change
-      double maxSteeringChangeDegrees = 0;
-      for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
-        double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
-        if (fieldRelative) {
-          steeringChangeDegrees -= getAngle();
+        if (latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
+            driveXY.magnitude() < powerOffThreshold) {
+          rotate = 0; // don't tip when about to start declerating
+          tipSmallStickActive = true;
+        } else {
+          tipSmallStickActive = false;
         }
-        steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
-        maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
-      }
+        // find largest recent steering change
+        double maxSteeringChangeDegrees = 0;
+        for (SnapshotVectorXY velocitySnapshot : velocityHistory) {
+          double steeringChangeDegrees = driveXY.degrees() - velocitySnapshot.getVectorXY().degrees();
+          if (fieldRelative) {
+            steeringChangeDegrees -= getAngle();
+          }
+          steeringChangeDegrees = Math.abs(boundDegrees(steeringChangeDegrees));
+          maxSteeringChangeDegrees = Math.max(maxSteeringChangeDegrees, steeringChangeDegrees);
+        }
 
       // detect large changes in drive stick that would tip due to excessive wheel rotation
-      if (!isDrivingWithSideCams() &&
-          latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
-          maxSteeringChangeDegrees >= DriveConstants.Tip.highSpeedSteeringChangeMaxDegrees &&
-          driveXY.magnitude() >= DriveConstants.Tip.highPowerOff) {
+        if (!isDrivingWithSideCams() &&
+            latestVelocity >= DriveConstants.Tip.lowVelocityFtPerSec &&
+            maxSteeringChangeDegrees >= DriveConstants.Tip.highSpeedSteeringChangeMaxDegrees &&
+            driveXY.magnitude() >= DriveConstants.Tip.highPowerOff) {
 
-        // kill power until velocity is low enough to allow turning to the new
-        // direction without risking a tipover
-        driveX = 0;
-        driveY = 0;
-        rotate = 0;
-        tipBigStickActive = true;
-      } else {
-        tipBigStickActive = false;
+          // kill power until velocity is low enough to allow turning to the new
+          // direction without risking a tipover
+          driveX = 0;
+          driveY = 0;
+          rotate = 0;
+          tipBigStickActive = true;
+        } else {
+          tipBigStickActive = false;
+        }
+      
+        if (Constants.debug) {
+          tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
+          tipSmallStickAtiveTab.setBoolean(!tipSmallStickActive);
+          tipBigStickAtiveTab.setBoolean(!tipBigStickActive);
+        }
+
+        // don't allow the wheels to rotate back to 45 deg angle
+        if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
+          rotate = 0;
+        }
       }
-
-      if (Constants.debug) {
-        tipDecelerationAtiveTab.setBoolean(!tipDecelerateActive);
-        tipSmallStickAtiveTab.setBoolean(!tipSmallStickActive);
-        tipBigStickAtiveTab.setBoolean(!tipBigStickActive);
-      }
-
-      // don't allow the wheels to rotate back to 45 deg angle
-      if (tipDecelerateActive || tipSmallStickActive || tipBigStickActive) {
-        rotate = 0;
-      }
-
       // convert to proper units
       rotate = rotate * DriveConstants.maxRotationSpeedRadSecond;
       driveX = driveX * DriveConstants.maxSpeedMetersPerSecond;

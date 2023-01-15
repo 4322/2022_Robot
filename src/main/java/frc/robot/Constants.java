@@ -49,6 +49,7 @@ public final class Constants {
   public static final boolean driveEnabled = (demo.driveMode != demo.DriveMode.OFF)  || !demo.inDemoMode;
   public static final boolean joysticksEnabled = true;
   public static final boolean gyroEnabled = true;
+  public static final boolean tippingCodeEnabled = false;
   public static final boolean intakeEnabled = false;
   public static final boolean shooterEnabled = false;
   public static final boolean kickerEnabled = false;
