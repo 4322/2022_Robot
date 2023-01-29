@@ -46,14 +46,14 @@ public final class Constants {
   public static final boolean driveEnabled = (demo.driveMode != demo.DriveMode.OFF)  || !demo.inDemoMode;
   public static final boolean joysticksEnabled = true;
   public static final boolean gyroEnabled = true;
-  public static final boolean intakeEnabled = true;
-  public static final boolean shooterEnabled = true;
-  public static final boolean kickerEnabled = true;
-  public static final boolean climberEnabled = true;
-  public static final boolean hoodEnabled = true;
-  public static final boolean conveyorEnabled = true;
-  public static final boolean ballSensorEnabled = true;
-  public static final boolean limelightEnabled = true;
+  public static final boolean intakeEnabled = false;
+  public static final boolean shooterEnabled = false;
+  public static final boolean kickerEnabled = false;
+  public static final boolean climberEnabled = false;
+  public static final boolean hoodEnabled = false;
+  public static final boolean conveyorEnabled = false;
+  public static final boolean ballSensorEnabled = false;
+  public static final boolean limelightEnabled = false;
 
   // configuration values common to all motor controllers
   public static final int controllerConfigTimeoutMs = 50;
@@ -202,7 +202,7 @@ public final class Constants {
               CANCoderOffsetDegrees = new double[4];
               CANCoderOffsetDegrees[WheelPosition.FRONT_RIGHT.wheelNumber] = 78.311;
               CANCoderOffsetDegrees[WheelPosition.FRONT_LEFT.wheelNumber] = 169.365;
-              CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = 9.844;
+              CANCoderOffsetDegrees[WheelPosition.BACK_RIGHT.wheelNumber] = -9.844;
               CANCoderOffsetDegrees[WheelPosition.BACK_LEFT.wheelNumber] = -104.678;
           }
       }
